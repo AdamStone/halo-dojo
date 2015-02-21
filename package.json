@@ -1,0 +1,40 @@
+{
+  "name": "halo-dojo",
+  "version": "0.0.1",
+  "description": "The Halo Dojo",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-browserify": "^3.2.1",
+    "grunt-contrib-copy": "^0.7.0",
+    "grunt-contrib-cssmin": "^0.10.0",
+    "grunt-contrib-uglify": "^0.5.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-hapi": "^0.8.1",
+    "grunt-react": "^0.10.0",
+    "grunt-sass": "^0.16.0",
+    "node-sass": "^1.0.3"
+  },
+  "dependencies": {
+    "bcrypt": "^0.8.1",
+    "boom": "^2.6.1",
+    "flux": "^2.0.1",
+    "hapi": "^8.1.0",
+    "hapi-auth-hawk": "^2.0.0",
+    "hapi-react": "^2.0.0",
+    "hawk": "^2.3.1",
+    "joi": "^4.7.0",
+    "neo4j": "^1.1.1",
+    "node-phantom-simple": "^1.2.0",
+    "node-uuid": "^1.4.2",
+    "nodemailer": "^1.3.0",
+    "react": "^0.12.1",
+    "socket.io": "^1.2.1",
+    "superagent": "^0.21.0",
+    "urlsafe-base64": "^1.0.0",
+    "xoauth2": "^1.0.0"
+  }
+}

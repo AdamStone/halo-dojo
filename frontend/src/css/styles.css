@@ -1,0 +1,580 @@
+*, *:before, *:after {
+  -webkit-box-sizing: border-box;
+  /* Needed for mobile WebKit */
+  -moz-box-sizing: border-box;
+  /* Needed for Firefox */
+  box-sizing: border-box; }
+
+html, body, .wrapper {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 400;
+  font-size: 16px; }
+
+li {
+  list-style: none; }
+
+.unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+
+.selectable {
+  -webkit-touch-callout: text;
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text; }
+
+img.grayscale {
+  filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale");
+  /* Firefox 10+, Firefox on Android */
+  filter: gray;
+  /* IE6-9 */
+  -webkit-filter: grayscale(100%);
+  /* Chrome 19+, Safari 6+, Safari 6+ iOS */ }
+
+img.grayscale.disabled {
+  filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 1 0\'/></filter></svg>#grayscale");
+  -webkit-filter: grayscale(0%); }
+
+.hover-solid {
+  opacity: 0.25;
+  filter: alpha(opacity=25); }
+
+.hover-solid:hover {
+  opacity: 1;
+  filter: alpha(opacity=100); }
+
+.style-placeholders *::-webkit-input-placeholder {
+  color: #567; }
+.style-placeholders *:-moz-placeholder {
+  /* Firefox 18- */
+  color: #567; }
+.style-placeholders *::-moz-placeholder {
+  /* Firefox 19+ */
+  color: #567; }
+.style-placeholders *:-ms-input-placeholder {
+  color: #567; }
+.style-placeholders *[placeholder] {
+  color: #567; }
+
+.site-wrapper {
+  background: url(../images/Orion_Nebula_-_Hubble_2006_mosaic_2560_blue_33.jpg) no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+  background-size: cover; }
+
+.sidebar {
+  background-color: rgba(0, 0, 0, 0.75);
+  position: absolute;
+  right: 0;
+  top: 3em;
+  bottom: 0;
+  width: 30%; }
+  .sidebar .sidebar-item {
+    color: #cdf;
+    background-color: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+    text-align: center;
+    padding: 0.75em;
+    margin: 1em; }
+    .sidebar .sidebar-item h3 {
+      margin: 0;
+      font-size: 20px;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 400; }
+  .sidebar .live-search {
+    cursor: pointer; }
+  .sidebar .live-search:hover {
+    background-color: rgba(0, 0, 0, 0.75); }
+  .sidebar .suggested h3 {
+    font-size: 16px; }
+
+.dojo-nav {
+  height: 3em;
+  width: 100%;
+  display: table;
+  table-layout: fixed;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: #cdf;
+  position: fixed;
+  right: 0;
+  left: 0;
+  top: 0; }
+  .dojo-nav .logo {
+    vertical-align: top;
+    height: 1.25em;
+    margin-right: 0.35em; }
+  .dojo-nav .brandname {
+    vertical-align: bottom; }
+  .dojo-nav ul {
+    display: table-row;
+    width: 100%;
+    height: 100%; }
+    .dojo-nav ul li {
+      cursor: pointer;
+      display: table-cell;
+      width: 12.5%;
+      text-align: center;
+      vertical-align: middle; }
+    .dojo-nav ul li:hover {
+      background-color: rgba(255, 255, 255, 0.05); }
+    .dojo-nav ul li.indicator {
+      width: 3em; }
+    .dojo-nav ul .brand {
+      width: 10em;
+      text-align: left;
+      padding-left: 0.5em; }
+    .dojo-nav ul .spacer {
+      width: auto;
+      cursor: default; }
+    .dojo-nav ul .spacer:hover {
+      background-color: rgba(0, 0, 0, 0); }
+    .dojo-nav ul .user-widget-slot {
+      width: 25%;
+      background-color: rgba(0, 0, 0, 0.5);
+      position: relative; }
+
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999; }
+  .overlay .window {
+    display: table;
+    height: 100%;
+    margin: auto;
+    padding: 5em 0; }
+    .overlay .window .auth-form {
+      background-color: rgba(0, 0, 0, 0.9);
+      display: table-cell;
+      vertical-align: middle;
+      width: 30em;
+      padding: 0 5em; }
+
+.auth-form {
+  width: 25em;
+  margin: auto;
+  padding: 1em;
+  text-align: center; }
+  .auth-form input {
+    text-align: center;
+    border: none;
+    padding: 0.5em;
+    margin: 0.5em auto;
+    width: 100%;
+    font-size: 16px;
+    border-radius: 3px; }
+  .auth-form input[type="submit"] {
+    width: 50%; }
+  .auth-form .hint {
+    color: #fff;
+    font-size: 21px; }
+
+.user-widget {
+  position: absolute;
+  display: block;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  cursor: default; }
+
+.landing-page {
+  overflow-y: auto;
+  position: fixed;
+  top: 3em;
+  bottom: 0; }
+  .landing-page .landing-title {
+    text-align: center;
+    width: 100%;
+    color: #cdf;
+    background-color: rgba(1, 3, 24, 0.33); }
+    .landing-page .landing-title h1 {
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin: 0;
+      padding: 1.5em;
+      font-size: 44px;
+      font-weight: 300;
+      cursor: default; }
+  .landing-page .landing-tagline {
+    text-align: center; }
+    .landing-page .landing-tagline h2 {
+      font-size: 27px;
+      margin: 0;
+      padding: 1.5em 5em;
+      font-weight: 400; }
+  .landing-page .landing-section {
+    text-align: center;
+    padding: 3em 5em; }
+    .landing-page .landing-section h3 {
+      margin: 0;
+      padding: 0 5em;
+      font-size: 26px;
+      font-family: Oxygen, sans-serif;
+      letter-spacing: 0.1em;
+      font-weight: 400; }
+    .landing-page .landing-section p, .landing-page .landing-section a {
+      margin: 0;
+      padding: 2em 0 0;
+      font-size: 21px;
+      font-weight: 300;
+      font-family: Oxygen, sans-serif;
+      letter-spacing: 0.05em; }
+    .landing-page .landing-section a {
+      font-size: 23px; }
+    .landing-page .landing-section a:hover {
+      color: #fff;
+      text-decoration: underline; }
+  .landing-page .dark {
+    color: #cdf;
+    background-color: rgba(5, 6, 10, 0.9); }
+  .landing-page .light {
+    background-color: rgba(157, 210, 249, 0.65); }
+    .landing-page .light a {
+      color: #000; }
+  .landing-page .logo {
+    width: 3em;
+    margin-top: 2em; }
+
+.dashboard {
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: absolute;
+  font-family: 'Oxygen', sans-serif;
+  top: 3em;
+  bottom: 2.25em;
+  left: 0;
+  right: 30%;
+  background-color: rgba(0, 0, 0, 0.15); }
+  .dashboard .tile-input {
+    border: none;
+    margin-bottom: 1em;
+    padding: 0.5em;
+    font-family: 'Oxygen', sans-serif;
+    font-size: 18px;
+    color: #cdf;
+    background-color: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+    text-align: center;
+    font-weight: 300; }
+  .dashboard .hint {
+    margin-top: 0; }
+
+.gamertag-stats {
+  color: #cdf;
+  width: 100.1%;
+  table-layout: fixed;
+  height: 5em;
+  background-color: rgba(0, 0, 0, 0.5);
+  text-align: center; }
+  .gamertag-stats img {
+    height: 2.25em;
+    width: 2.25em;
+    vertical-align: middle;
+    margin-left: 1.5em; }
+  .gamertag-stats h1 {
+    display: inline-block;
+    vertical-align: middle; }
+  .gamertag-stats h1, .gamertag-stats h2, .gamertag-stats h3 {
+    font-weight: 300;
+    margin: 0; }
+
+.profile {
+  width: 100%;
+  table-layout: fixed;
+  position: relative; }
+  .profile td {
+    vertical-align: top; }
+  .profile td.fixed-width {
+    width: 22em; }
+  .profile .bio {
+    width: 20em;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    font-size: 16px;
+    margin: 1em; }
+    .profile .bio textarea {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      font-size: 16px;
+      padding: 1em;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: #eee;
+      width: 20em;
+      resize: none;
+      border: none; }
+  .profile .preferences {
+    text-align: center;
+    padding: 0 1em 1em 0; }
+    .profile .preferences h1, .profile .preferences h2, .profile .preferences h3 {
+      font-weight: 300;
+      margin: 0;
+      margin-bottom: 0.5em;
+      color: #cdf; }
+    .profile .preferences .tile {
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 0.5em;
+      margin-top: 1em; }
+    .profile .preferences .icon {
+      height: 3.5em;
+      cursor: pointer; }
+
+.dojo-content {
+  overflow: hidden;
+  position: absolute;
+  top: 3em;
+  bottom: 2.25em;
+  width: 70%;
+  background-color: rgba(0, 0, 0, 0.15);
+  color: #cdf; }
+
+a {
+  text-decoration: none;
+  color: #cdf; }
+
+.status-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 30%;
+  height: 0;
+  text-align: center; }
+
+.set-status {
+  display: table;
+  width: 100%;
+  height: 100%;
+  margin-left: 1px; }
+  .set-status input {
+    display: table-cell;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 80%;
+    padding-left: 0.5em;
+    text-align: center;
+    background-color: #eee;
+    color: #222; }
+  .set-status .btn-submit {
+    display: table-cell;
+    padding: 0.25em;
+    background-color: #111;
+    cursor: pointer;
+    width: 20%;
+    vertical-align: middle; }
+
+.beacon-list {
+  margin: 0;
+  position: fixed;
+  top: 3em;
+  bottom: 2.25em;
+  left: 0;
+  right: 30%;
+  padding: 1em 1em 0 1em;
+  overflow-y: scroll;
+  margin-right: -200%;
+  padding-right: 200%; }
+
+.beacon-tile {
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 0.5em;
+  margin-bottom: 1em;
+  border-radius: 2px;
+  cursor: default; }
+  .beacon-tile .gamertag {
+    font-family: 'Oxygen', sans-serif;
+    letter-spacing: 0.1em;
+    font-size: 18px; }
+  .beacon-tile .idle-dot-cell {
+    width: 1em;
+    text-align: center;
+    vertical-align: top; }
+    .beacon-tile .idle-dot-cell .idle-dot {
+      width: 0.4em;
+      height: 0.4em; }
+  .beacon-tile .time {
+    width: 2.7em;
+    text-align: center;
+    color: #9ab; }
+  .beacon-tile .status {
+    font-family: 'Oxygen', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    background-color: rgba(0, 0, 0, 0.25);
+    color: #9ab;
+    height: 1.7em;
+    border-radius: 2px;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.1); }
+  .beacon-tile .table-spacer {
+    width: 5%; }
+  .beacon-tile .invite-button {
+    color: #eee;
+    width: 10%;
+    font-size: 24px; }
+  .beacon-tile .invite-button:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+    cursor: pointer; }
+  .beacon-tile .message-toggle {
+    margin-top: 0.75em;
+    height: 2em; }
+    .beacon-tile .message-toggle .textarea-sizer {
+      display: table-cell;
+      height: 100%;
+      width: 80%;
+      position: relative; }
+      .beacon-tile .message-toggle .textarea-sizer .message-input {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        padding: 0.5em;
+        resize: none;
+        border: none;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.25);
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+        border-radius: 2px;
+        color: #9ab; }
+    .beacon-tile .message-toggle .message-send {
+      display: table-cell;
+      height: 100%;
+      vertical-align: middle;
+      text-align: center;
+      cursor: pointer; }
+    .beacon-tile .message-toggle .message-send:hover {
+      background-color: rgba(0, 0, 0, 0.5); }
+
+.user-beacon-tile {
+  box-shadow: inset 0 0 1px 0px white; }
+
+.beacon-tile:hover {
+  background-color: rgba(0, 0, 0, 0.33);
+  color: #fff; }
+
+.message-bar {
+  color: #cdf;
+  height: 2.25em;
+  background-color: rgba(0, 0, 0, 0.75);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 30%; }
+  .message-bar .messagebar-align {
+    position: absolute;
+    right: 0; }
+  .message-bar .message-widget {
+    display: table-cell;
+    height: 100%;
+    vertical-align: middle;
+    padding: 0.25em;
+    font-family: 'Oxygen', sans-serif;
+    font-size: 14px;
+    position: relative; }
+    .message-bar .message-widget .toggle-button {
+      padding: 0.25em 0.5em;
+      width: 8em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis; }
+    .message-bar .message-widget .toggle-button:hover {
+      cursor: pointer;
+      background-color: rgba(255, 255, 255, 0.1); }
+    .message-bar .message-widget .expanded {
+      width: 16em; }
+
+.messenger {
+  position: absolute;
+  right: 0;
+  height: 16em;
+  width: 16em;
+  background-color: rgba(255, 255, 255, 0.5);
+  color: #111;
+  bottom: 2.55em; }
+  .messenger .minimize, .messenger .close {
+    font-size: 12px;
+    display: inline-block;
+    text-align: center;
+    width: 1.5em;
+    height: 1.5em;
+    cursor: pointer;
+    position: absolute;
+    padding-top: 0.2em;
+    top: 0.3em;
+    right: 3%; }
+  .messenger .minimize {
+    padding-top: 0.3em;
+    right: auto;
+    left: 3%; }
+  .messenger .minimize:hover, .messenger .close:hover {
+    background-color: rgba(255, 255, 255, 0.5); }
+  .messenger .chatbox {
+    background-color: rgba(255, 255, 255, 0.75);
+    height: 75%;
+    width: 94%;
+    margin: 1.6em auto 0;
+    padding: 0.2em;
+    overflow-y: scroll; }
+    .messenger .chatbox .bubble {
+      padding: 0.15em 0.5em;
+      border-radius: 0.3em;
+      display: inline-block; }
+    .messenger .chatbox .message-self {
+      text-align: right;
+      margin-left: 3em;
+      margin-bottom: 0.25em; }
+      .messenger .chatbox .message-self .bubble {
+        background-color: #B8D4FF; }
+    .messenger .chatbox .message-other {
+      text-align: left;
+      margin-right: 3em;
+      margin-bottom: 0.25em; }
+      .messenger .chatbox .message-other .bubble {
+        background-color: #C5B6FF; }
+  .messenger input {
+    width: 94%;
+    margin: 0.5em 3%;
+    height: 10%; }
+
+.tooltip {
+  display: inline;
+  position: relative; }
+
+.tooltip:hover:after {
+  font-size: 14px;
+  background-color: #0a0a0a;
+  position: absolute;
+  content: attr(title);
+  padding: 0.25em 0.5em;
+  border-radius: 0.25em;
+  left: 10%;
+  bottom: 2.45em;
+  z-index: 100; }
+
+.tooltip:hover:before {
+  border: solid;
+  border-color: #0a0a0a transparent;
+  border-width: 0.4em 0.3em 0;
+  bottom: 1.25em;
+  content: "";
+  left: 40%;
+  position: absolute;
+  z-index: 99; }

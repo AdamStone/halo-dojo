@@ -1,0 +1,4 @@
+node_modules
+*gitignore*
+!.gitignore
+frontend/public
