@@ -1,3 +1,5 @@
+"use strict";
+
 var db = require('../../config/database'),
     User = require('./user'),
     UUID = require('node-uuid'),
@@ -32,10 +34,10 @@ properties.forEach(function(property) {
 
 Object.defineProperty(Credentials.prototype, 'data', {
   get: function() {
-    return this._node._data['data'];
+    return this._node._data.data;
   },
   set: function(value) {
-    this._node._data['data'] = value;
+    this._node._data.data = value;
   }
 });
 
@@ -50,10 +52,12 @@ Credentials.delete = function(id, callback) {
   ].join('\n');
   
   db.queryFactory(cypher, { id: id }, function(err, result) {
-    if (err)
+    if (err) {
       return callback(err);
-    else
+    }
+    else {
       return callback(null, result);
+    }
   }).send();
 };
 
@@ -66,13 +70,15 @@ Credentials.get = function(id, callback) {
   ].join('\n');
   
   db.query(cypher, { id: id }, function(err, result) {
-    if (err)
+    if (err) {
       return callback(err);
-    if (result.length !== 1)
+    }
+    if (result.length !== 1) {
       return callback('Invalid credentials');
+    }
     
-    var token = new Credentials(result[0]['credentials']),
-        user = new User(result[0]['user']);
+    var token = new Credentials(result[0].credentials),
+        user = new User(result[0].user);
     
     // delete expired tokens
     if (token.expires < Math.round(new Date().getTime()/1000)) {
@@ -82,10 +88,12 @@ Credentials.get = function(id, callback) {
       ].join('\n');
       
       db.queryFactory(cypher, { id: token.id }, function(err, result) {
-        if (err)
+        if (err) {
           return callback(err);
-        else
+        }
+        if (result) {
           return callback('Your authentication has expired, please log in again');
+        }
       }).send();
     }
     else {
@@ -120,10 +128,12 @@ Credentials.create = function(data, callback) {
   };
   
   db.queryFactory(cypher, params, function(err, result) {
-    if (err)
-      return callback(err)
-    else
-      return callback(null, new Credentials(result[0]['credentials']));
+    if (err) {
+      return callback(err);
+    }
+    else {
+      return callback(null, new Credentials(result[0].credentials));
+    }
   }).send();
 };
 
@@ -140,19 +150,22 @@ Credentials.authenticate = function(user, callback, expires) {
       algorithm: 'sha256'
     };
     
-    if (user.code !== undefined)
+    if (user.code !== undefined) {
       data.code = user.code;
-    
-    if (expires)
+    }
+    if (expires) {
       data.expires = expires;
-    else
+    }
+    else {
       data.expires = Math.round(new Date().getTime()/1000) + TOKEN_LIFETIME;
-    
+    }
     Credentials.create(data, function(err, credentials) {
-      if (err)
+      if (err) {
         return callback(err);
-      else
+      }
+      else {
         return callback(null, credentials.data);
+      }
     });
   });
 };

@@ -1,5 +1,6 @@
+"use strict";
+
 var Hapi = require('hapi'),
-    Joi = require('joi'),
     FS = require('fs'),
     Path = require('path');
     
@@ -11,8 +12,8 @@ var schema = require('../../shared/input-validation'),
 
 var Waypoint = require('./gitignore.xbl/waypoint');
 
-var static = Path.join(__dirname, '..', '..', 'frontend', 'public');
-
+var staticPath = Path.join(__dirname, '..', '..', 
+                           'frontend', 'public');
 
 // Service Record
 var xbl = {
@@ -59,7 +60,7 @@ server.connection({
 var http = server.select('http');
 var https = server.select('https');
 
-http.path(static);
+http.path(staticPath);
 
 var engine = require('hapi-react')();
 server.views({
@@ -132,9 +133,9 @@ https.route({
 
 http.register(require('hapi-auth-hawk'), 
                 function(err) {
-  if (err)
-    return console.log(err);
-
+  if (err) {
+    return console.error(err);
+  }
   var config = {
     'auth': 'hawk'
   };

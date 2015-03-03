@@ -1,3 +1,4 @@
+/** @jsx React.DOM */
 var React = require('react');
 var ProfileActions = require('../actions/ProfileActions'),
     SharedConstants = require('../../../../shared/constants');

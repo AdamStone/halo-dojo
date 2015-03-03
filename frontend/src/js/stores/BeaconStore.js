@@ -1,5 +1,7 @@
+"use strict";
+
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
-    EventEmitter = require('events').EventEmitter;
+    EventEmitter = require('events').EventEmitter,
     merge = require('react/lib/merge');
 
 var Constants = require('../constants/Constants'),
@@ -9,11 +11,12 @@ var Constants = require('../constants/Constants'),
 var _dispatchToken;
 var _data;
 
-if (!sessionStorage._BeaconStore)
+if (!sessionStorage._BeaconStore) {
   _data = {};
-else
+}
+else {
   _data = JSON.parse(sessionStorage._BeaconStore);
-
+}
 
 
 var BeaconStore = merge(EventEmitter.prototype, {

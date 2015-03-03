@@ -1,8 +1,5 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
-    Constants = require('../constants/Constants'),
-    BeaconActions = require('../actions/BeaconActions'),
-    MessagingActions = require('../actions/MessagingActions'),
-    Socket = require('../utils/SocketAPI');
+    Constants = require('../constants/Constants');
 
 var ProfileActions = {
   

@@ -2,3 +2,4 @@ node_modules
 *gitignore*
 !.gitignore
 frontend/public
+frontend/src/css

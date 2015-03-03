@@ -1,3 +1,5 @@
+"use strict";
+
 var db = require('../../config/database'),
     UUID = require('node-uuid');
 
@@ -29,10 +31,10 @@ properties.forEach(function(property) {
 
 Object.defineProperty(User.prototype, 'data', {
   get: function() {
-    return this._node._data['data'];
+    return this._node._data.data;
   },
   set: function(value) {
-    this._node._data['data'] = value;
+    this._node._data.data = value;
   }
 });
 
@@ -52,12 +54,15 @@ User.getBy = function(property, value, callback) {
   };
   
   db.query(cypher, params, function(err, result) {
-    if (err)
+    if (err) {
       return callback(err);
-    if (!result.length)
+    }
+    if (!result.length) {
       return callback();
-    else
-      return callback(null, new User(result[0]['user']));
+    }
+    else {
+      return callback(null, new User(result[0].user));
+    }
   });
 };
 
@@ -76,10 +81,12 @@ User.create = function(data, callback) {
   };
 
   db.queryFactory(cypher, params, function(err, result) {
-    if (err)
+    if (err) {
       return callback(err);
-    else
-      return callback(null, new User(result[0]['user']));
+    }
+    else {
+      return callback(null, new User(result[0].user));
+    }
   }).send();
 };
 
@@ -98,10 +105,12 @@ User.createTemp = function(data, callback) {
   };
 
   db.queryFactory(cypher, params, function(err, result) {
-    if (err)
+    if (err) {
       return callback(err);
-    else
-      return callback(null, new User(result[0]['user']));
+    }
+    else {
+      return callback(null, new User(result[0].user));
+    }
   }).send();
 };
 
@@ -125,10 +134,12 @@ User.activate = function(id, callback) {
   };
   
   db.queryFactory(cypher, params, function(err, result) {
-    if (err)
+    if (err) {
       return callback(err);
-    else
-      return callback(null, new User(result[0]['user']));
+    }
+    else {
+      return callback(null, new User(result[0].user));
+    }
   }).send();
 };
 
@@ -147,18 +158,19 @@ User.getData = function(id, callback) {
   };
   
   db.queryFactory(cypher, params, function(err, result) {
-    if (err)
+    if (err) {
       return callback(err);
+    }
     if (result) {
       var gamertags = [];
       for (var i=0; i < result.length; i++) {
         gamertags.push(
-          new Gamertag(result[i]['gamertag']).data
+          new Gamertag(result[i].gamertag).data
         );
       }
       return callback(null, {
         gamertags: gamertags,
-        main: new Gamertag(result[0]['main']).data
+        main: new Gamertag(result[0].main).data
       });
     }
   }).send();

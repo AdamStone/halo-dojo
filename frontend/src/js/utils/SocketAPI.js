@@ -1,3 +1,5 @@
+"use strict";
+
 var Hawk = require('hawk');
 
 var _socket = null;
@@ -29,10 +31,12 @@ module.exports = {
 
     this.emit('handshake', {gamertag: gamertag}, function(err, clients) {
       if (callback) {
-        if (err) 
+        if (err) {
           return callback(err);
-        else
+        }
+        else {
           return callback(null, clients);
+        }
       }
     });
   },
@@ -43,7 +47,7 @@ module.exports = {
       _socket.io.disconnect();
       var status = this.connected();
       if (status) {
-        return callback('Disconnect failed')
+        return callback('Disconnect failed');
       }
     }
   },
@@ -52,8 +56,9 @@ module.exports = {
     if (_socket) {
       _socket.on(eventName, function() {
         var args = arguments;
-        if(callback)
+        if(callback) {
           callback.apply(_socket, args);
+        }
       });
     }
 //    else {
@@ -80,18 +85,20 @@ module.exports = {
       });
       _socket.emit(eventName, data, function() {
         var args = arguments;
-        if (callback)
+        if (callback) {
           callback.apply(_socket, args);
-
+        }
       });
     }
     else {
       var self = this;
       this.connect(function(err) {
-        if (err)
+        if (err) {
           return callback(err);
-        else
+        }
+        else {
           return self.emit(eventName, data, callback);
+        }
       });        
     }
   }

@@ -1,7 +1,8 @@
+"use strict";
+
 var Boom = require('boom'),
     Bcrypt = require('bcrypt'),
-    Nodemailer = require('nodemailer'),
-    UUID = require('node-uuid');
+    Nodemailer = require('nodemailer');
 
 var User = require('../models/user'),
     Credentials = require('../models/credentials'),
@@ -34,23 +35,23 @@ handlers.register = function(request, reply) {
       ));
     }
     // encrypt password
-    Bcrypt.hash(request.payload.password, 10, function(err, hash) {
-      if (err)
+    Bcrypt.hash(password, 10, function(err, hash) {
+      if (err) {
         return reply(Boom.badImplementation(
           'Error hashing the password in http.register.'
         ));
-
+      }
       // create new User
       User.createTemp({
         email: email,
         hash: hash
       },
       function(err, user) {
-        if (err)
+        if (err) {
           return reply(Boom.badImplementation(
             'There was an error saving user to the database.'
           ));
-
+        }
         Credentials.authenticate(user, function(err, credentials) {
           if (err) {
             return reply(Boom.badImplementation(
@@ -67,7 +68,7 @@ handlers.register = function(request, reply) {
             var options = Mailer.optionsFactory(
               user.email, code);
 
-            transport.sendMail(options, function(err, result) {
+            transport.sendMail(options, function(err) {
               if (err) {
                 console.log(err);
                 return reply(Boom.badImplementation(
@@ -133,13 +134,14 @@ handlers.login = function(request, reply) {
             'Error authenticating user in https.login'
           ));
         }
-        else
+        else {
           return reply({
             user: user.email,
             id: credentials.id,
             key: credentials.key,
             algorithm: credentials.algorithm
-          })
+          });
+        }
       });
     });
   });
@@ -165,23 +167,25 @@ handlers.activate = function(request, reply) {
         password = request.payload.password;
 
     Credentials.get(code, function(err, credentials) {
-      if (err || !credentials)
+      if (err || !credentials) {
         return reply(Boom.badRequest(
           'Authentication failed'
         ));
+      }
       else {
         var temp = new User(credentials.user);
         Bcrypt.compare(password, temp.hash, 
                        function(err, isValid) {
-          if (err || !isValid)
+          if (err || !isValid) {
             return reply(Boom.badRequest(
               'Authentication failed'
             ));
+          }
           else {
             // Convert to permanent User and authenticate
             User.activate(temp.id, function(err, user) {
               if (err) {
-                console.log(err)
+                console.error(err);
                 return reply(Boom.badImplementation(
                   'There was a problem activating your account'
                 ));
@@ -189,11 +193,12 @@ handlers.activate = function(request, reply) {
               if (user) {
                 Credentials.authenticate(user, function(
                                          err, credentials) {
-                  if (err)
+                  if (err) {
                     return reply(Boom.badImplementation(
                       'Your account was activated, but there ' + 
                       'was an error logging in'
                     ));
+                  }
                   if (credentials) {
 
                     // credentials_id, key, algorithm
@@ -203,7 +208,7 @@ handlers.activate = function(request, reply) {
                       id: credentials.id,
                       key: credentials.key,
                       algorithm: credentials.algorithm
-                    })
+                    });
                   }
                 });
               }

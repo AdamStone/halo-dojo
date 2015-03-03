@@ -1,7 +1,5 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
     Constants = require('../constants/Constants'),
-    BeaconActions = require('../actions/BeaconActions'),
-    MessagingActions = require('../actions/MessagingActions'),
     Socket = require('../utils/SocketAPI');
 
 var UserActions = {
@@ -55,7 +53,6 @@ var UserActions = {
       }
     });
   },
-  
   
   setStatus: function(status) {
     AppDispatcher.handleServerAction({

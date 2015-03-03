@@ -1,3 +1,5 @@
+"use strict";
+
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
     EventEmitter = require('events').EventEmitter,
     merge = require('react/lib/merge');
@@ -93,7 +95,7 @@ _dispatchToken = AppDispatcher.register(function(payload) {
       break;
       
     default: 
-      return true
+      return true;
   }
   sessionStorage._UserStore = JSON.stringify(_data);
   UserStore.emitChange();

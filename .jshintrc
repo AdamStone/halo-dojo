@@ -1,0 +1,6 @@
+{
+  "node": true,
+  "browserify": true,
+  "predef": ["sessionStorage", "io"],
+  "globals": ["sessionStorage", "io"]
+}

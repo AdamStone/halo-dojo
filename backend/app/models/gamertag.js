@@ -1,3 +1,5 @@
+"use strict";
+
 var db = require('../../config/database');
 
 function Gamertag(_node) {
@@ -21,10 +23,10 @@ properties.forEach(function(property) {
 
 Object.defineProperty(Gamertag.prototype, 'data', {
   get: function() {
-    return this._node._data['data'];
+    return this._node._data.data;
   },
   set: function(value) {
-    this._node._data['data'] = value;
+    this._node._data.data = value;
   }
 });
 
@@ -47,17 +49,19 @@ Gamertag.create = function(ownerId, gamertag, callback) {
   };
   
   db.queryFactory(cypher, params, function(err, result) {
-    if (err)
+    if (err) {
       return callback(err);
-    if (result)
+    }
+    if (result) {
       var gamertags = [];
       for (var i=0; i < result.length; i++) {
         gamertags.push(
-          new Gamertag(result[i]['gamertag']).data
+          new Gamertag(result[i].gamertag).data
         );
       }
       // Returns all GTs owned by user
       return callback(null, gamertags);
+    }
   }).send();
 };
 
@@ -78,10 +82,12 @@ Gamertag.setData = function(gamertag, data, callback) {
   data.gamertag = gamertag;
   console.log(data);
   db.queryFactory(cypher, params, function(err, result) {
-    if (err)
+    if (err) {
       return callback(err);
-    if (result)
-      return callback(null, new Gamertag(result[0]['gamertag']).data);
+    }
+    if (result) {
+      return callback(null, new Gamertag(result[0].gamertag).data);
+    }
   }).send();
 };
 

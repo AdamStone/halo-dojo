@@ -1,3 +1,5 @@
+"use strict";
+
 var UserActions = require('./UserActions'),
     ProfileActions = require('./ProfileActions'),
     BeaconActions = require('./BeaconActions'),
@@ -8,15 +10,16 @@ var UserActions = require('./UserActions'),
 
 var _getToken = function() {
   return UserStore.get().token;
-}
+};
 
 module.exports = {
   
   getUserData: function() {
     Server.auth.setToken(_getToken());
     Server.auth.getUserData(function(err, response) {
-      if (err)
+      if (err) {
         return console.error(err);
+      }
       if (response) {
         UserActions.updateUserData(
           JSON.parse(response.text)
@@ -28,8 +31,9 @@ module.exports = {
   getProfileData: function() {
     Server.auth.setToken(_getToken());
     Server.auth.getProfileData(function(err, response) {
-      if (err)
+      if (err) {
         return console.error(err);
+      }
       if (response) {
         console.log(response);
         ProfileActions.setProfile(
@@ -42,15 +46,15 @@ module.exports = {
   connect: function(gamertag) {
     Socket.setToken(_getToken());
     Socket.connect(gamertag, function(err, beacons) {
-      if (err)
+      if (err) {
         return console.log(err);
-
+      }
       UserActions.connect(gamertag);
 
       if (beacons) {
         console.log('Got initial beacons:');
         console.log(beacons);
-        BeaconActions.setBeacons(beacons)
+        BeaconActions.setBeacons(beacons);
       }
 
       // listen for beacon updates
@@ -65,7 +69,9 @@ module.exports = {
         console.log('message received:');
         console.log(data);
         MessagingActions.receiveMessage(data);
-        if (callback) return callback();
+        if (callback) {
+          return callback();
+        }
       });
     });
   },
@@ -73,11 +79,12 @@ module.exports = {
   setStatus: function(status) {
     Socket.setToken(_getToken());
     Socket.emit('status', status, function(err, message) {
-      if (err)
+      if (err) {
         return console.log(err);
-      if (message)
+      }
+      if (message) {
         console.log(message);
-      
+      }
       UserActions.setStatus(status);
     });
   },
@@ -89,8 +96,9 @@ module.exports = {
           recipient: gamertag,
           message: message
         }, function(err, data) {
-          if (err)
+          if (err) {
             return console.log(err);
+          }
           if (data) {
             MessagingActions.sentMessage(data);
           }

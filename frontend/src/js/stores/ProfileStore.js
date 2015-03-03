@@ -1,10 +1,10 @@
+"use strict";
+
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
     EventEmitter = require('events').EventEmitter,
     merge = require('react/lib/merge');
 
 var Constants = require('../constants/Constants'),
-    UserStore = require('../stores/UserStore'),
-    ActionCreators = require('../actions/ActionCreators'),
     Server = require('../utils/ServerAPI'),
     utils = require('../../../../shared/utils'),
     ProfileActions = require('../actions/ProfileActions');
@@ -90,7 +90,10 @@ var ProfileStore = merge(EventEmitter.prototype, {
 });
 
 _dispatchToken = AppDispatcher.register(function(payload) {
-  var action = payload.action;
+  var action = payload.action,
+      type = action.data.type,
+      title = action.data.title,
+      prev;
   
   switch (action.actionType) {
       
@@ -104,17 +107,13 @@ _dispatchToken = AppDispatcher.register(function(payload) {
       break;
       
     case Constants.Profile.PREFERENCE_TOGGLED:
-      var type = action.data.type;
-      var title = action.data.title;
-      var prev = _data[type][title];
+      prev = _data[type][title];
       _data[type][title] = ( prev === 1 ? 0 : 1 );
       _queueSave();
       break;
       
     case Constants.Profile.AVOIDANCE_TOGGLED:
-      var type = action.data.type;
-      var title = action.data.title;
-      var prev = _data[type][title];
+      prev = _data[type][title];
       _data[type][title] = ( prev === -1 ? 0 : -1 );
       _queueSave();
       break;

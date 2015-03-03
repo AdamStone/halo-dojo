@@ -1,6 +1,7 @@
+"use strict";
+
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
-    Constants = require('../constants/Constants')
-    Socket = require('../utils/SocketAPI');
+    Constants = require('../constants/Constants');
 
 var BeaconActions = {
   

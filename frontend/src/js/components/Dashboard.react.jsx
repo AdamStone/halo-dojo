@@ -1,3 +1,4 @@
+/** @jsx React.DOM */
 var React = require('react');
 var Server = require('../utils/ServerAPI'),
     UserStore = require('../stores/UserStore'),

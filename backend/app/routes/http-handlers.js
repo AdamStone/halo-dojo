@@ -1,6 +1,6 @@
-var Hapi = require('hapi'),
-    Boom = require('boom'),
-    Bcrypt = require('bcrypt'),
+"use strict";
+
+var Boom = require('boom'),
     User = require('../models/user'),
     Gamertag = require('../models/gamertag'),
     Profile = require('../models/profile');
@@ -16,16 +16,19 @@ module.exports = function(xbl) {
     
     console.log('Getting service record for gamertag ' + gamertag);
     xbl.waypoint.getServiceRecord(gamertag, function(err, result) {
-      if (err)
+      if (err) {
         return reply(err);
+      }
       if (result) {
         Gamertag.setData(gamertag, result, function(err, result) {
-          if (err)
+          if (err) {
             return reply(err);
-          if (result)
+          }
+          if (result) {
             return reply(result);
+          }
         });
-      };
+      }
     });
     
    // has played example response
@@ -65,10 +68,11 @@ module.exports = function(xbl) {
             'Gamertag is already in use'
           ));
         }
-        else
+        else {
           return reply(Boom.badImplementation(
             'An error occurred adding Gamertag'
           ));
+        }
       }
       if (result) {
         // Successfully created GT
@@ -77,16 +81,20 @@ module.exports = function(xbl) {
         // Since this may be slow or fail, don't wait to reply
         xbl.waypoint.getServiceRecord(gamertag, 
                           function(err, data) {
-          if (err)
+          if (err) {
             console.error(err);
-          if (data)
+          }
+          if (data) {
             Gamertag.setData(gamertag, data, function(err, gt) {
-              if (err)
+              if (err) {
                 console.error(err);
-              if (gt)
+              }
+              if (gt) {
                 console.log(gt);
                 // TODO get this data to client when ready
+              }
             });
+          }
         });
         
         // Result is array of all GT nodes owned by user        
@@ -101,13 +109,14 @@ module.exports = function(xbl) {
     var user = new User(request.auth.credentials.user);
     User.getData(user.id, function(err, result) {
       if (err) {
-        console.error(err)
+        console.error(err);
         return reply(Boom.badImplementation(
           'An error occurred getting user data'
         ));
       }
-      if (result)
+      if (result) {
         return reply(result);
+      }
     });
   };
   
@@ -125,8 +134,9 @@ module.exports = function(xbl) {
             "Unable to get user profile"
           ));
         }
-        if (result)
+        if (result) {
           return reply(result);
+        }
       });
     }
 
@@ -141,8 +151,9 @@ module.exports = function(xbl) {
             "An error occurred saving profile"
           ));
         }
-        else
+        if (result) {
           return reply(true);
+        }
       });
       
     }

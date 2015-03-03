@@ -1,3 +1,5 @@
+"use strict";
+
 var Request = require('superagent'),
     Hawk = require('hawk'),
     Urls = require('../../../../shared/urls');
@@ -7,10 +9,12 @@ var Request = require('superagent'),
 
 var handlerFactory = function(callback) {
   return function(err, res) {
-    if (err)
+    if (err) {
       return callback(err);
-    if (res)
+    }
+    if (res) {
       return callback(null, res);
+    }
   };
 };
 
@@ -71,7 +75,7 @@ module.exports = {
       Request
         .get(path)
         .set('Authorization', authHeader(path, 'get', _token))
-        .end(handler)
+        .end(handler);
     },
      
     saveProfile: function(data, callback) {

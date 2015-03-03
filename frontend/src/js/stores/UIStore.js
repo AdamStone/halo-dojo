@@ -1,3 +1,5 @@
+"use strict";
+
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
     EventEmitter = require('events').EventEmitter,
     merge = require('react/lib/merge');
@@ -9,13 +11,14 @@ var Constants = require('../constants/Constants'),
 var _dispatchToken;
 var _data;
 
-if (!sessionStorage._UIStore)
+if (!sessionStorage._UIStore) {
   _data = {
     overlay: null
   };
-else
+}
+else {
   _data = JSON.parse(sessionStorage._UIStore);
-
+}
 
 
 var UIStore = merge(EventEmitter.prototype, {

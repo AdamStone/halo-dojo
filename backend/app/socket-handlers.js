@@ -1,6 +1,8 @@
+"use strict";
+
 var Socket = require('socket.io'),
     Hawk = require('hawk'),
-    schema = require('../../shared/input-validation');
+    schema = require('../../shared/input-validation'),
     
     Credentials = require('./models/credentials');    
 
@@ -11,12 +13,11 @@ module.exports.attach = function(server) {
   server.start = function(callback) {
 
     this.oldStart(function() {
-      if (callback)
+      if (callback) {
         callback();
-      
-      var io = Socket.listen(server.listener);
-
-      var clients = {},
+      }
+      var io = Socket.listen(server.listener),
+          clients = {},
           beacons = {};
       
       // ========== handlers ========== //
@@ -32,7 +33,7 @@ module.exports.attach = function(server) {
         var emitBeacons = function() {
           console.log('emitting beacon update');
           io.sockets.in('beacons').emit('beacons', beacons);
-        }
+        };
         
         var deactivateBeacon = function(gamertag) {
           console.log('beacon deactivation requested by ' + gamertag);
@@ -56,25 +57,26 @@ module.exports.attach = function(server) {
         socket.on('handshake', function(data, callback) {
           console.log(data);
           schema.socket.handshake.validate(data, function(err, data) {
-            if (err && callback)
+            if (err && callback) {
               return callback(err);
-            
+            }
             Hawk.server.authenticateMessage('localhost', 8000, 'message', 
-              data.auth, Credentials.get, {}, function(err, credentials) {
+              data.auth, Credentials.get, {}, function(err) {
 
-                if (err)
+                if (err) {
                   callback(err);
+                }
 
-                var credentials = data;
-
-                if (Object.keys(credentials).length) {
-                  gamertag = credentials.gamertag;
+                if (Object.keys(data).length) {
+                  gamertag = data.gamertag;
                   console.log('Socket.io handshake from ' +
-                              credentials.gamertag);
+                              data.gamertag);
                   socket.gamertag = gamertag;
                   clients[gamertag] = socket;
                   activateBeacon(gamertag);
-                  if (callback) return callback(null, beacons);
+                  if (callback) {
+                    return callback(null, beacons);
+                  }
                 }
 
               });
@@ -84,8 +86,8 @@ module.exports.attach = function(server) {
         
         
         socket.on('status', function(data, callback) {
-          console.log('received status from ' 
-                      + socket.gamertag +': ');
+          console.log('received status from ' +
+                      socket.gamertag +': ');
           var status = data.message;
           console.log(status);
           
@@ -101,8 +103,9 @@ module.exports.attach = function(server) {
           // TODO disconnect on user logout
           if (gamertag) {
             console.log(gamertag + ' disconnected');
-            if (gamertag in beacons)
+            if (gamertag in beacons) {
               deactivateBeacon(gamertag);
+            }
             delete clients[gamertag];
           }
         });
@@ -111,17 +114,16 @@ module.exports.attach = function(server) {
         
         socket.on('message', function(data, callback) {
           schema.socket.message.validate(data, function(err, data) {
-            if (err)
+            if (err) {
               return callback(err);
-            
+            }
             Hawk.server.authenticateMessage('localhost', 8000, 'message', 
               data.auth, Credentials.get, {}, function(err, credentials) {
 
-                if (err)
+                if (err) {
                   callback(err);
-                var credentials = {
-                  gamertag: socket.gamertag
-                };
+                }
+                credentials.gamertag = socket.gamertag;
 
                 if (credentials && credentials.gamertag in clients) {
                   if (data.recipient in beacons) {
@@ -131,7 +133,7 @@ module.exports.attach = function(server) {
                       from: credentials.gamertag,
                       to: data.recipient,
                       time: Math.round(new Date().getTime()/1000)
-                    }
+                    };
 
                     clients[data.recipient].send(payload, function(err) {
                       if (err) {
@@ -141,16 +143,19 @@ module.exports.attach = function(server) {
                       callback(null, payload);
                     });
                   }
-                  else
-                    callback(data.recipient + ' is not available to chat');
+                  else {
+                    callback(data.recipient + 
+                             ' is not available to chat');
+                  }
                 }
-                else 
-                  return callback('Clients must handshake before messaging');
-
+                else {
+                  return callback(
+                    'Clients must handshake before messaging');
+                }
               });
           });  
         });        
       });
     });
   };  
-}
+};

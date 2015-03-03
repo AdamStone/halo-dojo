@@ -1,5 +1,7 @@
+"use strict";
+
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
-    EventEmitter = require('events').EventEmitter;
+    EventEmitter = require('events').EventEmitter,
     merge = require('react/lib/merge');
 
 var Constants = require('../constants/Constants'),
@@ -10,13 +12,14 @@ var _dispatchToken;
 var _data;
 
 
-if (!sessionStorage._MessagingStore)
+if (!sessionStorage._MessagingStore) {
   _data = {
 
   };
-else
+}
+else {
   _data = JSON.parse(sessionStorage._MessagingStore);
-
+}
 
 var MessagingStore = merge(EventEmitter.prototype, {
   
@@ -60,7 +63,7 @@ var updateConversation = function(gamertag, entry) {
 };
 
 
-AppDispatcher.register(function(payload) {
+_dispatchToken = AppDispatcher.register(function(payload) {
   var action = payload.action;
 
   var gamertag = action.data.gamertag;
@@ -86,7 +89,6 @@ AppDispatcher.register(function(payload) {
       break;
       
     case Constants.Messaging.CLOSED:
-      var gamertag = action.data.gamertag;
       _data[gamertag].minimized = true;
       _data[gamertag].closed = true;
       break;
