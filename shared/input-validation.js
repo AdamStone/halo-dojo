@@ -48,7 +48,7 @@ schema.socket = {
 };
 
 schema.profile = Joi.object().keys({
-  bio: Joi.string().max(500).optional(),
+  bio: Joi.string().max(500).allow('').optional(),
   games: Joi.object().optional()
 });
 
