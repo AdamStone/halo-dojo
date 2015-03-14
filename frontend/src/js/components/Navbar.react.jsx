@@ -14,28 +14,10 @@ module.exports = React.createClass({
     UIActions.showLoginOverlay();
   },
   
-  hideOverlay: function(e) {
-    UIActions.hideOverlay();
-  },
-  
   logOut: function(e) {
     UserActions.logOut();
   },
   
-  handleKeyDown: function(e) {
-    if (e.keyCode === 27) {
-      this.hideOverlay(e);
-    }
-  },
-
-  componentDidMount: function() {
-    window.addEventListener("keydown", this.handleKeyDown);
-  },  
-
-  componentWillUnmount: function() {
-    window.removeEventListener("keydown", this.handleKeyDown);
-  },
-
   render: function() {
   
     var saveStatus;

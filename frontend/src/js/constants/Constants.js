@@ -17,7 +17,8 @@ module.exports = {
   UI: keyMirror({
     SHOW_OVERLAY: null,
     OVERLAY_LOGIN: null,
-    OVERLAY_REGISTER: null
+    OVERLAY_REGISTER: null,
+    OVERLAY_MESSAGE: null
   }),
   
   Profile: keyMirror({

@@ -215,7 +215,8 @@ img.grayscale.disabled {
     margin: auto;
     padding: 5em 0;
 
-    .auth-form {
+    .overlay-content {
+      color: $content-color;
       background-color: rgba(0,0,0,.9);
       display: table-cell;
       vertical-align: middle;
