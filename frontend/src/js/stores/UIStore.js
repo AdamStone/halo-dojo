@@ -13,7 +13,7 @@ var _data;
 
 if (!sessionStorage._UIStore) {
   _data = {
-    overlay: null
+    overlay: Constants.UI.OVERLAY_MESSAGE
   };
 }
 else {

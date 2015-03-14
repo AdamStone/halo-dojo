@@ -9,16 +9,16 @@
 html, body, .wrapper, {
   height: 100%;
   margin: 0;
-  
+
   overflow: hidden;
-  
+
   font-family: 'Quicksand', sans-serif;
   font-weight: 400;
   font-size: 16px;
-  
+
 //  font-family: 'Oxygen';
 //  font-weight: 300;
-//  font-size: 18px;  
+//  font-size: 18px;
 }
 
 li {
@@ -69,12 +69,12 @@ img.grayscale.disabled {
      color: $placeholder-color;
   }
   *:-moz-placeholder { /* Firefox 18- */
-     color: $placeholder-color;  
+     color: $placeholder-color;
   }
   *::-moz-placeholder {  /* Firefox 19+ */
      color: $placeholder-color;
   }
-  *:-ms-input-placeholder {  
+  *:-ms-input-placeholder {
      color: $placeholder-color;
   }
   *[placeholder] {
@@ -87,7 +87,7 @@ img.grayscale.disabled {
   background-position: center;
   background-attachment: fixed;
 //  background-attachment: scroll;
-  background-size: cover;  
+  background-size: cover;
 }
 
 .sidebar {
@@ -107,24 +107,24 @@ img.grayscale.disabled {
     text-align: center;
     padding: .75em;
     margin: 1em;
-    
+
     h3 {
       margin: 0;
       font-size: 20px;
       font-family: 'Quicksand', sans-serif;
       font-weight: 400;
     }
-  
+
   }
 
   .live-search {
     cursor: pointer;
   }
-  
+
   .live-search:hover {
     background-color: $b75;
   }
-  
+
   .suggested h3 {
     font-size: 16px;
   }
@@ -138,29 +138,29 @@ img.grayscale.disabled {
   display: table;
   table-layout: fixed;
   z-index: 10;
-  
+
   background-color: $navbar-bgcolor;
   color: $navbar-color;
   position: fixed;
   right: 0;
   left: 0;
   top: 0;
-  
+
   .logo {
     vertical-align: top;
     height: 1.25em;
     margin-right: 0.35em;
   }
-  
+
   .brandname {
     vertical-align: bottom;
   }
-  
+
   ul {
     display: table-row;
     width: 100%;
     height: 100%;
-    
+
     li {
       cursor: pointer;
       display: table-cell;
@@ -168,21 +168,21 @@ img.grayscale.disabled {
       text-align: center;
       vertical-align: middle;
     }
-    
+
     li:hover {
       background-color: $w05;
     }
-    
+
     li.indicator {
       width: 3em;
     }
-    
+
     .brand {
       width: 10em;
       text-align: left;
       padding-left: 0.5em;
     }
-    
+
     .spacer {
       width: auto;
       cursor: default;
@@ -190,7 +190,7 @@ img.grayscale.disabled {
     .spacer:hover {
       background-color: rgba(0,0,0,0);
     }
-    
+
     .user-widget-slot {
       width: $widget-width;
       background-color: $widget-bgcolor;
@@ -206,9 +206,19 @@ img.grayscale.disabled {
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(0,0,0,.5);
+  background-color: rgba(0,0,0,.75);
   z-index: 9999;
-  
+
+  .dismiss-button {
+    margin-top: 1.5em;
+    padding: 1em;
+    background-color: rgba(13,15,15,1);
+  }
+
+  .dismiss-button:hover {
+    background-color: rgba(15,20,20,1);
+  }
+
   .window {
     display: table;
     height: 100%;
@@ -220,6 +230,7 @@ img.grayscale.disabled {
       background-color: rgba(0,0,0,.9);
       display: table-cell;
       vertical-align: middle;
+      text-align: center;
       width: 30em;
       padding: 0 5em;
     }
@@ -231,7 +242,7 @@ img.grayscale.disabled {
   margin: auto;
   padding: 1em;
   text-align: center;
-  
+
   input {
     text-align: center;
     border: none;
@@ -241,11 +252,11 @@ img.grayscale.disabled {
     font-size: 16px;
     border-radius: 3px;
   }
-  
+
   input[type="submit"] {
     width: 50%;
   }
-  
+
   .hint {
     color: #fff;
     font-size: 21px;
@@ -259,7 +270,7 @@ img.grayscale.disabled {
   right: 0;
   left: 0;
   bottom: 0;
-  cursor: default; 
+  cursor: default;
 }
 
 .landing-page {
@@ -317,36 +328,36 @@ img.grayscale.disabled {
       font-family: Oxygen, sans-serif;
       letter-spacing: 0.05em;
     }
-    
+
     a {
       font-size: 23px;
     }
-    
+
     a:hover {
       color: #fff;
-      text-decoration: underline;      
+      text-decoration: underline;
     }
   }
-  
+
   .dark {
     color: $content-color;
-    background-color: rgba(5, 6, 10, 0.9);  
-    
+    background-color: rgba(5, 6, 10, 0.9);
+
   }
-  
+
   .light {
     background-color: rgba(157, 210, 249, 0.65);
-    
+
     a {
       color: #000;
     }
   }
-  
+
   .logo {
     width: 3em;
     margin-top: 2em;
-  }  
-  
+  }
+
 }
 
 
@@ -385,7 +396,7 @@ img.grayscale.disabled {
   width: 100.1%;
   table-layout: fixed;
   height: 5em;
-  
+
 //    padding: 1em;
   background-color: $tile-bgcolor;
 //  text-align: left;
@@ -397,17 +408,17 @@ img.grayscale.disabled {
     vertical-align: middle;
     margin-left: 1.5em;
   }
-  
+
   h1 {
     display: inline-block;
     vertical-align: middle;
   }
-  
+
   h1, h2, h3 {
     font-weight: 300;
     margin: 0;
   }
-  
+
 }
 
 .profile {
@@ -420,15 +431,15 @@ img.grayscale.disabled {
 //  right: 0;
 //  bottom: 0;
 //  background-color: $b25;
-  
+
   td {
     vertical-align: top;
   }
-  
+
   td.fixed-width {
     width: $bio-width + 2em;
   }
-  
+
   .bio {
     width: $bio-width;
 //    min-height: 20em;
@@ -438,7 +449,7 @@ img.grayscale.disabled {
     bottom: 0;
     font-size: 16px;
     margin: 1em;
-    
+
     textarea {
       position: absolute;
       top: 0;
@@ -455,7 +466,7 @@ img.grayscale.disabled {
       border: none;
     }
   }
-  
+
   .preferences {
 //    position: relative;
 //    top: 0;
@@ -464,26 +475,26 @@ img.grayscale.disabled {
     text-align: center;
 //    background-color: rgba(0,0,255,0.5);
     padding: 0 1em 1em 0;
-    
+
     h1, h2, h3 {
       font-weight: 300;
       margin: 0;
       margin-bottom: 0.5em;
       color: $content-color;
     }
-    
+
     .tile {
       background-color: $b50;
       padding: .5em;
       margin-top: 1em;
     }
-    
+
     .icon {
       height: 3.5em;
       cursor: pointer;
     }
   }
-  
+
 }
 
 
@@ -525,12 +536,12 @@ a {
 }
 
 .set-status {
- 
+
   display: table;
   width: 100%;
   height: 100%;
   margin-left: 1px;
-  
+
   input {
     display: table-cell;
     position: absolute;
@@ -543,7 +554,7 @@ a {
     background-color: $set-status-bgcolor;
     color: $set-status-color;
   }
-  
+
   .btn-submit {
     display: table-cell;
     padding: 0.25em;
@@ -551,23 +562,23 @@ a {
     cursor: pointer;
     width: 20%;
     vertical-align: middle;
-  }  
+  }
 }
 
 .beacon-list {
   margin: 0;
-  
+
   position: fixed;
   top: $navbar-height;
   bottom: $messagebar-height;
   left: 0;
   right: $sidebar-width;
-  
+
   padding: 1em 1em 0 1em;
   overflow-y: scroll;
   margin-right: -200%;
   padding-right: 200%;
-  
+
 }
 
 .beacon-tile {
@@ -577,31 +588,31 @@ a {
 //  box-shadow: $shadow;
   border-radius: 2px;
   cursor: default;
-  
+
   .gamertag {
     font-family: 'Oxygen', sans-serif;
     letter-spacing: .1em;
     font-size: 18px;
   }
-  
+
   .idle-dot-cell {
-   
+
     width: 1em;
     text-align: center;
     vertical-align: top;
-  
+
     .idle-dot {
       width: 0.4em;
       height: 0.4em;
     }
   }
-  
+
   .time {
     width: 2.7em;
     text-align: center;
     color: $beacon-status-color;
   }
-  
+
   .status {
     font-family: 'Oxygen', sans-serif;
     font-size: 15px;
@@ -614,34 +625,34 @@ a {
     border-radius: 2px;
     box-shadow: $shadow-white;
   }
-  
+
   .table-spacer {
     width: 5%;
   }
-  
+
   .invite-button {
 //    padding: 0.25em;
     color: #eee;
     width: 10%;
     font-size: 24px;
   }
-  
+
   .invite-button:hover {
     background-color: $b50;
-    cursor: pointer; 
+    cursor: pointer;
   }
-  
+
   .message-toggle {
-    
+
     margin-top: .75em;
     height: 2em;
-    
+
     .textarea-sizer {
       display: table-cell;
       height: 100%;
       width: $beacon-status-width;
       position: relative;
-    
+
       .message-input {
         position: absolute;
         top: 0;
@@ -656,12 +667,12 @@ a {
         border-radius: 2px;
         color: $beacon-status-color;
       }
-      
+
 //      input {
 //        color: #0cf;
 //      }
     }
-    
+
     .message-send {
       display: table-cell;
       height: 100%;
@@ -696,12 +707,12 @@ a {
   left: 0;
   right: $sidebar-width;
 //  box-shadow: 0 0 3em $w15;
-  
+
   .messagebar-align {
     position: absolute;
     right: 0;
   }
-  
+
   .message-widget {
     display: table-cell;
     height: 100%;
@@ -710,10 +721,10 @@ a {
     font-family: 'Oxygen', sans-serif;
     font-size: 14px;
     position: relative;
-    
-    
+
+
     .toggle-button {
-      padding: .25em .5em; 
+      padding: .25em .5em;
       width: $messenger-toggle-width;
       white-space: nowrap;
       overflow: hidden;
@@ -723,7 +734,7 @@ a {
       cursor: pointer;
       background-color: $w10;
     }
-    
+
     .expanded {
       width: $messenger-width;
     }
@@ -752,18 +763,18 @@ a {
     top: .3em;
     right: 3%;
   }
-  
+
   .minimize {
 //    right: 1.5em;
     padding-top: .3em;
     right: auto;
     left: 3%;
   }
-  
+
   .minimize:hover, .close:hover {
     background-color: $w50;
   }
-  
+
   .chatbox {
     background-color: $w75;
     height: 75%;
@@ -771,41 +782,41 @@ a {
     margin: 1.6em auto 0;
     padding: .2em;
     overflow-y: scroll;
-    
+
 
     .bubble {
       padding: .15em .5em;
       border-radius: .3em;
       display: inline-block;
-    }        
-    
+    }
+
     .message-self {
       text-align: right;
       margin-left: 3em;
       margin-bottom: .25em;
-      
+
       .bubble {
         background-color: #B8D4FF;
       }
     }
-    
+
     .message-other {
       text-align: left;
       margin-right: 3em;
       margin-bottom: .25em;
-      
+
       .bubble {
         background-color: #C5B6FF;
-      }      
+      }
     }
   }
-  
+
   input {
     width: 94%;
     margin: .5em 3%;
     height: 10%;
   }
-  
+
 }
 
 
@@ -824,7 +835,7 @@ a {
   left: 10%;
   bottom: 2.45em;
   z-index: 100;
-  
+
 }
 
 .tooltip:hover:before{
@@ -848,10 +859,10 @@ a {
 //.overflow-wrapper {
 //  width: 100%;
 //  overflow: hidden;
-//  position: absolute;  
+//  position: absolute;
 //}
 //
-// 
+//
 
 //
 //.dojo-content {
@@ -866,19 +877,19 @@ a {
 //  background-attachment: fixed;
 ////  background-attachment: scroll;
 //  background-size: cover;
-//  
+//
 //  width: $overflow-width;
 //  display: table;
 //  table-layout: fixed;
 ////  margin-left: -100%;
 ////  margin-left: -200%;
-//} 
+//}
 //
 //.row-wrapper {
 //  display: table-row;
 //}
 //
-//.scroller { 
+//.scroller {
 //  background-color: rgba(0,0,0,.1);
 //  box-sizing: content-box;
 //  overflow-y: scroll;
@@ -895,12 +906,12 @@ a {
 //  right: 0;
 //  bottom: 0;
 //  background-color: $scrollbar-background;
-//  
+//
 //  .scrollhandle {
 //    background-color: $scrollbar-background;
 //    height: 20%;
 //  }
-//  
+//
 //}
 //
 //.profile {
@@ -911,16 +922,16 @@ a {
 //  width: $content-width;
 //  display: table-cell;
 //  height: 100%;
-//  
+//
 //  .bio {
 //    .textarea {
 //      color: #ddd;
-//      
+//
 //      box-shadow: 0 0 5px rgba(255,255,255,.1);
 //      background-color: rgba(0,0,0,0.5);
 //      border-radius: 0.25em;
-//      cursor: default;      
-//      
+//      cursor: default;
+//
 //      padding: .75em;
 //      font-family: 'Oxygen', sans-serif;
 //      font-weight: 400;
@@ -931,18 +942,18 @@ a {
 //    }
 //
 //  }
-//  
+//
 //  .dojo-icon {
 //    height: 3.5em;
 //  }
-//  
+//
 //}
 //
 //
 //.view {
 //  display: table-cell;
 //  width: $content-width;
-//  height: 100%;  
+//  height: 100%;
 //}
 //
 //
@@ -952,16 +963,16 @@ a {
 //  background-color: $scrollview-background;
 //  display: table;
 //  width: 100%;
-//  height: 100%;  
-//  
+//  height: 100%;
+//
 //  .header {
 //    background-color: rgba(0,0,0,.25);
 //    margin: -0.75em;
 //    margin-bottom: .75em;
 //    padding: 0.5em;
-//    
+//
 //  }
-//    
+//
 //  .tile-row {
 //    margin-bottom: .5em;
 //  }
@@ -986,7 +997,7 @@ a {
 //  padding: 0.25em;
 //  font-size: 25px;
 //  position: relative;
-//  
+//
 //  .beacon-svg {
 //    width: 100%;
 //  }
@@ -1016,7 +1027,7 @@ a {
 //
 //.tile:hover {
 //  background-color: $tile-background-hover;
-//  
+//
 //  .unknown {
 //    color: #666;
 //  }
@@ -1028,7 +1039,7 @@ a {
 //
 //
 //.player-tile {
-//  
+//
 //  .comparison {
 ////    padding-top: 1em;
 //    display: table-cell;
@@ -1043,7 +1054,7 @@ a {
 //    border-radius: 0.25em;
 //    cursor: default;
 //  }
-//  
+//
 //  .dojo-icon {
 //    height: 2.25em;
 //  }
@@ -1124,7 +1135,7 @@ a {
 //
 //
 //
-//.rank {  
+//.rank {
 //  width: 2em;
 //  height: 2em;
 //  margin-right: -0.33em;

@@ -5,6 +5,12 @@ var Server = require('../utils/ServerAPI'),
 
 module.exports = React.createClass({
 
+  getDefaultProps: function() {
+    return {
+      focus: "false"
+    }
+  },
+
   getInitialState: function() {
     return {
       message: null,
@@ -65,7 +71,7 @@ module.exports = React.createClass({
 
 
   componentDidMount: function() {
-    if (this.props.focus)
+    if (this.props.focus ==="true")
       this.refs.emailInput.getDOMNode().focus();
   },
 
