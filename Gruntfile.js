@@ -43,7 +43,10 @@ module.exports = function(grunt) {
     
     browserify: {
       build: {
-        src: ['frontend/src/**/*.jsx', 'frontend/src/**/*.jsx'],
+        src: ['frontend/src/**/*.js',
+              'frontend/src/**/*.jsx',
+              '!frontend/src/**/__tests__/*.js',
+              '!frontend/src/**/__tests__/*.jsx'],
         dest: 'frontend/public/bundle.js',
         options: {
           transform: [ require('grunt-react').browserify ]
@@ -75,7 +78,10 @@ module.exports = function(grunt) {
       },
       
       js: {
-        files: ['frontend/src/**/*.js','frontend/src/**/*.jsx'],
+        files: ['frontend/src/**/*.js',
+                'frontend/src/**/*.jsx',
+                '!frontend/src/**/__tests__/*.js',
+                '!frontend/src/**/__tests__/*.jsx'],
         tasks: 'browserify'
       },
       

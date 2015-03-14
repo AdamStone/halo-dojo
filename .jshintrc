@@ -1,6 +1,7 @@
 {
   "node": true,
+  "jsx": true,
   "browserify": true,
-  "predef": ["sessionStorage", "io"],
-  "globals": ["sessionStorage", "io"]
+  "predef": ["sessionStorage", "io", "jest", "describe", "it", "expect"],
+  "globals": ["sessionStorage", "io", "jest", "describe", "it", "expect"]
 }

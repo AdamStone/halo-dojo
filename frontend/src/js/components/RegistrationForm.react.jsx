@@ -27,8 +27,6 @@ module.exports = React.createClass({
 
   register: function(e) {
     e.preventDefault();
-    //var email = this.refs.emailInput.getDOMNode().value;
-    //var password = this.refs.passwordInput.getDOMNode().value;
 
     Server.submitRegistration(this.state.email, this.state.password,
                                                 function(err, res) {
@@ -37,8 +35,9 @@ module.exports = React.createClass({
         // no response
         message = err.message;
         if (message === 'Origin is not allowed by ' + 
-                        'Access-Control-Allow-Origin')
+                        'Access-Control-Allow-Origin') {
           message = 'Unable to contact authentication server.';
+        }
       }
       if (res) { 
         // got response (but could be rejection)
@@ -80,7 +79,8 @@ module.exports = React.createClass({
           <input style={{"display": "none"}} type="password"/>
 
           <input type="email" 
-                 name="email" 
+                 name="email"
+                 className="email-input"
                  placeholder="Enter your email"
                  value={this.state.email}
                  onChange={this.emailChanged}
@@ -89,12 +89,14 @@ module.exports = React.createClass({
 
           <input type="password"
                  name="password"
+                 className="password-input"
                  placeholder="Create a password"
                  value={this.state.password}
                  onChange={this.passwordChanged}
                  autoComplete="off"/>
 
           <input type="submit"
+                 className="submit-input"
                  value="Register"
                  style={{'cursor': 'pointer'}}/>
         </form>
