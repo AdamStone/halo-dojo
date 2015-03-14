@@ -11,8 +11,9 @@
   },
   "jest": {
     "testFileExtensions": ["js", "jsx"],
+    "testPathDirs": ["./frontend/src/js"],
     "scriptPreprocessor": "./preprocessor.js",
-    "unmockedModulePathPatterns": ["react", "react/addons", "superagent"]
+    "unmockedModulePathPatterns": ["node_modules"]
   },
   "devDependencies": {
     "grunt": "^0.4.5",
