@@ -11,7 +11,7 @@
   },
   "jest": {
     "testFileExtensions": ["js", "jsx"],
-    "testPathDirs": ["./frontend/src/js"],
+    "testPathDirs": ["./frontend/src/js", "./backend/app"],
     "scriptPreprocessor": "./preprocessor.js",
     "unmockedModulePathPatterns": ["node_modules"]
   },

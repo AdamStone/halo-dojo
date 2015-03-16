@@ -7,8 +7,8 @@ var Boom = require('boom'),
 var User = require('../models/user'),
     Credentials = require('../models/credentials'),
     Mailer = require('../../config/gitignore.mailer.js');
-    
-    
+
+
 var handlers = {};
 
 // REGISTER
@@ -17,7 +17,7 @@ handlers.register = function(request, reply) {
   if (request.method === 'options') {
     return reply();
   }
-  
+
   var email = request.payload.email,
       password = request.payload.password;
 
@@ -30,7 +30,7 @@ handlers.register = function(request, reply) {
       ));
     }
     if (user) {
-      return reply(Boom.conflict('Email ' + email + 
+      return reply(Boom.conflict('Email ' + email +
           ' is already associated with a Halo Dojo account.'
       ));
     }
@@ -55,7 +55,7 @@ handlers.register = function(request, reply) {
         Credentials.authenticate(user, function(err, credentials) {
           if (err) {
             return reply(Boom.badImplementation(
-              'Error calling Credentials.authenticate ' + 
+              'Error calling Credentials.authenticate ' +
               'in http.register'
             ));
           }
@@ -72,11 +72,11 @@ handlers.register = function(request, reply) {
               if (err) {
                 console.log(err);
                 return reply(Boom.badImplementation(
-                  'There was an error sending a validation email'
+                  'There was an error sending confirmation email'
                 ));
               }
               else {
-                return reply('A confirmation email has been ' + 
+                return reply('A confirmation email has been ' +
           'sent to ' + user.email);
               }
             });
@@ -92,7 +92,7 @@ handlers.register = function(request, reply) {
 
 // LOGIN
 handlers.login = function(request, reply) {
-  
+
   if (request.method === 'options') {
     return reply();
   }
@@ -104,7 +104,7 @@ handlers.login = function(request, reply) {
     if (err) {
       console.log(err);
       return reply(Boom.badImplementation(
-        'Error calling User.getBy("email") ' + 
+        'Error calling User.getBy("email") ' +
         'in https.login'
       ));
     }
@@ -114,7 +114,7 @@ handlers.login = function(request, reply) {
       ));
     }
 
-    Bcrypt.compare(password, user.hash, 
+    Bcrypt.compare(password, user.hash,
                    function(err, isValid) {
       if (err) {
         return reply(Boom.badImplementation(
@@ -127,7 +127,7 @@ handlers.login = function(request, reply) {
         ));
       }
 
-      Credentials.authenticate(user, 
+      Credentials.authenticate(user,
                   function(err, credentials) {
         if (err) {
           return reply(Boom.badImplementation(
@@ -151,7 +151,7 @@ handlers.login = function(request, reply) {
 
 // ACTIVATE
 handlers.activate = function(request, reply) {
-  
+
   if (request.method === 'options') {
     return reply();
   }
@@ -174,7 +174,7 @@ handlers.activate = function(request, reply) {
       }
       else {
         var temp = new User(credentials.user);
-        Bcrypt.compare(password, temp.hash, 
+        Bcrypt.compare(password, temp.hash,
                        function(err, isValid) {
           if (err || !isValid) {
             return reply(Boom.badRequest(
@@ -195,7 +195,7 @@ handlers.activate = function(request, reply) {
                                          err, credentials) {
                   if (err) {
                     return reply(Boom.badImplementation(
-                      'Your account was activated, but there ' + 
+                      'Your account was activated, but there ' +
                       'was an error logging in'
                     ));
                   }
