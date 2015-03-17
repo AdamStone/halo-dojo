@@ -1,25 +1,34 @@
+"use strict";
+
 jest.dontMock('../https-handlers');
 
-var register, request, reply, User;
+var register, request, reply, User, Credentials;
 
 describe('register', function() {
 
   beforeEach(function() {
     register = require('../https-handlers').register;
     User = require('../../models/user');
+    Credentials = require('../../models/credentials');
+
+    // simulate email available as default
+    User.getBy.mockImpl(function(property, value, callback) {
+      callback(null, null);
+    });
+
+    // simulate successful createTemp by default
+    User.createTemp.mockImpl(function(login, callback) {
+      return callback(null, {email: 'user@example.com'});
+    });
+
     request = {
       payload: {
         email: 'email@example.com',
         password: 'password'
       }
     };
-    reply = jest.genMockFn();
 
-    // simulate email available
-    User.getBy.mockImplementation(
-      function(property, value, callback) {
-        callback(null, null);
-      });
+    reply = jest.genMockFn();
   });
 
 
@@ -39,10 +48,9 @@ describe('register', function() {
   it('Booms if email already in use', function() {
 
     // simulate email unavailable
-    User.getBy.mockImplementation(
-      function(property, value, callback) {
-        callback(null, 'foundUser');
-      });
+    User.getBy.mockImpl(function(property, value, callback) {
+      callback(null, 'foundUser');
+    });
 
     register(request, reply);
 
@@ -65,7 +73,8 @@ describe('register', function() {
     // checks after waitFor returns truthy
     runs(function() {
       expect(User.createTemp.mock.calls[0][0].email).toBeDefined();
-      expect(User.createTemp.mock.calls[0][0].hash).toBeDefined();
+      expect(User.createTemp.mock.calls[0][0].hash)
+        .toBeDefined();
     });
   });
 
@@ -73,12 +82,39 @@ describe('register', function() {
 
   it('authenticates tempUser', function() {
 
+    register(request, reply);
+
+    waitsFor(function() {
+      return Credentials.authenticate.mock.calls.length;
+    }, 1000);
+
+    runs(function () {
+      expect(Credentials.authenticate.mock.calls[0][0])
+        .toEqual({email: 'user@example.com'});
+    });
   });
 
 
 
   it('sends confirmation email', function() {
 
+    var transport = require('nodemailer').createTransport();
+
+    Credentials.authenticate.mockImpl(function(user, callback) {
+      return callback(null, {id: 'uuid'});
+    });
+
+    register(request, reply);
+
+    waitsFor(function() {
+      return transport.sendMail.mock.calls.length;
+    }, 1000);
+
+    runs(function () {
+      expect(transport.sendMail).toBeCalled();
+      expect(reply.mock.calls[0][0].isBoom)
+        .toBeUndefined();
+    });
   });
 
 });

@@ -24,7 +24,6 @@ handlers.register = function(request, reply) {
   // check if email is in use
   User.getBy('email', email, function(err, user) {
     if (err) {
-//      console.log(err);
       return reply(Boom.badImplementation(
         'Error calling User.getBy("email") in http.register.'
       ));
@@ -60,8 +59,6 @@ handlers.register = function(request, reply) {
             ));
           }
           else {
-//              console.log(credentials);
-
             var transport = Nodemailer.createTransport(Mailer.smtp);
 //              var code = Base64.encode(Buffer(UUID.v4()));
             var code = credentials.id;
