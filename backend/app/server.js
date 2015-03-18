@@ -3,7 +3,7 @@
 var Hapi = require('hapi'),
     FS = require('fs'),
     Path = require('path');
-    
+
 var schema = require('../../shared/input-validation'),
     utils = require('../../shared/utils'),
     SocketHandlers = require('./socket-handlers'),
@@ -12,7 +12,7 @@ var schema = require('../../shared/input-validation'),
 
 var Waypoint = require('./gitignore.xbl/waypoint');
 
-var staticPath = Path.join(__dirname, '..', '..', 
+var staticPath = Path.join(__dirname, '..', '..',
                            'frontend', 'public');
 
 // Service Record
@@ -39,7 +39,7 @@ server.connection({
   labels: ['http']
 });
 
-server.connection({ 
+server.connection({
   host: Urls.https.hostname,
   port: Urls.https.port,
   tls: {
@@ -60,7 +60,7 @@ server.connection({
 var http = server.select('http');
 var https = server.select('https');
 
-http.path(staticPath);
+server.path(staticPath);
 
 var engine = require('hapi-react')();
 server.views({
@@ -98,7 +98,10 @@ https.route({
       }
     }
   },
-  handler: handlers.https.activate
+  handler: function(request, reply) {
+    return reply.file(Path.join(staticPath, 'index.html'));
+  }
+//  handler: handlers.https.activate
 });
 
 https.route({
@@ -120,6 +123,14 @@ https.route({
 
 // PUBLIC ROUTES
 
+//server.route({
+//  method: 'GET',
+//  path: '/testpath',
+//  handler: function(request, reply) {
+//    return reply.file(Path.join(staticPath, 'index.html'));
+//  }
+//});
+
 // test
 //server.route({
 //  method: 'GET',
@@ -131,7 +142,7 @@ https.route({
 
 // AUTHENTICATED ROUTES
 
-http.register(require('hapi-auth-hawk'), 
+http.register(require('hapi-auth-hawk'),
                 function(err) {
   if (err) {
     return console.error(err);
@@ -139,12 +150,12 @@ http.register(require('hapi-auth-hawk'),
   var config = {
     'auth': 'hawk'
   };
-  
+
   http.auth.strategy('hawk', 'hawk', {
-    getCredentialsFunc: Credentials.get 
+    getCredentialsFunc: Credentials.get
   });
 
-  
+
   http.route({
     method: 'POST',
     path: '/addgt',
@@ -164,7 +175,7 @@ http.register(require('hapi-auth-hawk'),
     config: config,
     handler: handlers.http.profile
   });
-  
+
   http.route({
     method: 'PUT',
     path: '/profile',
@@ -175,17 +186,17 @@ http.register(require('hapi-auth-hawk'),
     }),
     handler: handlers.http.profile
   });
-  
+
   http.route({
     method: 'GET',
     path: '/userdata',
     config: config,
     handler: handlers.http.getUserData
   });
-  
+
   // Connect WebSockets
   SocketHandlers.attach(server);
 
   module.exports = server;
-  
+
 });

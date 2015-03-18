@@ -3,8 +3,8 @@
 var Socket = require('socket.io'),
     Hawk = require('hawk'),
     schema = require('../../shared/input-validation'),
-    
-    Credentials = require('./models/credentials');    
+
+    Credentials = require('./models/credentials');
 
 
 module.exports.attach = function(server) {
@@ -19,29 +19,29 @@ module.exports.attach = function(server) {
       var io = Socket.listen(server.listener),
           clients = {},
           beacons = {};
-      
+
       // ========== handlers ========== //
-      
+
       io.on('connection', function(socket) {
-        
+
         console.log('socket connected');
-        
+
         var gamertag;
-        
+
         // ============== methods ============== //
-        
+
         var emitBeacons = function() {
           console.log('emitting beacon update');
           io.sockets.in('beacons').emit('beacons', beacons);
         };
-        
+
         var deactivateBeacon = function(gamertag) {
           console.log('beacon deactivation requested by ' + gamertag);
           socket.leave('beacons');
           delete beacons[gamertag];
           emitBeacons();
         };
-        
+
         var activateBeacon = function(gamertag) {
           console.log('beacon activation requested by ' + gamertag);
           socket.join('beacons');
@@ -51,16 +51,16 @@ module.exports.attach = function(server) {
           };
           emitBeacons();
         };
-        
+
         // =============== event handlers =============== //
-        
+
         socket.on('handshake', function(data, callback) {
           console.log(data);
           schema.socket.handshake.validate(data, function(err, data) {
             if (err && callback) {
               return callback(err);
             }
-            Hawk.server.authenticateMessage('localhost', 8000, 'message', 
+            Hawk.server.authenticateMessage('localhost', 8000, 'message',
               data.auth, Credentials.get, {}, function(err) {
 
                 if (err) {
@@ -82,23 +82,23 @@ module.exports.attach = function(server) {
               });
           });
         });
-        
-        
-        
+
+
+
         socket.on('status', function(data, callback) {
           console.log('received status from ' +
                       socket.gamertag +': ');
           var status = data.message;
           console.log(status);
-          
+
           beacons[socket.gamertag].status = status;
           emitBeacons();
-          
+
           callback(null, 'Status received');
         });
-        
-        
-        
+
+
+
         socket.on('disconnect', function() {
           // TODO disconnect on user logout
           if (gamertag) {
@@ -109,15 +109,15 @@ module.exports.attach = function(server) {
             delete clients[gamertag];
           }
         });
-        
-        
-        
+
+
+
         socket.on('message', function(data, callback) {
           schema.socket.message.validate(data, function(err, data) {
             if (err) {
               return callback(err);
             }
-            Hawk.server.authenticateMessage('localhost', 8000, 'message', 
+            Hawk.server.authenticateMessage('localhost', 8000, 'message',
               data.auth, Credentials.get, {}, function(err, credentials) {
 
                 if (err) {
@@ -144,7 +144,7 @@ module.exports.attach = function(server) {
                     });
                   }
                   else {
-                    callback(data.recipient + 
+                    callback(data.recipient +
                              ' is not available to chat');
                   }
                 }
@@ -153,9 +153,9 @@ module.exports.attach = function(server) {
                     'Clients must handshake before messaging');
                 }
               });
-          });  
-        });        
+          });
+        });
       });
     });
-  };  
+  };
 };
