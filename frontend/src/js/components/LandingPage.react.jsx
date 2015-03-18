@@ -1,13 +1,13 @@
 /** @jsx React.DOM */
 var React = require('react');
-var RegistrationForm = require('./RegistrationForm.react.jsx');
+var AuthForm = require('./AuthForm.react.jsx');
 
 module.exports = React.createClass({
 
   render: function() {
     return (
         <div className="landing-page selectable">
-        
+
           <div className="landing-title unselectable">
             <h1>The Halo Dojo</h1>
           </div>
@@ -26,7 +26,7 @@ module.exports = React.createClass({
             <p>When you're ready to play, find teammates on-the-fly by joining the real-time lobby. Invite players to team up through the built-in instant messaging system, or just set your status message, start playing, and wait for someone to message you. The lobby dynamically updates as users connect and disconnect, so it's always up-to-date.</p>
             <p><a href="">Learn more</a></p>
           </div>
-          
+
           <div className="landing-section light">
             <h3>Find your dream team</h3>
             <p>The teammate recommendation system helps connect you with the most compatible teammates in the userbase by identifying similarities in skill ranks, game history, communication preferences, playstyle and more.</p>
@@ -36,7 +36,7 @@ module.exports = React.createClass({
           <div className="landing-section dark">
             <h3>Suit up</h3>
             <p>Let's make the solo queue obsolete</p>
-            <RegistrationForm/>
+            <AuthForm action="register" autocomplete="off"/>
             <img className="logo"
                  src="/images/svg/dojo.svg" />
           </div>

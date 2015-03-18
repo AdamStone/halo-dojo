@@ -1,6 +1,10 @@
-jest.dontMock('../RegistrationForm.react.jsx');
+// TODO move API call logic into ActionCreators test
+// and just test that component calls ActionCreators
 
-var React, TestUtils, RegistrationForm, Server,
+jest.dontMock('../AuthForm.react.jsx');
+jest.dontMock('../../actions/ActionCreators');
+
+var React, TestUtils, RegistrationForm, Server, UserStore,
     form, emailInput, passwordInput, submitInput;
 
 describe('RegistrationForm', function() {
@@ -8,13 +12,13 @@ describe('RegistrationForm', function() {
   beforeEach(function() {
     React = require('react/addons'),
     TestUtils = React.addons.TestUtils,
-    Component = require('../RegistrationForm.react.jsx');
-    Server = require('../../utils/ServerAPI'),
-    
+    Component = require('../AuthForm.react.jsx'),
+    Server = require('../../utils/ServerAPI');
+
     RegistrationForm = TestUtils.renderIntoDocument(
-      <Component/>
+      <Component action="register"/>
     );
-    
+
     emailInput = TestUtils.findRenderedDOMComponentWithClass(
                       RegistrationForm, 'email-input');
     passwordInput = TestUtils.findRenderedDOMComponentWithClass(
@@ -22,8 +26,8 @@ describe('RegistrationForm', function() {
     form = TestUtils.findRenderedDOMComponentWithTag(
                       RegistrationForm, 'form');
   });
-  
-  
+
+
 
   it('accepts user inputs of email and password', function() {
 
@@ -31,8 +35,8 @@ describe('RegistrationForm', function() {
     expect(emailInput.getDOMNode().value)
           .toBe('');
     expect(passwordInput.getDOMNode().value)
-          .toBe('');  
-  
+          .toBe('');
+
     // Enter email and password
     TestUtils.Simulate.change(emailInput, {
       target: {
@@ -44,18 +48,18 @@ describe('RegistrationForm', function() {
         value: 'password'
       }
     });
-    
+
     // Expect input fields reflect change
     expect(emailInput.getDOMNode().value)
           .toBe('email');
     expect(passwordInput.getDOMNode().value)
           .toBe('password');
   });
-  
-  
-  
+
+
+
   it('calls server API with form data', function() {
-    
+
     // Enter valid email and password
     TestUtils.Simulate.change(emailInput, {
       target: {
@@ -67,10 +71,10 @@ describe('RegistrationForm', function() {
         value: 'password'
       }
     });
-    
+
     // Submit form
     TestUtils.Simulate.submit(form);
-    
+
     // Expect server API to be called
     expect(Server.submitRegistration.mock.calls.length)
           .toBe(1);
@@ -79,5 +83,5 @@ describe('RegistrationForm', function() {
     expect(Server.submitRegistration.mock.calls[0][1])
           .toBe('password');
   });
-  
+
 });

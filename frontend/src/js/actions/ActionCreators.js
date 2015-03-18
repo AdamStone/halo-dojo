@@ -1,6 +1,7 @@
 "use strict";
 
 var UserActions = require('./UserActions'),
+    UIActions = require('./UIActions'),
     ProfileActions = require('./ProfileActions'),
     BeaconActions = require('./BeaconActions'),
     MessagingActions = require('./MessagingActions'),
@@ -13,7 +14,80 @@ var _getToken = function() {
 };
 
 module.exports = {
-  
+
+  register: function(email, password) {
+
+    Server.submitRegistration(email, password, function(err, res) {
+      var message;
+      if (err) {
+        // no response
+        message = err.message;
+        if (message === 'Origin is not allowed by ' +
+                        'Access-Control-Allow-Origin') {
+          message = 'Unable to contact authentication server.';
+        }
+      }
+      if (res) {
+        // got response (but could be rejection)
+
+        if (res.statusType === 2) {
+          // registration succeeded
+
+          message = res.text;
+          // TODO handle message
+          console.log(message);
+//          this.setState({
+//            message: message
+//          });
+
+          return;
+        }
+        else {
+          // registration rejected
+          message = JSON.parse(res.text).message;
+          console.log(message);
+        }
+      }
+      // TODO handle message
+//      this.setState({
+//        message: message
+//      });
+    });
+  },
+
+  login: function(email, password) {
+
+    Server.submitLogin(email, password, function(err, res) {
+      var message;
+      if (err) {
+        // no response
+        message = err.message;
+        if (message === 'Origin is not allowed by ' +
+                        'Access-Control-Allow-Origin') {
+          message = 'Unable to contact authentication server.';
+        }
+      }
+      if (res) {
+        // got response (but could be rejection)
+        if (res.statusType === 2) {
+          // login succeeded
+          UserActions.authenticate(JSON.parse(res.text));
+          UIActions.hideOverlay();
+          return;
+        }
+        else {
+          // registration rejected
+          message = JSON.parse(res.text).message;
+        }
+      }
+      // TODO handle message
+      console.log(message);
+//      this.setState({
+//        message: message
+//      });
+    });
+  },
+
   getUserData: function() {
     Server.auth.setToken(_getToken());
     Server.auth.getUserData(function(err, response) {
@@ -27,7 +101,7 @@ module.exports = {
       }
     });
   },
-  
+
   getProfileData: function() {
     Server.auth.setToken(_getToken());
     Server.auth.getProfileData(function(err, response) {
@@ -42,7 +116,7 @@ module.exports = {
       }
     });
   },
-  
+
   connect: function(gamertag) {
     Socket.setToken(_getToken());
     Socket.connect(gamertag, function(err, beacons) {
@@ -63,7 +137,7 @@ module.exports = {
         console.log(beacons);
         BeaconActions.setBeacons(beacons);
       });
-      
+
       // listen for messages
       Socket.on('message', function(data, callback) {
         console.log('message received:');
@@ -75,7 +149,7 @@ module.exports = {
       });
     });
   },
-  
+
   setStatus: function(status) {
     Socket.setToken(_getToken());
     Socket.emit('status', status, function(err, message) {
@@ -88,7 +162,7 @@ module.exports = {
       UserActions.setStatus(status);
     });
   },
-  
+
   sendMessage: function(gamertag, message) {
     if (message.trim() !== '') {
       Socket.setToken(_getToken());
@@ -106,5 +180,5 @@ module.exports = {
       );
     }
   }
-  
+
 };

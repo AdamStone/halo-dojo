@@ -4,8 +4,9 @@ var UserWidget = require('./UserWidget.react.jsx'),
     NavBar = require('./NavBar.react.jsx'),
     LandingPage = require('./LandingPage.react.jsx'),
     Dashboard = require('./Dashboard.react.jsx'),
-    RegistrationForm = require('./RegistrationForm.react.jsx'),
-    LoginForm = require('./LoginForm.react.jsx'),
+    AuthForm = require('./AuthForm.react.jsx'),
+/*    RegistrationForm = require('./RegistrationForm.react.jsx'),*/
+/*    LoginForm = require('./LoginForm.react.jsx'),*/
     BeaconList = require('./BeaconList.react.jsx'),
     MessageBar = require('./MessageBar.react.jsx'),
     SideBar = require('./SideBar.react.jsx'),
@@ -85,7 +86,9 @@ module.exports = React.createClass({
         {this.state.ui.overlay === Constants.UI.OVERLAY_REGISTER ?
 
           <Overlay>
-            <RegistrationForm focus="true"/>
+            <AuthForm action="register"
+                      focus="true"
+                      autocomplete="off"/>
           </Overlay>
 
           : null
@@ -94,7 +97,8 @@ module.exports = React.createClass({
         {this.state.ui.overlay === Constants.UI.OVERLAY_LOGIN ?
 
           <Overlay>
-            <LoginForm focus="true"/>
+            <AuthForm action="login"
+                      focus="true"/>
           </Overlay>
 
           : null
