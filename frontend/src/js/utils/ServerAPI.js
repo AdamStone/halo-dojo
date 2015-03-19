@@ -31,8 +31,10 @@ var _token = null;
 
 module.exports = {
 
+
+
   // PUBLIC ROUTES
-  
+
   submitRegistration: function(email, password, callback) {
     var handler = handlerFactory(callback);
     Request
@@ -50,14 +52,25 @@ module.exports = {
       .end(handler);
   },
 
+  submitActivate: function(email, password, code, callback) {
+    var handler = handlerFactory(callback);
+    Request
+      .post(Urls.https.domain + '/activate/' + code)
+      .set('Content-Type', 'application/json')
+      .send({email: email, password: password, code: code})
+      .end(handler);
+  },
+
+
+
   // AUTHENTICATED ROUTES
-  
+
   auth: {
-  
+
     setToken: function(token) {
       _token = token;
     },
-  
+
     getUserData: function(callback) {
       var handler = handlerFactory(callback);
       var path = '/userdata';
@@ -67,7 +80,7 @@ module.exports = {
         .set('Authorization', authHeader(path, 'get', _token))
         .end(handler);
     },
-    
+
     getProfileData: function(callback) {
       var handler = handlerFactory(callback);
       var path = '/profile';
@@ -77,7 +90,7 @@ module.exports = {
         .set('Authorization', authHeader(path, 'get', _token))
         .end(handler);
     },
-     
+
     saveProfile: function(data, callback) {
       var handler = handlerFactory(callback);
       var path = '/profile';
@@ -103,6 +116,6 @@ module.exports = {
         .set('Authorization', authHeader(path, 'post', _token))
         .end(handler);
     }
-  
+
   }
 };

@@ -3,3 +3,4 @@ node_modules
 !.gitignore
 frontend/public
 frontend/src/css
+tasks.json

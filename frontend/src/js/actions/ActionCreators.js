@@ -13,6 +13,37 @@ var _getToken = function() {
   return UserStore.get().token;
 };
 
+var loginCallback = function(err, response) {
+  var message;
+  if (err) {
+    // no response
+    message = err.message;
+    if (message === 'Origin is not allowed by ' +
+                    'Access-Control-Allow-Origin') {
+      message = 'Unable to contact authentication server.';
+    }
+  }
+  if (response) {
+
+    console.log(response);
+    // got response (but could be rejection)
+    if (response.statusType === 2) {
+      // login succeeded
+      UserActions.authenticate(JSON.parse(response.text));
+      UIActions.hideOverlay();
+      return;
+    }
+    else {
+      // registration rejected
+      message = JSON.parse(response.text).message;
+    }
+  }
+  // TODO handle message
+  console.log(message);
+};
+
+
+
 module.exports = {
 
   register: function(email, password) {
@@ -57,46 +88,21 @@ module.exports = {
 
   login: function(email, password) {
 
-    Server.submitLogin(email, password, function(err, res) {
-      var message;
-      if (err) {
-        // no response
-        message = err.message;
-        if (message === 'Origin is not allowed by ' +
-                        'Access-Control-Allow-Origin') {
-          message = 'Unable to contact authentication server.';
-        }
-      }
-      if (res) {
-        // got response (but could be rejection)
-        if (res.statusType === 2) {
-          // login succeeded
-          UserActions.authenticate(JSON.parse(res.text));
-          UIActions.hideOverlay();
-          return;
-        }
-        else {
-          // registration rejected
-          message = JSON.parse(res.text).message;
-        }
-      }
-      // TODO handle message
-      console.log(message);
-//      this.setState({
-//        message: message
-//      });
-    });
+    Server.submitLogin(email, password, loginCallback);
   },
 
-  activate: function(email, password, code) {
-    // TODO
+  activate: function(email, password) {
 
+    var code = window.location.pathname.split('/')[2];
+
+    Server.submitActivate(email, password, code, loginCallback);
   },
 
   getUserData: function() {
     Server.auth.setToken(_getToken());
     Server.auth.getUserData(function(err, response) {
       if (err) {
+        // TODO placeholder
         return console.error(err);
       }
       if (response) {
@@ -126,7 +132,7 @@ module.exports = {
     Socket.setToken(_getToken());
     Socket.connect(gamertag, function(err, beacons) {
       if (err) {
-        return console.log(err);
+        return console.error(err);
       }
       UserActions.connect(gamertag);
 
