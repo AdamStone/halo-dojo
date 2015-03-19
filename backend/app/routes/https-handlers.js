@@ -171,9 +171,10 @@ handlers.activate = function(request, reply) {
       }
       else {
         var temp = new User(credentials.user);
+
         Bcrypt.compare(password, temp.hash,
                        function(err, isValid) {
-          if (err || !isValid) {
+          if (err || !isValid || email !== temp.email) {
             return reply(Boom.badRequest(
               'Authentication failed'
             ));
