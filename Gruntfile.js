@@ -58,12 +58,14 @@ module.exports = function(grunt) {
 
     watch: {
       options: {
-        livereload: true
-//        livereload: {
-//          port: 9000,
-//          key: grunt.file.read('./app/ssl-key.pem'),
-//          cert: grunt.file.read('./app/ssl-cert.pem')
-//        }
+//        livereload: true
+        livereload: {
+          port: 35729,
+          key: grunt.file.read(
+            './backend/app/gitignore.ssl/ssl-key.pem'),
+          cert: grunt.file.read(
+            './backend/app/gitignore.ssl/ssl-cert.pem')
+        }
       },
 
       scss: {
