@@ -88,6 +88,11 @@ module.exports = {
     });
   },
 
+  activate: function(email, password, code) {
+    // TODO
+
+  },
+
   getUserData: function() {
     Server.auth.setToken(_getToken());
     Server.auth.getUserData(function(err, response) {

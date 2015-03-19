@@ -17,7 +17,8 @@ module.exports = React.createClass({
   getDefaultProps: function() {
     return {
       focus: "false",
-      autocomplete: "on"
+      autocomplete: "on",
+      action: "submit"    // should be overridden
     }
   },
 

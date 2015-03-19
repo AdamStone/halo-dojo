@@ -64,6 +64,42 @@ module.exports = React.createClass({
   render: function() {
     var user = this.state.user;
 
+    var overlay;
+    switch(this.state.ui.overlay) {
+
+      case Constants.UI.OVERLAY_REGISTER:
+        overlay = (
+          <Overlay>
+            <AuthForm action="register"
+                      focus="true"
+                      autocomplete="off"/>
+          </Overlay>
+        )
+        break;
+
+      case Constants.UI.OVERLAY_LOGIN:
+        overlay = (
+          <Overlay>
+            <AuthForm action="login"
+                      focus="true"/>
+          </Overlay>
+        )
+        break;
+
+      case Constants.UI.OVERLAY_ACTIVATE:
+        overlay = (
+          <Overlay escapable="false">
+            <AuthForm action="activate"
+                      focus="true"
+                      autocomplete="off"/>
+          </Overlay>
+        )
+        break;
+
+      default:
+        overlay = null;
+    }
+
     return (
       <div className="wrapper site-wrapper unselectable">
 
@@ -83,6 +119,7 @@ module.exports = React.createClass({
                            messaging={this.state.messaging}
                            beacons={this.state.beacons}/>}
 
+/*
         {this.state.ui.overlay === Constants.UI.OVERLAY_REGISTER ?
 
           <Overlay>
@@ -112,6 +149,8 @@ module.exports = React.createClass({
 
           : null
         }
+*/
+        {overlay}
 
       </div>
     );

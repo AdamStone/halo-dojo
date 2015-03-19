@@ -20,25 +20,29 @@ else {
   _data = JSON.parse(sessionStorage._UIStore);
 }
 
+if (window.location.pathname.split('/')[1] === 'activate') {
+  _data.overlay = Constants.UI.OVERLAY_ACTIVATE;
+}
+
 
 var UIStore = merge(EventEmitter.prototype, {
-  
+
   get: function() {
     return utils.copy(_data);
   },
-  
+
   getDispatchToken: function() {
     return _dispatchToken;
   },
-  
+
   emitChange: function() {
     this.emit('change');
   },
-  
+
   addChangeListener: function(callback) {
     this.on('change', callback);
   },
-  
+
   removeChangeListener: function(callback) {
     this.removeListener('change', callback);
   }
@@ -48,13 +52,13 @@ var UIStore = merge(EventEmitter.prototype, {
 
 _dispatchToken = AppDispatcher.register(function(payload) {
   var action = payload.action;
-  
+
   switch (action.actionType) {
-    
+
     case Constants.UI.SHOW_OVERLAY:
       _data.overlay = action.data.overlay;
       break;
-      
+
     default:
       return true;
   }
