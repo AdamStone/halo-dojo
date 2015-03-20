@@ -4,7 +4,7 @@ var URL  = require('url');
 
 var parseDomain = function(href) {
   var parsed = URL.parse(href);
-  parsed.domain = [parsed.protocol, 
+  parsed.domain = [parsed.protocol,
                    href.split('//')[1]
                        .split('/')[0]]
                        .join('//');

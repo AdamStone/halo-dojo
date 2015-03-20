@@ -10,10 +10,18 @@
     "test": "jest"
   },
   "jest": {
-    "testFileExtensions": ["js", "jsx"],
-    "testPathDirs": ["./frontend/src/js", "./backend/app"],
+    "testFileExtensions": [
+      "js",
+      "jsx"
+    ],
+    "testPathDirs": [
+      "./frontend/src/js",
+      "./backend/app"
+    ],
     "scriptPreprocessor": "./preprocessor.js",
-    "unmockedModulePathPatterns": ["node_modules"]
+    "unmockedModulePathPatterns": [
+      "node_modules"
+    ]
   },
   "devDependencies": {
     "grunt": "^0.4.5",
