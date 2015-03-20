@@ -2,7 +2,16 @@ var AppDispatcher = require('../dispatcher/AppDispatcher'),
     Constants = require('../constants/Constants');
 
 var UIActions = {
-  
+
+  setUrlPath: function(path) {
+    AppDispatcher.handleViewAction({
+      actionType: Constants.UI.SET_URL_PATH,
+      data: {
+        path: path
+      }
+    });
+  },
+
   showLoginOverlay: function() {
     AppDispatcher.handleViewAction({
       actionType: Constants.UI.SHOW_OVERLAY,
@@ -11,7 +20,7 @@ var UIActions = {
       }
     });
   },
-  
+
   showRegisterOverlay: function() {
     AppDispatcher.handleViewAction({
       actionType: Constants.UI.SHOW_OVERLAY,
@@ -20,7 +29,7 @@ var UIActions = {
       }
     });
   },
-  
+
   hideOverlay: function() {
     AppDispatcher.handleViewAction({
       actionType: Constants.UI.SHOW_OVERLAY,
@@ -29,7 +38,7 @@ var UIActions = {
       }
     });
   }
-  
+
 };
 
 module.exports = UIActions;

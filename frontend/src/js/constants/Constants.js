@@ -19,7 +19,7 @@ module.exports = {
     OVERLAY_LOGIN: null,
     OVERLAY_REGISTER: null,
     OVERLAY_MESSAGE: null,
-    OVERLAY_ACTIVATE: null
+    SET_URL_PATH: null
   }),
 
   Profile: keyMirror({

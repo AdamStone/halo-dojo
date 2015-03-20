@@ -1,5 +1,8 @@
 /** @jsx React.DOM */
 var React = require('react');
+
+var Urls = require('../../../../shared/urls');
+
 var Server = require('../utils/ServerAPI'),
     ActionCreators = require('../actions/ActionCreators');
 
@@ -50,8 +53,17 @@ module.exports = React.createClass({
   onSubmit: function(e) {
     e.preventDefault();
 
-    ActionCreators[this.props.action](
-      this.state.email, this.state.password);
+    ActionCreators[this.props.action](this.state.email,
+                                      this.state.password,
+                                      this.onMessage);
+  },
+
+  onMessage: function(message) {
+    if (message) {
+      this.setState({
+        message: message
+      });
+    }
   },
 
   render: function() {

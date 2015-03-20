@@ -1,17 +1,20 @@
 /** @jsx React.DOM */
 var React = require('react');
+
+var Route = require('./Route.react.jsx');
+
 var UserWidget = require('./UserWidget.react.jsx'),
     NavBar = require('./NavBar.react.jsx'),
     LandingPage = require('./LandingPage.react.jsx'),
     Dashboard = require('./Dashboard.react.jsx'),
     AuthForm = require('./AuthForm.react.jsx'),
-/*    RegistrationForm = require('./RegistrationForm.react.jsx'),*/
-/*    LoginForm = require('./LoginForm.react.jsx'),*/
+    ActivatePage = require('./ActivatePage.react.jsx'),
     BeaconList = require('./BeaconList.react.jsx'),
     MessageBar = require('./MessageBar.react.jsx'),
     SideBar = require('./SideBar.react.jsx'),
     Overlay = require('./Overlay.react.jsx'),
-    WorkInProgressMessage = require('./WorkInProgressMessage.react.jsx');
+    WorkInProgressMessage = require(
+      './WorkInProgressMessage.react.jsx');
 
 var MessagingStore = require('../stores/MessagingStore'),
     ProfileStore = require('../stores/ProfileStore'),
@@ -28,6 +31,13 @@ var stores = [
   UIStore,
   UserStore
 ];
+
+
+var routes = {
+
+  activate: /^\/activate\/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/
+
+};
 
 function getAppState() {
   return {
@@ -64,6 +74,8 @@ module.exports = React.createClass({
   render: function() {
     var user = this.state.user;
 
+    // OVERLAY
+
     var overlay;
     switch(this.state.ui.overlay) {
 
@@ -86,28 +98,60 @@ module.exports = React.createClass({
         )
         break;
 
-      case Constants.UI.OVERLAY_ACTIVATE:
-        overlay = (
-          <Overlay escapable="false">
-            <AuthForm action="activate"
-                      focus="true"
-                      autocomplete="off"/>
-          </Overlay>
-        )
-        break;
-
       default:
         overlay = null;
     }
+
+
 
     return (
       <div className="wrapper site-wrapper unselectable">
 
         <NavBar user={this.state.user}
-                profile={this.state.profile} />
+                profile={this.state.profile}/>
 
+
+        <Route condition={!user.token}>
+          <LandingPage/>
+        </Route>
+
+
+        <Route condition={user.token && !user.connected}>
+          <Dashboard user={user}
+                     profile={this.state.profile}
+                     messaging={this.state.messaging}/>
+        </Route>
+
+
+        <Route condition={user.token && user.connected}>
+          <BeaconList user={user}
+                      messaging={this.state.messaging}
+                      beacons={this.state.beacons}/>
+        </Route>
+
+
+        <Route protocol="https" url={routes.activate}>
+          <ActivatePage/>
+        </Route>
+
+
+        {overlay}
+
+      </div>
+    );
+  },
+
+
+
+  _onChange: function() {
+    this.setState(getAppState());
+  }
+});
+
+
+/*
         {!user.token
-            && <LandingPage ref="landingPage" />}
+            && <LandingPage/>}
 
         {user.token && !user.connected
             && <Dashboard user={user}
@@ -117,49 +161,4 @@ module.exports = React.createClass({
         {user.token && user.connected
             && <BeaconList user={user}
                            messaging={this.state.messaging}
-                           beacons={this.state.beacons}/>}
-
-/*
-        {this.state.ui.overlay === Constants.UI.OVERLAY_REGISTER ?
-
-          <Overlay>
-            <AuthForm action="register"
-                      focus="true"
-                      autocomplete="off"/>
-          </Overlay>
-
-          : null
-        }
-
-        {this.state.ui.overlay === Constants.UI.OVERLAY_LOGIN ?
-
-          <Overlay>
-            <AuthForm action="login"
-                      focus="true"/>
-          </Overlay>
-
-          : null
-        }
-
-        {this.state.ui.overlay === Constants.UI.OVERLAY_MESSAGE ?
-
-          <Overlay escapable="false">
-            <WorkInProgressMessage/>
-          </Overlay>
-
-          : null
-        }
-*/
-        {overlay}
-
-      </div>
-    );
-  },
-
-
-
-
-  _onChange: function() {
-    this.setState(getAppState());
-  }
-});
+                           beacons={this.state.beacons}/>}*/

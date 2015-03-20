@@ -13,42 +13,45 @@ var _getToken = function() {
   return UserStore.get().token;
 };
 
-var loginCallback = function(err, response) {
-  var message;
-  if (err) {
-    // no response
-    message = err.message;
-    if (message === 'Origin is not allowed by ' +
-                    'Access-Control-Allow-Origin') {
-      message = 'Unable to contact authentication server.';
-    }
-  }
-  if (response) {
+var getLoginCallback = function(onMessage) {
 
-    console.log(response);
-    // got response (but could be rejection)
-    if (response.statusType === 2) {
-      // login succeeded
-      UserActions.authenticate(JSON.parse(response.text));
-      UIActions.hideOverlay();
-      return;
+  return function(err, response) {
+    var message;
+    if (err) {
+      // no response
+      message = err.message;
+      if (message === 'Origin is not allowed by ' +
+                      'Access-Control-Allow-Origin') {
+        message = 'Unable to contact authentication server.';
+      }
     }
-    else {
-      // registration rejected
-      message = JSON.parse(response.text).message;
+    if (response) {
+
+      // got response (but could be rejection)
+      if (response.statusType === 2) {
+        // login succeeded
+        UserActions.authenticate(JSON.parse(response.text));
+        UIActions.hideOverlay();
+        UIActions.setUrlPath('/');
+      }
+      else {
+        // rejected
+        message = JSON.parse(response.text).message;
+      }
     }
-  }
-  // TODO handle message
-  console.log(message);
+    onMessage(message);
+  };
+
 };
 
 
 
 module.exports = {
 
-  register: function(email, password) {
+  register: function(email, password, onMessage) {
 
-    Server.submitRegistration(email, password, function(err, res) {
+    Server.submitRegistration(email, password,
+                              function(err, response) {
       var message;
       if (err) {
         // no response
@@ -58,44 +61,34 @@ module.exports = {
           message = 'Unable to contact authentication server.';
         }
       }
-      if (res) {
+      if (response) {
         // got response (but could be rejection)
 
-        if (res.statusType === 2) {
+        if (response.statusType === 2) {
           // registration succeeded
 
-          message = res.text;
-          // TODO handle message
-          console.log(message);
-//          this.setState({
-//            message: message
-//          });
-
-          return;
+          message = response.text;
+          return onMessage(message);
         }
         else {
           // registration rejected
-          message = JSON.parse(res.text).message;
-          console.log(message);
+          message = JSON.parse(response.text).message;
         }
       }
-      // TODO handle message
-//      this.setState({
-//        message: message
-//      });
+      return onMessage(message);
     });
   },
 
-  login: function(email, password) {
-
-    Server.submitLogin(email, password, loginCallback);
+  login: function(email, password, onMessage) {
+    var callback = getLoginCallback(onMessage);
+    Server.submitLogin(email, password, callback);
   },
 
-  activate: function(email, password) {
+  activate: function(email, password, onMessage) {
 
     var code = window.location.pathname.split('/')[2];
-
-    Server.submitActivate(email, password, code, loginCallback);
+    var callback = getLoginCallback(onMessage);
+    Server.submitActivate(email, password, code, callback);
   },
 
   getUserData: function() {

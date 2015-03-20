@@ -6,7 +6,7 @@ var _socket = null;
 var _token = null;
 
 module.exports = {
-  
+
   setToken: function(token) {
     _token = token;
   },
@@ -51,7 +51,7 @@ module.exports = {
       }
     }
   },
-  
+
   on: function(eventName, callback) {
     if (_socket) {
       _socket.on(eventName, function() {
@@ -99,8 +99,8 @@ module.exports = {
         else {
           return self.emit(eventName, data, callback);
         }
-      });        
+      });
     }
   }
-  
+
 };

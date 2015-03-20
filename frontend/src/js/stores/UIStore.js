@@ -20,9 +20,9 @@ else {
   _data = JSON.parse(sessionStorage._UIStore);
 }
 
-if (window.location.pathname.split('/')[1] === 'activate') {
-  _data.overlay = Constants.UI.OVERLAY_ACTIVATE;
-}
+//if (window.location.pathname.split('/')[1] === 'activate') {
+//  _data.overlay = Constants.UI.OVERLAY_ACTIVATE;
+//}
 
 
 var UIStore = merge(EventEmitter.prototype, {
@@ -57,6 +57,13 @@ _dispatchToken = AppDispatcher.register(function(payload) {
 
     case Constants.UI.SHOW_OVERLAY:
       _data.overlay = action.data.overlay;
+      break;
+
+    case Constants.UI.SET_URL_PATH:
+      if (window.location.pathname !== action.data.path) {
+        window.location.href = window.location.origin +
+                               action.data.path;
+      }
       break;
 
     default:
