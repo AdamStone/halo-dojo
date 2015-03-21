@@ -6,6 +6,7 @@ var Hapi = require('hapi'),
 
 var schema = require('../../shared/input-validation'),
     utils = require('../../shared/utils'),
+    setupDB = require('../setup-db'),
     SocketHandlers = require('./socket-handlers'),
     Credentials = require('./models/credentials'),
     Urls = require('../../shared/urls');
@@ -71,6 +72,9 @@ server.views({
   path: __dirname + '/templates'
 });
 
+
+// make sure DB has been initialized
+setupDB.initialize();
 
 
 
