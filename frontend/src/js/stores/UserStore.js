@@ -5,14 +5,12 @@ var AppDispatcher = require('../dispatcher/AppDispatcher'),
     merge = require('react/lib/merge');
 
 var Constants = require('../constants/Constants'),
-    Server = require('../utils/ServerAPI'),
     utils = require('../../../../shared/utils');
 
 
-
-var _dispatchToken;
-var _data;
-var _meta = {};
+var _dispatchToken,
+    _data,
+    _cached;
 
 var _getInitialState = function() {
   return {
@@ -24,19 +22,21 @@ var _getInitialState = function() {
   };
 };
 
+
 if (!sessionStorage._UserStore) {
   _data = _getInitialState();
-  _meta.cached = false;
+  _cached = false;
 }
 else {
   _data = JSON.parse(sessionStorage._UserStore);
-  _meta.cached = true;
+  _cached = true;
 }
+
 
 var UserStore = merge(EventEmitter.prototype, {
 
   cached: function() {
-    return _meta.cached;
+    return _cached;
   },
 
   get: function() {
@@ -73,8 +73,6 @@ _dispatchToken = AppDispatcher.register(function(payload) {
 
     case Constants.User.LOGGED_OUT:
       _data = _getInitialState();
-      sessionStorage._UserStore = JSON.stringify(_getInitialState());
-      _meta.cached = false;
       break;
 
     case Constants.User.CONNECTED:
@@ -87,6 +85,7 @@ _dispatchToken = AppDispatcher.register(function(payload) {
 
     case Constants.User.UPDATE_USER_DATA:
       _data = utils.update(_data, action.data);
+      _cached = true;
       break;
 
     case Constants.User.UPDATE_GAMERTAGS:
@@ -101,9 +100,19 @@ _dispatchToken = AppDispatcher.register(function(payload) {
     default:
       return true;
   }
-  sessionStorage._UserStore = JSON.stringify(_data);
+
+  // caching
+  if (_data.token) {
+    sessionStorage._UserStore = JSON.stringify(_data);
+  }
+  else {
+    sessionStorage._UserStore = '';
+    _cached = false;
+  }
+
   UserStore.emitChange();
   return true;
+
 });
 
 module.exports = UserStore;

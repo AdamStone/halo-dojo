@@ -11,11 +11,11 @@ var Constants = require('../constants/Constants'),
     UserStore = require('./UserStore');
 
 
+var _dispatchToken,
+    _data,
+    _cached;
 
-var _dispatchToken;
-var _data;
-var _meta = {};
-
+// save profile a few seconds after last change
 var _saveTimer;
 var _timer = function() {
   Server.auth.saveProfile(_data, function(err, saved) {
@@ -54,22 +54,23 @@ var _getInitialState = function() {
       h5: 0
     }
   };
-}
+};
 
 
 if (!sessionStorage._ProfileStore) {
   _data = _getInitialState();
-  _meta.cached = false;
+  _cached = false;
 }
 else {
   _data = JSON.parse(sessionStorage._ProfileStore);
-  _meta.cached = true;
+  _cached = true;
 }
+
 
 var ProfileStore = merge(EventEmitter.prototype, {
 
   cached: function() {
-    return _meta.cached;
+    return _cached;
   },
 
   get: function() {
@@ -104,6 +105,7 @@ _dispatchToken = AppDispatcher.register(function(payload) {
 
     case Constants.Profile.SET_PROFILE:
       _data = utils.update(_data, action.data);
+      _cached = true;
       break;
 
     case Constants.Profile.BIO_CHANGED:
@@ -124,22 +126,27 @@ _dispatchToken = AppDispatcher.register(function(payload) {
       break;
 
     case Constants.Profile.SET_SAVE_STATUS:
-      var status = action.data.status;
-      _data.unsaved = !status;
+      _data.unsaved = !action.data.status;
       break;
 
     case Constants.User.LOGGED_OUT:
-//      AppDispatcher.waitFor([UserStore.getDispatchToken()]);
-      sessionStorage._ProfileStore = JSON.stringify(_getInitialState());
+      AppDispatcher.waitFor([UserStore.getDispatchToken()]);
       _data = _getInitialState();
-      _meta.cached = false;
-      console.dir(JSON.parse(sessionStorage._ProfileStore));
       break;
 
     default:
       return true;
   }
-  sessionStorage._ProfileStore = JSON.stringify(_data);
+
+  // caching
+  if (UserStore.get().token) {
+    sessionStorage._ProfileStore = JSON.stringify(_data);
+  }
+  else {
+    sessionStorage._ProfileStore = '';
+    _cached = false;
+  }
+
   ProfileStore.emitChange();
   return true;
 });
