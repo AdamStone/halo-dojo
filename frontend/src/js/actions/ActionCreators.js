@@ -5,7 +5,6 @@ var UserActions = require('./UserActions'),
     ProfileActions = require('./ProfileActions'),
     BeaconActions = require('./BeaconActions'),
     MessagingActions = require('./MessagingActions'),
-    UserStore = require('../stores/UserStore'),
     Server = require('../utils/ServerAPI'),
     Socket = require('../utils/SocketAPI');
 

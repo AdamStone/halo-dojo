@@ -52,7 +52,7 @@ User.getBy = function(property, value, callback) {
   var params = {
     value: value
   };
-  
+
   db.query(cypher, params, function(err, result) {
     if (err) {
       return callback(err);
@@ -75,7 +75,7 @@ User.create = function(data, callback) {
   ].join('\n');
 
   data.id = UUID.v4();
-    
+
   var params = {
     data: data
   };
@@ -97,9 +97,9 @@ User.createTemp = function(data, callback) {
     'CREATE (user:TempUser {data})',
     'RETURN user'
   ].join('\n');
-  
+
   data.id = UUID.v4();
-  
+
   var params = {
     data: data
   };
@@ -132,7 +132,7 @@ User.activate = function(id, callback) {
   var params = {
     id: id
   };
-  
+
   db.queryFactory(cypher, params, function(err, result) {
     if (err) {
       return callback(err);
@@ -148,29 +148,35 @@ User.activate = function(id, callback) {
 User.getData = function(id, callback) {
   var cypher = [
     'MATCH (user:User {id: {id}})',
-    'OPTIONAL MATCH (user)-[m:MAIN]->(main:Gamertag)',
+    'OPTIONAL MATCH (user)-[m:MAINS]->(main:Gamertag)',
     'OPTIONAL MATCH (user)-[o:OWNS]->(gamertag:Gamertag)',
     'RETURN main, gamertag'
   ].join('\n');
-  
+
   var params = {
     id: id
   };
-  
+
   db.queryFactory(cypher, params, function(err, result) {
     if (err) {
       return callback(err);
     }
     if (result) {
-      var gamertags = [];
+      var gamertags = [],
+          main = null;
       for (var i=0; i < result.length; i++) {
-        gamertags.push(
-          new Gamertag(result[i].gamertag).data
-        );
+        if (result[i].gamertag) {
+          gamertags.push(
+            new Gamertag(result[i].gamertag).data
+          );
+        }
+        if (result[i].main) {
+          main = new Gamertag(result[0].main).data
+        }
       }
       return callback(null, {
         gamertags: gamertags,
-        main: new Gamertag(result[0].main).data
+        main: main
       });
     }
   }).send();

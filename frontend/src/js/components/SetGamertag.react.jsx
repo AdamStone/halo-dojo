@@ -12,101 +12,83 @@ var Joi = require('joi'),
 
 module.exports = React.createClass({
 
+  // TODO move logic into action creators
   addGamertag: function(e) {
     e.preventDefault();
     var gamertagInput = this.refs.addGamertagInput.getDOMNode();
     var gamertag = gamertagInput.value;
-    Joi.validate(gamertag, schema.gamertag, 
+    Joi.validate(gamertag, schema.gamertag,
                  function(err, gamertag) {
       if (err)
         this.setState({
           message: 'Not a valid gamertag'
         });
       else {
-        var token = UserStore.getToken();
-        Server.addGamertag(gamertag, token, function(err, res) {
-        
+        Server.auth.addGamertag(gamertag, function(err, response) {
+
           if (err) {  // Network error
             console.log(err);
             this.setState({
               message: 'There was an error contacting the server'
             });
           }
-          if (res) {
-          
-            if (res.statusType === 2) {
+          if (response) {
+
+            if (response.statusType === 2) {
               // Succeeded
-              var gamertags = JSON.parse(res.text);
-              UserActions.updateGamertags(gamertags);
-              this.hideInput();
+              console.dir(JSON.parse(response.text));
+              var data = JSON.parse(response.text);
+              UserActions.updateGamertags(data.gamertags, data.main);
             }
-            else if (res.status === 400) {
+            else if (response.status === 400) {
               // Gamertag already claimed
-              
-              
-              
+
+
+
               // TODO start validation cycle
-              
-              
-            
+
+
+
               this.setState({
-                message: JSON.parse(res.text).message
+                message: JSON.parse(response.text).message
               });
             }
             else {
             // Some other error
               this.setState({
-                message: JSON.parse(res.text).message
+                message: JSON.parse(response.text).message
               });
-            }        
+            }
           }
         }.bind(this));
       }
     }.bind(this));
   },
-  
-  showInput: function(e) {
+
+  focus: function(e) {
     e.stopPropagation();
-    this.setState({
-      addingGamertag: true
-    }, function() {
-      this.refs.addGamertagInput.getDOMNode().focus();
-    });
-  },
-  
-  hideInput: function(e) {
-    this.setState({
-      addingGamertag: false,
-      message: null
-    });
+    this.refs.addGamertagInput.getDOMNode().focus();
   },
 
   getInitialState: function() {
     return {
-      addingGamertag: false
+      addingGamertag: true
     };
-  },
-  
-  handleKeyDown: function(e) {
-    if (e.keyCode === 27) {
-      this.hideInput(e);
-    }
   },
 
   componentDidMount: function() {
     window.addEventListener("keydown", this.handleKeyDown);
-  },  
+  },
 
   componentWillUnmount: function() {
     window.removeEventListener("keydown", this.handleKeyDown);
-  },  
-  
+  },
+
   render: function() {
     return (
-      <div className="tile gamertag-tile"
-           style={{'cursor': 'pointer'}}
-           onClick={this.showInput} >
-        <h2>Set your Gamertag</h2>
+      <div className="tile-input"
+           onClick={this.focus} >
+        <h2>Add your Gamertag</h2>
 
         {this.state.addingGamertag ?
 
@@ -123,7 +105,7 @@ module.exports = React.createClass({
 
           null
         }
-        
+
         {this.state.message ?
 
           <p className="hint">{this.state.message}</p>
@@ -131,9 +113,35 @@ module.exports = React.createClass({
           :
 
           null
-        }        
+        }
 
       </div>
     );
   }
 });
+
+
+
+/*
+  showInput: function(e) {
+    e.stopPropagation();
+    this.setState({
+      addingGamertag: true
+    }, function() {
+      this.refs.addGamertagInput.getDOMNode().focus();
+    });
+  },
+
+  hideInput: function(e) {
+    this.setState({
+      addingGamertag: false,
+      message: null
+    });
+  },
+
+  handleKeyDown: function(e) {
+    if (e.keyCode === 27) {
+      this.hideInput(e);
+    }
+  },
+*/

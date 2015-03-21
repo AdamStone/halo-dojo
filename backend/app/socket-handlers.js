@@ -7,155 +7,162 @@ var Socket = require('socket.io'),
     Credentials = require('./models/credentials');
 
 
-module.exports.attach = function(server) {
-  server.oldStart = server.start;
+module.exports = {
 
-  server.start = function(callback) {
+  io: null,
 
-    this.oldStart(function() {
-      if (callback) {
-        callback();
-      }
-      var io = Socket.listen(server.listener),
-          clients = {},
-          beacons = {};
+  attach: function(server) {
+    var self = this;
+    server.oldStart = server.start;
 
-      // ========== handlers ========== //
+    server.start = function(callback) {
 
-      io.on('connection', function(socket) {
+      this.oldStart(function() {
+        if (callback) {
+          callback();
+        }
+        self.io = Socket.listen(server.listener);
+        var clients = {},
+            beacons = {};
 
-        console.log('socket connected');
+        // ========== handlers ========== //
 
-        var gamertag;
+        self.io.on('connection', function(socket) {
 
-        // ============== methods ============== //
+          console.log('socket connected');
 
-        var emitBeacons = function() {
-          console.log('emitting beacon update');
-          io.sockets.in('beacons').emit('beacons', beacons);
-        };
+          var gamertag;
 
-        var deactivateBeacon = function(gamertag) {
-          console.log('beacon deactivation requested by ' + gamertag);
-          socket.leave('beacons');
-          delete beacons[gamertag];
-          emitBeacons();
-        };
+          // ============== methods ============== //
 
-        var activateBeacon = function(gamertag) {
-          console.log('beacon activation requested by ' + gamertag);
-          socket.join('beacons');
-          beacons[gamertag] = {
-            time: Math.round(new Date().getTime()/1000),
-            status: null
+          var emitBeacons = function() {
+            console.log('emitting beacon update');
+            self.io.sockets.in('beacons').emit('beacons', beacons);
           };
-          emitBeacons();
-        };
 
-        // =============== event handlers =============== //
+          var deactivateBeacon = function(gamertag) {
+            console.log('beacon deactivation requested by ' + gamertag);
+            socket.leave('beacons');
+            delete beacons[gamertag];
+            emitBeacons();
+          };
 
-        socket.on('handshake', function(data, callback) {
-          console.log(data);
-          schema.socket.handshake.validate(data, function(err, data) {
-            if (err && callback) {
-              return callback(err);
-            }
-            Hawk.server.authenticateMessage('localhost', 8000, 'message',
-              data.auth, Credentials.get, {}, function(err) {
+          var activateBeacon = function(gamertag) {
+            console.log('beacon activation requested by ' + gamertag);
+            socket.join('beacons');
+            beacons[gamertag] = {
+              time: Math.round(new Date().getTime()/1000),
+              status: null
+            };
+            emitBeacons();
+          };
 
-                if (err) {
-                  callback(err);
-                }
+          // =============== event handlers =============== //
 
-                if (Object.keys(data).length) {
-                  gamertag = data.gamertag;
-                  console.log('Socket.io handshake from ' +
-                              data.gamertag);
-                  socket.gamertag = gamertag;
-                  clients[gamertag] = socket;
-                  activateBeacon(gamertag);
-                  if (callback) {
-                    return callback(null, beacons);
+          socket.on('handshake', function(data, callback) {
+            console.log(data);
+            schema.socket.handshake.validate(data, function(err, data) {
+              if (err && callback) {
+                return callback(err);
+              }
+              Hawk.server.authenticateMessage('localhost', 8000, 'message',
+                data.auth, Credentials.get, {}, function(err) {
+
+                  if (err) {
+                    callback(err);
                   }
-                }
 
-              });
+                  if (Object.keys(data).length) {
+                    gamertag = data.gamertag;
+                    console.log('Socket.io handshake from ' +
+                                data.gamertag);
+                    socket.gamertag = gamertag;
+                    clients[gamertag] = socket;
+                    activateBeacon(gamertag);
+                    if (callback) {
+                      return callback(null, beacons);
+                    }
+                  }
+
+                });
+            });
           });
-        });
 
 
 
-        socket.on('status', function(data, callback) {
-          console.log('received status from ' +
-                      socket.gamertag +': ');
-          var status = data.message;
-          console.log(status);
+          socket.on('status', function(data, callback) {
+            console.log('received status from ' +
+                        socket.gamertag +': ');
+            var status = data.message;
+            console.log(status);
 
-          beacons[socket.gamertag].status = status;
-          emitBeacons();
+            beacons[socket.gamertag].status = status;
+            emitBeacons();
 
-          callback(null, 'Status received');
-        });
+            callback(null, 'Status received');
+          });
 
 
 
-        socket.on('disconnect', function() {
-          // TODO disconnect on user logout
-          if (gamertag) {
-            console.log(gamertag + ' disconnected');
-            if (gamertag in beacons) {
-              deactivateBeacon(gamertag);
+          socket.on('disconnect', function() {
+            // TODO disconnect on user logout
+            if (gamertag) {
+              console.log(gamertag + ' disconnected');
+              if (gamertag in beacons) {
+                deactivateBeacon(gamertag);
+              }
+              delete clients[gamertag];
             }
-            delete clients[gamertag];
-          }
-        });
+          });
 
 
 
-        socket.on('message', function(data, callback) {
-          schema.socket.message.validate(data, function(err, data) {
-            if (err) {
-              return callback(err);
-            }
-            Hawk.server.authenticateMessage('localhost', 8000, 'message',
-              data.auth, Credentials.get, {}, function(err, credentials) {
+          socket.on('message', function(data, callback) {
+            schema.socket.message.validate(data, function(err, data) {
+              if (err) {
+                return callback(err);
+              }
+              Hawk.server.authenticateMessage('localhost', 8000, 'message',
+                data.auth, Credentials.get, {}, function(err, credentials) {
 
-                if (err) {
-                  callback(err);
-                }
-                credentials.gamertag = socket.gamertag;
+                  if (err) {
+                    callback(err);
+                  }
+                  credentials.gamertag = socket.gamertag;
 
-                if (credentials && credentials.gamertag in clients) {
-                  if (data.recipient in beacons) {
+                  if (credentials && credentials.gamertag in clients) {
+                    if (data.recipient in beacons) {
 
-                    var payload = {
-                      message: data.message,
-                      from: credentials.gamertag,
-                      to: data.recipient,
-                      time: Math.round(new Date().getTime()/1000)
-                    };
+                      var payload = {
+                        message: data.message,
+                        from: credentials.gamertag,
+                        to: data.recipient,
+                        time: Math.round(new Date().getTime()/1000)
+                      };
 
-                    clients[data.recipient].send(payload, function(err) {
-                      if (err) {
-                        console.log(err);
-                        return callback(err);
-                      }
-                      callback(null, payload);
-                    });
+                      clients[data.recipient].send(payload, function(err) {
+                        if (err) {
+                          console.log(err);
+                          return callback(err);
+                        }
+                        callback(null, payload);
+                      });
+                    }
+                    else {
+                      callback(data.recipient +
+                               ' is not available to chat');
+                    }
                   }
                   else {
-                    callback(data.recipient +
-                             ' is not available to chat');
+                    return callback(
+                      'Clients must handshake before messaging');
                   }
-                }
-                else {
-                  return callback(
-                    'Clients must handshake before messaging');
-                }
-              });
+                });
+            });
           });
         });
       });
-    });
-  };
+    };
+  }
+
 };

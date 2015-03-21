@@ -3,22 +3,22 @@ var AppDispatcher = require('../dispatcher/AppDispatcher'),
     Socket = require('../utils/SocketAPI');
 
 var UserActions = {
-  
+
   updateUserData: function(data) {
     AppDispatcher.handleServerAction({
       actionType: Constants.User.UPDATE_USER_DATA,
       data: data
     });
   },
-  
+
   logOut: function() {
     Socket.disconnect();
     AppDispatcher.handleViewAction({
       actionType: Constants.User.LOGGED_OUT,
       data: {}
     });
-  },  
-  
+  },
+
   authenticate: function(token) {
     AppDispatcher.handleServerAction({
       actionType: Constants.User.AUTHENTICATED,
@@ -28,15 +28,16 @@ var UserActions = {
     });
   },
 
-  updateGamertags: function(gamertags) {
+  updateGamertags: function(gamertags, main) {
     AppDispatcher.handleServerAction({
       actionType: Constants.User.UPDATE_GAMERTAGS,
       data: {
-        gamertags: gamertags
+        gamertags: gamertags,
+        main: main
       }
     });
   },
-  
+
   disconnect: function() {
     Socket.disconnect();
     AppDispatcher.handleViewAction({
@@ -44,7 +45,7 @@ var UserActions = {
       data: {}
     });
   },
-  
+
   connect: function(gamertag) {
     AppDispatcher.handleServerAction({
       actionType: Constants.User.CONNECTED,
@@ -53,7 +54,7 @@ var UserActions = {
       }
     });
   },
-  
+
   setStatus: function(status) {
     AppDispatcher.handleServerAction({
       actionType: Constants.User.STATUS_UPDATE,
@@ -62,7 +63,7 @@ var UserActions = {
       }
     });
   }
-  
+
 };
 
 module.exports = UserActions;

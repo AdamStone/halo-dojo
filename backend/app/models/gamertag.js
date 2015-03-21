@@ -36,31 +36,49 @@ Object.defineProperty(Gamertag.prototype, 'data', {
 Gamertag.create = function(ownerId, gamertag, callback) {
   var cypher = [
     'MATCH (user:User {id: {id}})',
+    'OPTIONAL MATCH (user)-[:MAINS]->(main:Gamertag)',
     'CREATE (gt:Gamertag {gamertag: {gt}})',
     'CREATE (user)-[o:OWNS]->(gt)',
+
+    // if no main exists, set gt as main
+    'WITH user, gt, main, ',
+      'CASE main WHEN NULL THEN [1] ELSE [] END as nomain',
+
+    'FOREACH (n IN nomain | ',
+      'CREATE UNIQUE (user)-[:MAINS]->(gt)',
+    ')',
+
+    // return all gamertags
     'WITH user',
-    'MATCH (user)-[o:OWNS]->(gamertag:Gamertag)',
-    'RETURN gamertag'
+    'MATCH (user)-[:OWNS]->(gamertag:Gamertag)',
+    'MATCH (user)-[:MAINS]->(main:Gamertag)',
+    'RETURN main, collect(gamertag) as gamertags'
   ].join('\n');
-  
-  var params = { 
+
+  var params = {
     id: ownerId,
     gt: gamertag
   };
-  
+
   db.queryFactory(cypher, params, function(err, result) {
     if (err) {
+      console.error(err);
       return callback(err);
     }
     if (result) {
+      console.log(result);
+      var main = new Gamertag(result[0].main).data;
       var gamertags = [];
-      for (var i=0; i < result.length; i++) {
+      for (var i=0; i < result[0].gamertags.length; i++) {
         gamertags.push(
-          new Gamertag(result[i].gamertag).data
+          new Gamertag(result[0].gamertags[i]).data
         );
       }
       // Returns all GTs owned by user
-      return callback(null, gamertags);
+      return callback(null, {
+        gamertags: gamertags,
+        main: main
+      });
     }
   }).send();
 };
@@ -73,16 +91,16 @@ Gamertag.setData = function(gamertag, data, callback) {
     'SET gamertag = { data }',
     'RETURN gamertag'
   ].join('\n');
-  
+
   var params = {
     data: data,
     gamertag: gamertag
   };
-  
+
   data.gamertag = gamertag;
-  console.log(data);
   db.queryFactory(cypher, params, function(err, result) {
     if (err) {
+      console.error(err);
       return callback(err);
     }
     if (result) {

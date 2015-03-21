@@ -19,6 +19,7 @@ module.exports = React.createClass({
   },
 
   componentDidMount: function() {
+    // if Stores not cached, call the server
     if (!UserStore.cached())
       ActionCreators.getUserData();
     if (!ProfileStore.cached())
@@ -27,19 +28,19 @@ module.exports = React.createClass({
 
   render: function() {
     var user = this.props.user;
-    
+
     return (
       <div>
         <div className="dashboard">
-        
+
           {user.main &&
               <GamertagStats gamertag={user.main} />}
-          
-          {user.gamertags && !user.gamertags.length &&
+
+          {(!user.gamertags || !user.gamertags.length) &&
               <SetGamertag />}
-              
+
           <Profile profile={this.props.profile} />
-          
+
         </div>
 
 
@@ -50,12 +51,12 @@ module.exports = React.createClass({
                onClick={this.connect}>
             <h3>Realtime Search</h3>
           </div>
-          
+
           <div className="sidebar-item suggested">
             <h3>Suggested Players</h3>
           </div>
         </SideBar>
-        
+
         <MessageBar messaging={this.props.messaging}/>
       </div>
     );

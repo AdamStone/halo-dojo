@@ -2,7 +2,7 @@
 var React = require('react');
 
 module.exports = React.createClass({
-  
+
   render: function() {
     var gt = this.props.gamertag;
     return (
@@ -14,9 +14,16 @@ module.exports = React.createClass({
               <h1>
                 {gt.gamertag}
               </h1>
-              <img src={'/images/svg/ranks/' + gt.csr_max + '.svg'}
-                   alt={gt.csr_max}
-                   title="Max CSR"/>
+
+              { gt.csr_max ?
+
+                <img src={'/images/svg/ranks/' + gt.csr_max + '.svg'}
+                     alt={gt.csr_max}
+                     title="Max CSR"/>
+
+                     : null
+              }
+
             </td>
 
             <td>
@@ -50,16 +57,16 @@ module.exports = React.createClass({
 });
 /*
 
-        {gt.games_played ? 
-        
+        {gt.games_played ?
+
           <div>
             <p>Games Played: {gt.games_played}</p>
             <p>Win/Loss Ratio: {gt.wl}</p>
             <p>Kill/Death Ratio: {gt.kd}</p>
             <p>Max Rank: {gt.csr_max}</p>
           </div>
-          
-          : 
-          
+
+          :
+
           <p>No games played in MCC</p>
         }*/

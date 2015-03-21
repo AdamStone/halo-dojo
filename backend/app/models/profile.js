@@ -47,7 +47,7 @@ var _resultHandler = function(result, callback) {
     }
     if (res.avoid) {
       games[res.avoid._data.data.name] = -1;
-    }      
+    }
   });
   SharedConstants.GAME_NAMES.forEach(function(name) {
     if (games[name] === undefined) {
@@ -55,31 +55,36 @@ var _resultHandler = function(result, callback) {
     }
   });
 
-  var profileData = new Profile(result[0].profile).data;
-  profileData.games = games;
+  // if profile exists
+  if (result[0].profile) {
+    var profileData = new Profile(result[0].profile).data;
+    profileData.games = games;
+    return callback(null, profileData);
+  }
 
-  return callback(null, profileData);
+  return callback(null, []);
 };
 
 
 
-// Static methods
 
 
+// STATIC METHODS
 
 Profile.get = function(userId, callback) {
   var cypher = [
-    'MATCH (user:User)-[o:OWNS]->(profile:Profile)',
+    'MATCH (user:User)',
     'WHERE user.id = {userId}',
+    'OPTIONAL MATCH (user)-[o:OWNS]->(profile:Profile)',
     'OPTIONAL MATCH (user)-[:PREFERS]->(prefer:Game)',
     'OPTIONAL MATCH (user)-[:AVOIDS]->(avoid:Game)',
     'RETURN profile, prefer, avoid'
   ].join('\n');
-  
+
   var params = {
     userId: userId
   };
-  
+
   db.queryFactory(cypher, params, function(err, result) {
     if (err) {
       return callback(err);
@@ -91,12 +96,14 @@ Profile.get = function(userId, callback) {
 };
 
 
+
+
 Profile.save = function(userId, data, callback) {
-  
+
   var prefer = [],
       avoid = [],
       reset = [];
-  
+
   for (var game in data.games) {
     switch (data.games[game]) {
       case 0:
@@ -110,46 +117,46 @@ Profile.save = function(userId, data, callback) {
         break;
     }
   }
-  
-  var matches = '',
-      creates = '';
+
+  var matches = ' ',
+      creates = ' ';
   if (prefer.length) {
-    matches += 'MATCH (prefer:Game) ' + 
+    matches += 'MATCH (prefer:Game) ' +
                'WHERE prefer.name IN {prefer} ';
     creates += 'CREATE UNIQUE (user)-[:PREFERS]->(prefer) ';
   }
-  
+
   if (avoid.length) {
-    matches += 'MATCH (avoid:Game) ' + 
+    matches += 'MATCH (avoid:Game) ' +
                'WHERE avoid.name IN {avoid} ';
     creates += 'CREATE UNIQUE (user)-[:AVOIDS]->(avoid) ';
   }
-    
+
   var cypher = [
     'MATCH (user:User {id: {userId}})' +
       matches +
       creates,
 
-    'CREATE UNIQUE (user)-[o:OWNS]->(profile:Profile)',
-    'SET profile.bio = {bio}',    
-    
-    'WITH user, profile' + 
+    'MERGE (user)-[o:OWNS]->(profile:Profile)',
+    'SET profile.bio = {bio}',
+
+    'WITH user, profile' +
       (prefer.length ? ', prefer' : '') +
       (avoid.length ? ', avoid' : ''),
-    
+
     'OPTIONAL MATCH (user)-[prefs:PREFERS]->(preferred:Game)',
     'WHERE NOT preferred.name IN {prefer}',
-    
+
     'OPTIONAL MATCH (user)-[avoids:AVOIDS]->(avoided:Game)',
     'WHERE NOT avoided.name IN {avoid}',
-    
+
     'DELETE prefs, avoids',
-    'RETURN profile' + 
+    'RETURN profile' +
       (prefer.length ? ', prefer' : '') +
       (avoid.length ? ', avoid' : ''),
-    
+
   ].join('\n');
-  
+
   var params = {
     userId: userId,
     bio: data.bio,
@@ -157,7 +164,7 @@ Profile.save = function(userId, data, callback) {
     avoid: avoid,
     reset: reset
   };
-  
+
   db.queryFactory(cypher, params, function(err, result) {
     if (err) {
       return callback(err);
@@ -165,7 +172,7 @@ Profile.save = function(userId, data, callback) {
     if (result) {
       return _resultHandler(result, callback);
     }
-  }).send(); 
+  }).send();
 };
 
 
