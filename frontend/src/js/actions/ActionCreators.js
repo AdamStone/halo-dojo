@@ -9,9 +9,6 @@ var UserActions = require('./UserActions'),
     Server = require('../utils/ServerAPI'),
     Socket = require('../utils/SocketAPI');
 
-var _getToken = function() {
-  return UserStore.get().token;
-};
 
 var getLoginCallback = function(onMessage) {
 
@@ -92,13 +89,13 @@ module.exports = {
   },
 
   getUserData: function() {
-    Server.auth.setToken(_getToken());
     Server.auth.getUserData(function(err, response) {
       if (err) {
         // TODO placeholder
         return console.error(err);
       }
       if (response) {
+        console.log(response);
         UserActions.updateUserData(
           JSON.parse(response.text)
         );
@@ -107,7 +104,6 @@ module.exports = {
   },
 
   getProfileData: function() {
-    Server.auth.setToken(_getToken());
     Server.auth.getProfileData(function(err, response) {
       if (err) {
         return console.error(err);
@@ -122,7 +118,6 @@ module.exports = {
   },
 
   connect: function(gamertag) {
-    Socket.setToken(_getToken());
     Socket.connect(gamertag, function(err, beacons) {
       if (err) {
         return console.error(err);
@@ -155,7 +150,6 @@ module.exports = {
   },
 
   setStatus: function(status) {
-    Socket.setToken(_getToken());
     Socket.emit('status', status, function(err, message) {
       if (err) {
         return console.log(err);
@@ -169,7 +163,6 @@ module.exports = {
 
   sendMessage: function(gamertag, message) {
     if (message.trim() !== '') {
-      Socket.setToken(_getToken());
       Socket.emit('message', {
           recipient: gamertag,
           message: message

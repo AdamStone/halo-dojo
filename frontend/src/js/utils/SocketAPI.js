@@ -2,13 +2,18 @@
 
 var Hawk = require('hawk');
 
+var UserStore = require('../stores/UserStore');
+
 var _socket = null;
 var _token = null;
 
 module.exports = {
 
-  setToken: function(token) {
-    _token = token;
+  getToken: function() {
+    if (!_token) {
+      _token = UserStore.get().token;
+    }
+    return _token;
   },
 
   connected: function() {
@@ -81,7 +86,7 @@ module.exports = {
         };
       }
       data.auth = Hawk.client.message('localhost', 8000, 'message', {
-        credentials: _token
+        credentials: this.getToken()
       });
       _socket.emit(eventName, data, function() {
         var args = arguments;

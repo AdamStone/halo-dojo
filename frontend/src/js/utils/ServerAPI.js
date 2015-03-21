@@ -2,7 +2,8 @@
 
 var Request = require('superagent'),
     Hawk = require('hawk'),
-    Urls = require('../../../../shared/urls');
+    Urls = require('../../../../shared/urls'),
+    UserStore = require('../stores/UserStore');
 
 
 
@@ -67,8 +68,11 @@ module.exports = {
 
   auth: {
 
-    setToken: function(token) {
-      _token = token;
+    getToken: function() {
+      if (!_token) {
+        _token = UserStore.get().token;
+      }
+      return _token;
     },
 
     getUserData: function(callback) {
@@ -77,7 +81,7 @@ module.exports = {
       console.log('getUserData called in serverAPI');
       Request
         .get(path)
-        .set('Authorization', authHeader(path, 'get', _token))
+        .set('Authorization', authHeader(path, 'get', this.getToken()))
         .end(handler);
     },
 
@@ -87,7 +91,7 @@ module.exports = {
       console.log('getProfile called in serverAPI');
       Request
         .get(path)
-        .set('Authorization', authHeader(path, 'get', _token))
+        .set('Authorization', authHeader(path, 'get', this.getToken()))
         .end(handler);
     },
 
@@ -101,7 +105,7 @@ module.exports = {
           bio: data.bio,
           games: data.games
         })
-        .set('Authorization', authHeader(path, 'put', _token))
+        .set('Authorization', authHeader(path, 'put', this.getToken()))
         .end(handler);
     },
 
@@ -113,7 +117,7 @@ module.exports = {
         .send({
           gamertag: gamertag
         })
-        .set('Authorization', authHeader(path, 'post', _token))
+        .set('Authorization', authHeader(path, 'post', this.getToken()))
         .end(handler);
     }
 
