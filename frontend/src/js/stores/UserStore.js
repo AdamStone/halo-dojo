@@ -14,14 +14,18 @@ var _dispatchToken;
 var _data;
 var _meta = {};
 
-if (!sessionStorage._UserStore) {
-  _data = {
+var _getInitialState = function() {
+  return {
     token: null,
     gamertags: null,
     main: null,
     connected: null,
     status: null
   };
+};
+
+if (!sessionStorage._UserStore) {
+  _data = _getInitialState();
   _meta.cached = false;
 }
 else {
@@ -68,8 +72,9 @@ _dispatchToken = AppDispatcher.register(function(payload) {
       break;
 
     case Constants.User.LOGGED_OUT:
-      _data.token = null;
-      _data.connected = null;
+      _data = _getInitialState();
+      sessionStorage._UserStore = JSON.stringify(_getInitialState());
+      _meta.cached = false;
       break;
 
     case Constants.User.CONNECTED:
@@ -86,6 +91,7 @@ _dispatchToken = AppDispatcher.register(function(payload) {
 
     case Constants.User.UPDATE_GAMERTAGS:
       _data.gamertags = action.data.gamertags;
+      _data.main = action.data.main;
       break;
 
     case Constants.User.STATUS_UPDATE:

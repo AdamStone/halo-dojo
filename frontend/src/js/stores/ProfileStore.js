@@ -7,7 +7,8 @@ var AppDispatcher = require('../dispatcher/AppDispatcher'),
 var Constants = require('../constants/Constants'),
     Server = require('../utils/ServerAPI'),
     utils = require('../../../../shared/utils'),
-    ProfileActions = require('../actions/ProfileActions');
+    ProfileActions = require('../actions/ProfileActions'),
+    UserStore = require('./UserStore');
 
 
 
@@ -26,7 +27,7 @@ var _timer = function() {
 };
 
 var _queueSave = function() {
-  
+
   if (!_data.unsaved) {
     _data.unsaved = true;
     _saveTimer = setTimeout(_timer, 3000);
@@ -35,14 +36,13 @@ var _queueSave = function() {
     clearTimeout(_saveTimer);
     _saveTimer = setTimeout(_timer, 3000);
   }
-  
+
 };
 
 
 
-
-if (!sessionStorage._ProfileStore) {
-  _data = {
+var _getInitialState = function() {
+  return {
     unsaved: null,
     bio: null,
     games: {
@@ -54,6 +54,11 @@ if (!sessionStorage._ProfileStore) {
       h5: 0
     }
   };
+}
+
+
+if (!sessionStorage._ProfileStore) {
+  _data = _getInitialState();
   _meta.cached = false;
 }
 else {
@@ -62,31 +67,31 @@ else {
 }
 
 var ProfileStore = merge(EventEmitter.prototype, {
-  
+
   cached: function() {
     return _meta.cached;
   },
-  
+
   get: function() {
     return utils.copy(_data);
   },
-  
+
   getDispatchToken: function() {
     return _dispatchToken;
   },
-  
+
   emitChange: function() {
     this.emit('change');
   },
-  
+
   addChangeListener: function(callback) {
     this.on('change', callback);
   },
-  
+
   removeChangeListener: function(callback) {
     this.removeListener('change', callback);
   }
-  
+
 });
 
 _dispatchToken = AppDispatcher.register(function(payload) {
@@ -94,33 +99,41 @@ _dispatchToken = AppDispatcher.register(function(payload) {
       type = action.data.type,
       title = action.data.title,
       prev;
-  
+
   switch (action.actionType) {
-      
+
     case Constants.Profile.SET_PROFILE:
       _data = utils.update(_data, action.data);
       break;
-      
+
     case Constants.Profile.BIO_CHANGED:
       _data.bio = action.data.bio;
       _queueSave();
       break;
-      
+
     case Constants.Profile.PREFERENCE_TOGGLED:
       prev = _data[type][title];
       _data[type][title] = ( prev === 1 ? 0 : 1 );
       _queueSave();
       break;
-      
+
     case Constants.Profile.AVOIDANCE_TOGGLED:
       prev = _data[type][title];
       _data[type][title] = ( prev === -1 ? 0 : -1 );
       _queueSave();
       break;
-      
+
     case Constants.Profile.SET_SAVE_STATUS:
       var status = action.data.status;
       _data.unsaved = !status;
+      break;
+
+    case Constants.User.LOGGED_OUT:
+//      AppDispatcher.waitFor([UserStore.getDispatchToken()]);
+      sessionStorage._ProfileStore = JSON.stringify(_getInitialState());
+      _data = _getInitialState();
+      _meta.cached = false;
+      console.dir(JSON.parse(sessionStorage._ProfileStore));
       break;
 
     default:
