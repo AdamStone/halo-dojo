@@ -50,8 +50,9 @@ module.exports = {
       _socket.io.disconnect();
       var status = this.connected();
       if (status) {
-        return callback('Disconnect failed');
+        return (callback && callback('Disconnect failed'));
       }
+      return (callback && callback(null));
     }
   },
 

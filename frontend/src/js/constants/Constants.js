@@ -10,6 +10,7 @@ module.exports = {
     UPDATE_GAMERTAGS: null,
     CONNECTED: null,
     DISCONNECTED: null,
+    LOST_CONNECTION: null,
     STATUS_UPDATE: null,
     LOGGED_OUT: null
   }),

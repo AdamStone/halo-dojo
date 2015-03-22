@@ -90,7 +90,13 @@ module.exports = {
     Server.submitLogin(email, password, callback);
   },
 
-  logout: function() {
+  logOut: function() {
+    Socket.disconnect(function(err) {
+      if (err) {
+        return console.error(err);
+      }
+      UserActions.disconnected();
+    });
     UserActions.logOut();
   },
 
@@ -153,16 +159,34 @@ module.exports = {
           return (callback && callback());
         });
 
+        // listen for disconnects
+        Socket.on('disconnect', function(reason) {
+          if (reason === 'forced close') {
+            console.log('socket was disconnected by client');
+            UserActions.disconnected();
+          }
+          if (reason === 'transport close') {
+            console.log('socket was disconnected by server');
+            UserActions.lostConnection();
+          }
+          else {
+            console.log('socket was disconnected: ' + reason);
+            UserActions.disconnected();
+          }
+
+        });
+
         return (callback && callback(null, response));
       }
     });
   },
 
   disconnect: function() {
-    UserActions.disconnected(function(err) {
+    Socket.disconnect(function(err) {
       if (err) {
-        console.error(err);
+        return console.error(err);
       }
+      UserActions.disconnected();
     });
   },
 
@@ -220,7 +244,7 @@ module.exports = {
       };
       Socket.emit('message', data, function(err, data) {
         if (err) {
-          console.err(err);
+          console.error(err);
           return (callback && callback(err));
         }
         if (data) {

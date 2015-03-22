@@ -70,6 +70,11 @@ _dispatchToken = AppDispatcher.register(function(payload) {
       }
       break;
 
+    case Constants.User.DISCONNECTED:
+      _data.beacons = {};
+      _data.active = false;
+      break;
+
     default:
       return true;
   }

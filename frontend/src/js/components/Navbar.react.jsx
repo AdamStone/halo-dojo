@@ -2,7 +2,7 @@
 var React = require('react');
 
 var UIActions = require('../actions/UIActions'),
-    UserActions = require('../actions/UserActions');
+    ActionCreators = require('../actions/ActionCreators');
 
 module.exports = React.createClass({
 
@@ -15,7 +15,7 @@ module.exports = React.createClass({
   },
 
   logOut: function(e) {
-    UserActions.logOut();
+    ActionCreators.logOut();
   },
 
   render: function() {

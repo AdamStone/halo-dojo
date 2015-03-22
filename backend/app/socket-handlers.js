@@ -131,10 +131,19 @@ module.exports = {
             var status = data.message;
             console.log(status);
 
-            _beacons[gamertag].status = status;
-            emitBeacons();
+            // check avoids errors after server restart
+            if (_beacons[gamertag]) {
+              _beacons[gamertag].status = status;
+              emitBeacons();
 
-            callback(null, 'Status received');
+              return (callback &&
+                      callback(null, 'Status received'));
+            }
+            else {
+              return (callback &&
+                      callback('Set status failed, ' +
+                               'you may need to reconnect'));
+            }
           });
 
 
@@ -177,7 +186,7 @@ module.exports = {
                     // recipient is disconnected
 
                     callback(data.recipient +
-                             ' is not available to chat');
+                             ' is offline');
                   }
                 });
             });

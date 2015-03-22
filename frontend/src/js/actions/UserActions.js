@@ -1,6 +1,5 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
-    Constants = require('../constants/Constants'),
-    Socket = require('../utils/SocketAPI');
+    Constants = require('../constants/Constants');
 
 var UserActions = {
 
@@ -12,7 +11,6 @@ var UserActions = {
   },
 
   logOut: function() {
-    Socket.disconnect();
     AppDispatcher.handleViewAction({
       actionType: Constants.User.LOGGED_OUT,
       data: {}
@@ -39,8 +37,7 @@ var UserActions = {
   },
 
   disconnected: function() {
-    Socket.disconnect();
-    AppDispatcher.handleViewAction({
+    AppDispatcher.handleServerAction({
       actionType: Constants.User.DISCONNECTED,
       data: {}
     });
@@ -49,6 +46,13 @@ var UserActions = {
   connected: function() {
     AppDispatcher.handleServerAction({
       actionType: Constants.User.CONNECTED,
+      data: {}
+    });
+  },
+
+  lostConnection: function() {
+    AppDispatcher.handleServerAction({
+      actionType: Constants.User.LOST_CONNECTION,
       data: {}
     });
   },

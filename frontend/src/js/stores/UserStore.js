@@ -77,6 +77,11 @@ _dispatchToken = AppDispatcher.register(function(payload) {
       _data.connected = false;
       break;
 
+    case Constants.User.LOST_CONNECTION:
+      // TODO display notification
+      _data.connected = false;
+      break;
+
     case Constants.User.UPDATE_USER_DATA:
       _data = utils.update(_data, action.data);
       _data.cached = true;
