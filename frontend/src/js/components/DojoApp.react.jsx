@@ -116,17 +116,11 @@ module.exports = React.createClass({
         </Route>
 
 
-        <Route condition={user.token && !user.connected}>
+        <Route condition={user.token}>
           <Dashboard user={user}
                      profile={this.state.profile}
+                     beacons={this.state.beacons}
                      messaging={this.state.messaging}/>
-        </Route>
-
-
-        <Route condition={user.token && user.connected}>
-          <BeaconList user={user}
-                      messaging={this.state.messaging}
-                      beacons={this.state.beacons}/>
         </Route>
 
 
@@ -147,18 +141,3 @@ module.exports = React.createClass({
     this.setState(getAppState());
   }
 });
-
-
-/*
-        {!user.token
-            && <LandingPage/>}
-
-        {user.token && !user.connected
-            && <Dashboard user={user}
-                          profile={this.state.profile}
-                          messaging={this.state.messaging}/>}
-
-        {user.token && user.connected
-            && <BeaconList user={user}
-                           messaging={this.state.messaging}
-                           beacons={this.state.beacons}/>}*/

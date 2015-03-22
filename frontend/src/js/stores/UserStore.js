@@ -9,35 +9,29 @@ var Constants = require('../constants/Constants'),
 
 
 var _dispatchToken,
-    _data,
-    _cached;
+    _data;
 
 var _getInitialState = function() {
   return {
     token: null,
     gamertags: null,
     main: null,
-    connected: null,
-    status: null
+    connected: false,
+    status: null,
+    cached: false
   };
 };
 
 
 if (!sessionStorage._UserStore) {
   _data = _getInitialState();
-  _cached = false;
 }
 else {
   _data = JSON.parse(sessionStorage._UserStore);
-  _cached = true;
 }
 
 
 var UserStore = merge(EventEmitter.prototype, {
-
-  cached: function() {
-    return _cached;
-  },
 
   get: function() {
     return utils.copy(_data);
@@ -76,16 +70,16 @@ _dispatchToken = AppDispatcher.register(function(payload) {
       break;
 
     case Constants.User.CONNECTED:
-      _data.connected = action.data.gamertag;
+      _data.connected = true;
       break;
 
     case Constants.User.DISCONNECTED:
-      _data.connected = null;
+      _data.connected = false;
       break;
 
     case Constants.User.UPDATE_USER_DATA:
       _data = utils.update(_data, action.data);
-      _cached = true;
+      _data.cached = true;
       break;
 
     case Constants.User.UPDATE_GAMERTAGS:
@@ -107,7 +101,7 @@ _dispatchToken = AppDispatcher.register(function(payload) {
   }
   else {
     sessionStorage._UserStore = '';
-    _cached = false;
+    _data.cached = false;
   }
 
   UserStore.emitChange();

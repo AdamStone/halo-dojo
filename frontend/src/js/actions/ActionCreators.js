@@ -42,7 +42,17 @@ var getLoginCallback = function(onMessage) {
 
 
 
+var beaconListener = function(beacons) {
+  console.log('Got beacons update:');
+  console.log(beacons);
+  BeaconActions.setBeacons(beacons);
+};
+
+
+
 module.exports = {
+
+  // SERVER API
 
   register: function(email, password, onMessage) {
 
@@ -78,6 +88,10 @@ module.exports = {
   login: function(email, password, onMessage) {
     var callback = getLoginCallback(onMessage);
     Server.submitLogin(email, password, callback);
+  },
+
+  logout: function() {
+    UserActions.logOut();
   },
 
   activate: function(email, password, onMessage) {
@@ -116,35 +130,73 @@ module.exports = {
     });
   },
 
-  connect: function(gamertag) {
-    Socket.connect(gamertag, function(err, beacons) {
-      if (err) {
-        return console.error(err);
-      }
-      UserActions.connect(gamertag);
 
+  // SOCKET API
+
+  connect: function(gamertag, callback) {
+    Socket.connect(gamertag, function(err, response) {
+      if (err) {
+        // TODO display indicator that connection failed
+        console.error(err);
+        return (callback && callback(err));
+      }
+      if (response) {
+        // connected
+
+        UserActions.connected();
+
+        // listen for messages
+        Socket.on('message', function(data, callback) {
+          console.log('message received:');
+          console.log(data);
+          MessagingActions.receiveMessage(data);
+          return (callback && callback());
+        });
+
+        return (callback && callback(null, response));
+      }
+    });
+  },
+
+  disconnect: function() {
+    UserActions.disconnected(function(err) {
+      if (err) {
+        console.error(err);
+      }
+    });
+  },
+
+  activateBeacon: function(callback) {
+
+    Socket.activateBeacon(function(err, beacons) {
+      if (err && callback) {
+        return callback(err);
+      }
       if (beacons) {
         console.log('Got initial beacons:');
         console.log(beacons);
         BeaconActions.setBeacons(beacons);
+
+        // listen for beacon updates
+        Socket.on('beacons', beaconListener);
       }
+    });
+  },
 
-      // listen for beacon updates
-      Socket.on('beacons', function(beacons) {
-        console.log('Got beacons update:');
-        console.log(beacons);
-        BeaconActions.setBeacons(beacons);
-      });
+  deactivateBeacon: function(callback) {
 
-      // listen for messages
-      Socket.on('message', function(data, callback) {
-        console.log('message received:');
-        console.log(data);
-        MessagingActions.receiveMessage(data);
-        if (callback) {
-          return callback();
-        }
-      });
+    Socket.deactivateBeacon(function(err, response) {
+      if (err) {
+        return (callback && callback(err));
+      }
+      else {
+        BeaconActions.setBeacons({});
+
+        // stop beacon updates
+        Socket.removeListener('beacons', beaconListener);
+
+        return (callback && callback(null, response));
+      }
     });
   },
 
@@ -160,20 +212,23 @@ module.exports = {
     });
   },
 
-  sendMessage: function(gamertag, message) {
+  sendMessage: function(gamertag, message, callback) {
     if (message.trim() !== '') {
-      Socket.emit('message', {
-          recipient: gamertag,
-          message: message
-        }, function(err, data) {
-          if (err) {
-            return console.log(err);
-          }
-          if (data) {
-            MessagingActions.sentMessage(data);
-          }
+      var data = {
+        recipient: gamertag,
+        message: message
+      };
+      Socket.emit('message', data, function(err, data) {
+        if (err) {
+          console.err(err);
+          return (callback && callback(err));
         }
-      );
+        if (data) {
+          // success returns message with metadata
+          MessagingActions.sentMessage(data);
+          return callback && callback(null);
+        }
+      });
     }
   }
 

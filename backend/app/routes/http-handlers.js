@@ -76,10 +76,10 @@ module.exports = function(xbl) {
         }
       }
       if (result) {
-        // Successfully created GT
+        // Successfully created GT,
+        // now try to get service record
 
-        // Try to get service record for GT
-        // Since this may be slow or fail, don't wait to reply
+        // TODO deal with timeout/failure
         xbl.waypoint.getServiceRecord(gamertag,
                           function(err, data) {
           if (err) {
@@ -92,14 +92,13 @@ module.exports = function(xbl) {
               }
               if (gt) {
                 console.log(gt);
-                // TODO get this data to client when ready
-//                SocketHandlers.io.
+                result.main = gt;
+                return reply(result);
               }
             });
           }
         });
-
-        return reply(result);
+//        return reply(result);  // without waiting for scrape
       }
     });
   };

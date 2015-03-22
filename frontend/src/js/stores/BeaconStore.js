@@ -8,11 +8,23 @@ var Constants = require('../constants/Constants'),
     utils = require('../../../../shared/utils');
 
 
-var _dispatchToken;
-var _data;
+function isEmpty(obj) {
+  for (var prop in obj) {
+    if (obj.hasOwnProperty(prop)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+var _dispatchToken,
+    _data;
 
 if (!sessionStorage._BeaconStore) {
-  _data = {};
+  _data = {
+    active: false,
+    beacons: {}
+  };
 }
 else {
   _data = JSON.parse(sessionStorage._BeaconStore);
@@ -20,40 +32,46 @@ else {
 
 
 var BeaconStore = merge(EventEmitter.prototype, {
-  
+
   get: function() {
     return utils.copy(_data);
   },
-  
+
   getDispatchToken: function() {
     return _dispatchToken;
   },
-  
+
   emitChange: function() {
     this.emit('change');
-  },  
-  
+  },
+
   addChangeListener: function(callback) {
     this.on('change', callback);
   },
-  
+
   removeChangeListener: function(callback) {
     this.removeListener('change', callback);
-  }    
-  
+  }
+
 });
 
 _dispatchToken = AppDispatcher.register(function(payload) {
   var action = payload.action;
-  
+
   switch (action.actionType) {
-  
+
     case Constants.Beacons.SET_BEACONS:
-      _data = action.data.beacons;
+      _data.beacons = action.data.beacons;
+      if (isEmpty(_data.beacons)) {
+        _data.active = false;
+      }
+      else {
+        _data.active = true;
+      }
       break;
-      
-    default: 
-      return true
+
+    default:
+      return true;
   }
   sessionStorage._BeaconStore = JSON.stringify(_data);
   BeaconStore.emitChange();
@@ -98,7 +116,7 @@ module.exports = BeaconStore;
 //};
 //
 //function sort(objs, key) {
-//  
+//
 //  var compare = function(a, b) {
 //    if (a[key] < b[key])
 //      return -1;
@@ -106,7 +124,7 @@ module.exports = BeaconStore;
 //      return 1
 //    return 0;
 //  };
-//  
+//
 //  objs.sort(compare);
 //};
 //

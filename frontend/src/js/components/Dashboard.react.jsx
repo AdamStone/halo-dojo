@@ -9,48 +9,95 @@ var SideBar = require('./SideBar.react.jsx'),
     MessageBar = require('./MessageBar.react.jsx'),
     GamertagStats = require('./GamertagStats.react.jsx'),
     Profile = require('./Profile.react.jsx'),
-    SetGamertag = require('./SetGamertag.react.jsx');
+    SetGamertag = require('./SetGamertag.react.jsx'),
+    BeaconList = require('./BeaconList.react.jsx');
+
+
+var resultLogger = function(err, result) {
+  if (err) {
+    console.error(err);
+  }
+  if (result) {
+    console.log(result);
+  }
+};
 
 module.exports = React.createClass({
 
-  connect: function(e) {
+  activateBeacon: function(e) {
     // TODO disable if no GT set
-    ActionCreators.connect(this.props.user.main.gamertag);
+    ActionCreators.activateBeacon();
+  },
+
+  deactivateBeacon: function(e) {
+    // TODO disable if no GT set
+    ActionCreators.deactivateBeacon();
   },
 
   componentDidMount: function() {
-    // if Stores not cached, call the server
-    if (!UserStore.cached())
+    if (!this.props.user.cached) {
       ActionCreators.getUserData();
-    if (!ProfileStore.cached())
+    }
+    if (!this.props.profile.cached) {
       ActionCreators.getProfileData();
+    }
+    // connect socket if main gamertag already known
+    if (this.props.user.main) {
+      ActionCreators.connect(this.props.user.main.gamertag,
+                             resultLogger);
+    }
+  },
+
+  componentDidUpdate: function(prevProps, prevState) {
+    // connect socket if main gamertag becomes known
+    if (!prevProps.user.main && this.props.user.main ) {
+      ActionCreators.connect(this.props.user.main.gamertag,
+                             resultLogger);
+    }
   },
 
   render: function() {
-    var user = this.props.user;
+    var user = this.props.user,
+        messaging = this.props.messaging,
+        beacons = this.props.beacons;
 
     return (
       <div>
+
+        {beacons.active ?
+          <BeaconList user={user}
+                      messaging={messaging}
+                      beacons={beacons}/>
+        :
+
         <div className="dashboard">
 
           {user.main &&
-              <GamertagStats gamertag={user.main} />}
+              <GamertagStats gamertag={user.main}/>
+          }
 
-          {(!user.gamertags || !user.gamertags.length) &&
+          {(!user.main) &&
               <SetGamertag />}
 
-          <Profile profile={this.props.profile} />
+          <Profile profile={this.props.profile}/>
 
         </div>
 
-
+        }
 
 
         <SideBar>
-          <div className="sidebar-item live-search"
-               onClick={this.connect}>
-            <h3>Realtime Search</h3>
-          </div>
+          {beacons.active ?
+            <div className="sidebar-item live-search"
+                 onClick={this.deactivateBeacon}>
+              <h3>Disconnect</h3>
+            </div>
+          :
+            <div className="sidebar-item live-search"
+                 onClick={this.activateBeacon}>
+              <h3>Realtime Lobby</h3>
+            </div>
+          }
 
           <div className="sidebar-item suggested">
             <h3>Suggested Players</h3>

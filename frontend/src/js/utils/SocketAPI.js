@@ -29,13 +29,16 @@ module.exports = {
       _socket.io.connect();
     }
 
-    this.emit('handshake', {gamertag: gamertag}, function(err, clients) {
+    var data = {
+      gamertag: gamertag
+    };
+    this.emit('handshake', data, function(err, response) {
       if (callback) {
         if (err) {
           return callback(err);
         }
         else {
-          return callback(null, clients);
+          return callback(null, response);
         }
       }
     });
@@ -52,24 +55,54 @@ module.exports = {
     }
   },
 
-  on: function(eventName, callback) {
+  activateBeacon: function(callback) {
+    if (!this.connected()) {
+      return callback('Unable to activate beacon, socket is disconnected');
+    }
+    this.emit('activate beacon', {}, function(err, response) {
+      if (err) {
+        console.error(err);
+        return (callback && callback(err));
+      }
+      if (callback && response) {  // response = beacons
+        return callback(null, response);
+      }
+    });
+  },
+
+  deactivateBeacon: function(callback) {
+    if (!this.connected()) {
+      return callback('Socket is already disconnected');
+    }
+    this.emit('deactivate beacon', {}, function(err, response) {
+      if (err) {
+        console.error(err);
+        return (callback && callback(err));
+      }
+      if (callback && response) {
+        return callback(null, response);
+      }
+    });
+  },
+
+
+
+
+  // BASE METHODS
+
+  on: function(eventName, handler) {
     if (_socket) {
       _socket.on(eventName, function() {
         var args = arguments;
-        if(callback) {
-          callback.apply(_socket, args);
+        if(handler) {
+          handler.apply(_socket, args);
         }
       });
     }
-//    else {
-//      var self = this;
-//      this.connect(function(err) {
-//        if (err)
-//          return callback(err);
-//        else
-//          return self.on(eventName, callback);
-//      });
-//    }
+  },
+
+  removeListener: function(eventName, handler) {
+    _socket.removeListener(eventName, handler);
   },
 
   emit: function(eventName, data, callback) {

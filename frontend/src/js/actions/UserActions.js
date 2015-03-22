@@ -38,7 +38,7 @@ var UserActions = {
     });
   },
 
-  disconnect: function() {
+  disconnected: function() {
     Socket.disconnect();
     AppDispatcher.handleViewAction({
       actionType: Constants.User.DISCONNECTED,
@@ -46,12 +46,10 @@ var UserActions = {
     });
   },
 
-  connect: function(gamertag) {
+  connected: function() {
     AppDispatcher.handleServerAction({
       actionType: Constants.User.CONNECTED,
-      data: {
-        gamertag: gamertag
-      }
+      data: {}
     });
   },
 

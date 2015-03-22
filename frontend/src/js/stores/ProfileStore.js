@@ -12,8 +12,7 @@ var Constants = require('../constants/Constants'),
 
 
 var _dispatchToken,
-    _data,
-    _cached;
+    _data;
 
 // save profile a few seconds after last change
 var _saveTimer;
@@ -52,26 +51,21 @@ var _getInitialState = function() {
       h4: 0,
       h2a: 0,
       h5: 0
-    }
+    },
+    cached: false
   };
 };
 
 
 if (!sessionStorage._ProfileStore) {
   _data = _getInitialState();
-  _cached = false;
 }
 else {
   _data = JSON.parse(sessionStorage._ProfileStore);
-  _cached = true;
 }
 
 
 var ProfileStore = merge(EventEmitter.prototype, {
-
-  cached: function() {
-    return _cached;
-  },
 
   get: function() {
     return utils.copy(_data);
@@ -105,7 +99,7 @@ _dispatchToken = AppDispatcher.register(function(payload) {
 
     case Constants.Profile.SET_PROFILE:
       _data = utils.update(_data, action.data);
-      _cached = true;
+      _data.cached = true;
       break;
 
     case Constants.Profile.BIO_CHANGED:
@@ -144,7 +138,7 @@ _dispatchToken = AppDispatcher.register(function(payload) {
   }
   else {
     sessionStorage._ProfileStore = '';
-    _cached = false;
+    _data.cached = false;
   }
 
   ProfileStore.emitChange();
