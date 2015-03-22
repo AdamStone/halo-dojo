@@ -165,7 +165,7 @@ module.exports = {
             console.log('socket was disconnected by client');
             UserActions.disconnected();
           }
-          if (reason === 'transport close') {
+          else if (reason === 'transport close') {
             console.log('socket was disconnected by server');
             UserActions.lostConnection();
           }

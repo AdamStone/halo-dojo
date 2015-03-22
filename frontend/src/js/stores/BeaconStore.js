@@ -75,6 +75,11 @@ _dispatchToken = AppDispatcher.register(function(payload) {
       _data.active = false;
       break;
 
+    case Constants.User.LOST_CONNECTION:
+      _data.beacons = {};
+      _data.active = false;
+      break;
+
     default:
       return true;
   }
