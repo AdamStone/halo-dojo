@@ -3,8 +3,7 @@
 var Boom = require('boom'),
     User = require('../models/user'),
     Gamertag = require('../models/gamertag'),
-    Profile = require('../models/profile'),
-    SocketHandlers = require('../socket-handlers');
+    Profile = require('../models/profile');
 
 
 module.exports = function(xbl) {
@@ -21,6 +20,7 @@ module.exports = function(xbl) {
         return reply(err);
       }
       if (result) {
+        console.log('Got service record, trying Gamertag.setData');
         Gamertag.setData(gamertag, result, function(err, result) {
           if (err) {
             return reply(err);
@@ -98,7 +98,7 @@ module.exports = function(xbl) {
             });
           }
         });
-//        return reply(result);  // without waiting for scrape
+//        return reply(result);  // without waiting for data
       }
     });
   };
