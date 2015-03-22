@@ -21,7 +21,7 @@ var xbl = {
   waypoint: new Waypoint()
 };
 
-//xbl.waypoint.start();
+xbl.waypoint.start();
 
 
 
@@ -83,12 +83,28 @@ setupDB.initialize();
 https.route({
   method: ['POST', 'OPTIONS'],
   path: '/register',
+  config: {
+    validate: {
+      payload: {
+        email: schema.email,
+        password: schema.password
+      }
+    }
+  },
   handler: handlers.https.register
 });
 
 https.route({
   method: ['POST', 'OPTIONS'],
   path: '/login',
+  config: {
+    validate: {
+      payload: {
+        email: schema.email,
+        password: schema.password
+      }
+    }
+  },
   handler: handlers.https.login
 });
 
@@ -115,6 +131,10 @@ https.route({
     validate: {
       params: {
         code: schema.guid
+      },
+      payload: {
+        email: schema.email,
+        password: schema.password
       }
     }
   },
