@@ -86,18 +86,20 @@ Gamertag.create = function(ownerId, gamertag, callback) {
 
 
 Gamertag.setData = function(gamertag, data, callback) {
+
+  data.gamertag = gamertag;
+
   var cypher = [
-    'MATCH (gamertag:Gamertag {gamertag: { gamertag }})',
-    'SET gamertag = { data }',
-    'RETURN gamertag'
+    'MATCH (gt:Gamertag)',
+    'WHERE gt.gamertag = { data }.gamertag',
+    'SET gt = { data }',
+    'RETURN gt as gamertag'
   ].join('\n');
 
   var params = {
-    data: data,
-    gamertag: gamertag
+    data: data
   };
 
-  data.gamertag = gamertag;
   db.queryFactory(cypher, params, function(err, result) {
     if (err) {
       console.error(err);
