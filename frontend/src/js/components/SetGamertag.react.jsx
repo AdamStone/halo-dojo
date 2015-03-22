@@ -12,23 +12,45 @@ var Joi = require('joi'),
 
 module.exports = React.createClass({
 
+  getInitialState: function() {
+    return {
+      gamertag: '',
+      message: 'Note: Make sure you actually own this gamertag!\n' +
+                      'You may be asked to validate it.',
+      pending: false
+    };
+  },
+
+  gamertagChanged: function(e) {
+    this.setState({
+      gamertag: e.target.value
+    });
+  },
+
   // TODO move logic into action creators
   addGamertag: function(e) {
     e.preventDefault();
-    var gamertagInput = this.refs.addGamertagInput.getDOMNode();
-    var gamertag = gamertagInput.value;
+    var self = this;
+    var gamertag = this.state.gamertag;
     Joi.validate(gamertag, schema.gamertag,
                  function(err, gamertag) {
       if (err)
-        this.setState({
+        self.setState({
           message: 'Not a valid gamertag'
         });
       else {
+        self.setState({
+          pending: true,
+          message: 'Getting service record. This may take a moment...'
+        });
+
         Server.auth.addGamertag(gamertag, function(err, response) {
 
-          if (err) {  // Network error
+          if (err) {
+            // Network error
+
             console.log(err);
-            this.setState({
+            self.setState({
               message: 'There was an error contacting the server'
             });
           }
@@ -36,44 +58,43 @@ module.exports = React.createClass({
 
             if (response.statusType === 2) {
               // Succeeded
-              console.dir(JSON.parse(response.text));
+
               var data = JSON.parse(response.text);
               UserActions.updateGamertags(data.gamertags, data.main);
+
+              self.setState({
+                pending: false,
+                message: 'Gamertag added'
+              });
+
             }
             else if (response.status === 400) {
-              // Gamertag already claimed
-
-
+              // Gamertag already in use
 
               // TODO start validation cycle
 
 
 
-              this.setState({
+              self.setState({
                 message: JSON.parse(response.text).message
               });
             }
             else {
-            // Some other error
-              this.setState({
+              // Some other error
+
+              self.setState({
                 message: JSON.parse(response.text).message
               });
             }
           }
-        }.bind(this));
+        });
       }
-    }.bind(this));
+    });
   },
 
   focus: function(e) {
     e.stopPropagation();
-    this.refs.addGamertagInput.getDOMNode().focus();
-  },
-
-  getInitialState: function() {
-    return {
-      addingGamertag: true
-    };
+    this.refs.gamertagInput.getDOMNode().focus();
   },
 
   componentDidMount: function() {
@@ -88,27 +109,24 @@ module.exports = React.createClass({
     return (
       <div className="tile-input"
            onClick={this.focus} >
+
         <h2>Add your Gamertag</h2>
 
-        {this.state.addingGamertag ?
+        {this.state.pending ?
 
+          <div className="spinner"></div>
+        :
           <form onSubmit={this.addGamertag}>
-            <input className="tile-input"
-                   ref="addGamertagInput" />
-            <p>
-              Make sure you actually own this gamertag!<br/>
-              You may be required to validate it
-            </p>
+            <input className="tile-input gamertag-input"
+                   value={this.state.gamertag}
+                   onChange={this.gamertagChanged}
+                   ref="gamertagInput" />
           </form>
-
-          :
-
-          null
         }
 
         {this.state.message ?
 
-          <p className="hint">{this.state.message}</p>
+          <pre className="hint">{this.state.message}</pre>
 
           :
 
@@ -119,29 +137,3 @@ module.exports = React.createClass({
     );
   }
 });
-
-
-
-/*
-  showInput: function(e) {
-    e.stopPropagation();
-    this.setState({
-      addingGamertag: true
-    }, function() {
-      this.refs.addGamertagInput.getDOMNode().focus();
-    });
-  },
-
-  hideInput: function(e) {
-    this.setState({
-      addingGamertag: false,
-      message: null
-    });
-  },
-
-  handleKeyDown: function(e) {
-    if (e.keyCode === 27) {
-      this.hideInput(e);
-    }
-  },
-*/
