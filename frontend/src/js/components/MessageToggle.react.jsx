@@ -31,7 +31,7 @@ module.exports = React.createClass({
           message: ''
         });
       }
-    });
+    }.bind(this));
   },
 
   stopProp: function(e) {
