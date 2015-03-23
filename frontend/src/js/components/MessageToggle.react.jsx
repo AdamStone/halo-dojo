@@ -83,8 +83,8 @@ module.exports = React.createClass({
                      placeholder={"Message " + this.props.gamertag}
                      ref="messageInput"
                      autoComplete="off"/>
-              <pre>{this.state.error}</pre>
             </form>
+            <pre className="error-message">{this.state.error}</pre>
           </div>
         </div>
       </div>

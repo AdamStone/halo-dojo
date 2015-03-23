@@ -7,16 +7,33 @@ module.exports = React.createClass({
 
   getInitialState: function() {
     return {
-      message: ''
+      input: '',
+      error: ''
     };
   },
 
   sendMessage: function(e) {
     e.preventDefault();
-    var messageInput = this.refs.messageInput.getDOMNode();
     ActionCreators.sendMessage(this.props.gamertag,
-                               messageInput.value);
-    messageInput.value="";
+                               this.state.input,
+                               function(err) {
+      if (err) {
+        this.setState({
+          error: err
+        });
+      }
+      else {
+        this.setState({
+          input: ''
+        });
+      }
+    }.bind(this));
+  },
+
+  inputChanged: function(e) {
+    this.setState({
+      input: e.target.value
+    });
   },
 
   close: function() {
@@ -41,7 +58,6 @@ module.exports = React.createClass({
   },
 
   scrollDown: function() {
-    console.log('scroll down called');
     var chatNode = this.refs.chatbox.getDOMNode();
     chatNode.scrollTop = chatNode.scrollHeight - chatNode.clientHeight;
   },
@@ -112,6 +128,14 @@ module.exports = React.createClass({
     var chatbox = (
       <div className="messenger">
 
+        {this.state.error ?
+          <span className="error-message">
+          {this.state.error}
+          </span>
+
+          : null
+        }
+
         <span className="minimize fa fa-minus"
               onClick={this.minimize}></span>
 
@@ -120,6 +144,7 @@ module.exports = React.createClass({
 
         <div className="chatbox selectable"
              ref="chatbox">
+
           {messageNodes}
         </div>
 
@@ -129,6 +154,8 @@ module.exports = React.createClass({
           <input type="text"
                  ref="messageInput"
                  name="message-input"
+                 value={this.state.input}
+                 onChange={this.inputChanged}
                  autoComplete="off"/>
         </form>
 

@@ -647,6 +647,14 @@ a {
     margin-top: .75em;
     height: 2em;
 
+    .error-message {
+      color: #eee;
+      margin: 0;
+      position: relative;
+      bottom: 4em;
+      text-align: center;
+    }
+
     .textarea-sizer {
       display: table-cell;
       height: 100%;
@@ -773,6 +781,14 @@ a {
 
   .minimize:hover, .close:hover {
     background-color: $w50;
+  }
+
+  .error-message {
+    position: absolute;
+    width: 100%;
+    top: .2em;
+    text-align: center;
+    color: #444;
   }
 
   .chatbox {

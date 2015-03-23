@@ -22,27 +22,27 @@ else {
 }
 
 var MessagingStore = merge(EventEmitter.prototype, {
-  
+
   get: function() {
     return utils.copy(_data);
   },
-  
+
   emitChange: function() {
     this.emit('change');
   },
-  
+
   addChangeListener: function(callback) {
     this.on('change', callback);
   },
-  
+
   removeChangeListener: function(callback) {
     this.removeListener('change', callback);
   }
-  
-});
-  
 
-    
+});
+
+
+
 
 var updateConversation = function(gamertag, entry) {
   if (gamertag in _data) {
@@ -67,32 +67,30 @@ _dispatchToken = AppDispatcher.register(function(payload) {
   var action = payload.action;
 
   var gamertag = action.data.gamertag;
-  
+
   switch(action.actionType) {
-      
+
     case Constants.Messaging.SENT_MESSAGE:
-      console.log('message data');
-      console.log(action.data);
       updateConversation(action.data.to, action.data);
       break;
-      
+
     case Constants.Messaging.RECEIVED_MESSAGE:
       updateConversation(action.data.from, action.data);
       break;
-      
+
     case Constants.Messaging.MINIMIZED:
       _data[gamertag].minimized = true;
       break;
-      
+
     case Constants.Messaging.EXPANDED:
       _data[gamertag].minimized = false;
       break;
-      
+
     case Constants.Messaging.CLOSED:
       _data[gamertag].minimized = true;
       _data[gamertag].closed = true;
       break;
-      
+
     default:
       return true;
   }
