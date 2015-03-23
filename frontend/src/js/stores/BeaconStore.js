@@ -23,6 +23,7 @@ var _dispatchToken,
 if (!sessionStorage._BeaconStore) {
   _data = {
     active: false,
+    status: null,
     beacons: {}
   };
 }
@@ -71,13 +72,23 @@ _dispatchToken = AppDispatcher.register(function(payload) {
       break;
 
     case Constants.User.DISCONNECTED:
-      _data.beacons = {};
-      _data.active = false;
+      _data = {
+        beacons: {},
+        active: false,
+        status: null
+      };
       break;
 
     case Constants.User.LOST_CONNECTION:
-      _data.beacons = {};
-      _data.active = false;
+      _data = {
+        beacons: {},
+        active: false,
+        status: null
+      };
+      break;
+
+    case Constants.Beacons.SET_STATUS:
+      _data.status = action.data.status;
       break;
 
     default:

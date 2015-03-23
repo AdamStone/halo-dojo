@@ -203,6 +203,8 @@ module.exports = {
 
         // listen for beacon updates
         Socket.on('beacons', beaconListener);
+
+        return (callback && callback(null));
       }
     });
   },
@@ -232,7 +234,7 @@ module.exports = {
       if (message) {
         console.log(message);
       }
-      UserActions.setStatus(status);
+      BeaconActions.setStatus(status);
     });
   },
 

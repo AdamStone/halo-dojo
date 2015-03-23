@@ -55,15 +55,6 @@ var UserActions = {
       actionType: Constants.User.LOST_CONNECTION,
       data: {}
     });
-  },
-
-  setStatus: function(status) {
-    AppDispatcher.handleServerAction({
-      actionType: Constants.User.STATUS_UPDATE,
-      data: {
-        status: status
-      }
-    });
   }
 
 };

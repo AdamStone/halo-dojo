@@ -4,7 +4,7 @@ var AppDispatcher = require('../dispatcher/AppDispatcher'),
     Constants = require('../constants/Constants');
 
 var BeaconActions = {
-  
+
   setBeacons: function(beacons) {
     AppDispatcher.handleServerAction({
       actionType: Constants.Beacons.SET_BEACONS,
@@ -12,8 +12,17 @@ var BeaconActions = {
         beacons: beacons
       }
     });
+  },
+
+  setStatus: function(status) {
+    AppDispatcher.handleViewAction({
+      actionType: Constants.Beacons.SET_STATUS,
+      data: {
+        status: status
+      }
+    });
   }
-  
+
 };
 
 module.exports = BeaconActions;

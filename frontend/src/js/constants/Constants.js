@@ -11,7 +11,6 @@ module.exports = {
     CONNECTED: null,
     DISCONNECTED: null,
     LOST_CONNECTION: null,
-    STATUS_UPDATE: null,
     LOGGED_OUT: null
   }),
 
@@ -40,6 +39,7 @@ module.exports = {
   }),
 
   Beacons: keyMirror({
-    SET_BEACONS: null
+    SET_BEACONS: null,
+    SET_STATUS: null
   })
 };

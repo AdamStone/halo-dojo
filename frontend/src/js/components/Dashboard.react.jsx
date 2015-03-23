@@ -1,8 +1,6 @@
 /** @jsx React.DOM */
 var React = require('react');
 var Server = require('../utils/ServerAPI'),
-    UserStore = require('../stores/UserStore'),
-    ProfileStore = require('../stores/ProfileStore'),
     ActionCreators = require('../actions/ActionCreators');
 
 var SideBar = require('./SideBar.react.jsx'),
@@ -12,15 +10,6 @@ var SideBar = require('./SideBar.react.jsx'),
     SetGamertag = require('./SetGamertag.react.jsx'),
     BeaconList = require('./BeaconList.react.jsx');
 
-
-var resultLogger = function(err, result) {
-  if (err) {
-    console.error(err);
-  }
-  if (result) {
-    console.log(result);
-  }
-};
 
 module.exports = React.createClass({
 
@@ -34,6 +23,29 @@ module.exports = React.createClass({
     ActionCreators.deactivateBeacon();
   },
 
+  connectCallback: function(err, result) {
+    if (err) {
+      console.error(err);
+    }
+    if (result) {
+      console.log('connectCallback run, props status:');
+      var status = this.props.beacons.status;
+      console.log(status);
+      if (this.props.beacons.active) {
+        ActionCreators.activateBeacon(function(err) {
+          if (err) {
+            return console.error(err);
+          }
+          if (status) {
+            console.log('calling setStatus with status:');
+            console.log(status);
+            ActionCreators.setStatus(status);
+          }
+        });
+      }
+    }
+  },
+
   componentDidMount: function() {
     if (!this.props.user.cached) {
       ActionCreators.getUserData();
@@ -44,7 +56,7 @@ module.exports = React.createClass({
     // connect socket if main gamertag already known
     if (this.props.user.main) {
       ActionCreators.connect(this.props.user.main.gamertag,
-                             resultLogger);
+                             this.connectCallback);
     }
   },
 
@@ -52,8 +64,9 @@ module.exports = React.createClass({
     // connect socket if main gamertag becomes known
     if (!prevProps.user.main && this.props.user.main ) {
       ActionCreators.connect(this.props.user.main.gamertag,
-                             resultLogger);
+                             this.connectCallback);
     }
+/*    console.log(this.props.beacons);*/
   },
 
   render: function() {

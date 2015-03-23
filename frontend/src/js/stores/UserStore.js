@@ -92,10 +92,6 @@ _dispatchToken = AppDispatcher.register(function(payload) {
       _data.main = action.data.main;
       break;
 
-    case Constants.User.STATUS_UPDATE:
-      _data.status = action.data.status;
-      break;
-
     default:
       return true;
   }
