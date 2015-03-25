@@ -8,8 +8,22 @@ module.exports = React.createClass({
   getInitialState: function() {
     return {
       input: '',
-      error: ''
+      error: '',
+      viewed: true
     };
+  },
+
+  onClick: function(e) {
+    this.focus();
+  },
+
+  focus: function(e) {
+    if (this.refs.messageInput) {
+      this.refs.messageInput.getDOMNode().focus();
+    }
+    this.setState({
+      viewed: true
+    });
   },
 
   sendMessage: function(e) {
@@ -23,6 +37,7 @@ module.exports = React.createClass({
         });
       }
       else {
+        this.focus();
         this.setState({
           input: ''
         });
@@ -66,12 +81,12 @@ module.exports = React.createClass({
     if (!this.props.minimized) {
       setTimeout(function(self) {
         self.scrollDown();
-        self.refs.messageInput.getDOMNode().focus();
+        self.focus();
       }, 250, this);
     }
   },
 
-  componentDidUpdate: function(prevProps) {
+  componentDidUpdate: function(prevProps, prevState) {
     if (!(this.props.data.minimized ||
           this.props.data.closed)) {
 
@@ -79,9 +94,16 @@ module.exports = React.createClass({
 
       if (prevProps.data.minimized) {
         setTimeout(function(self) {
-          self.refs.messageInput.getDOMNode().focus();
+          self.focus();
         }, 250, this);
       }
+    }
+    if (this.props.data.conversation.length >
+         prevProps.data.conversation.length) {
+
+      this.setState({
+        viewed: false
+      });
     }
   },
 
@@ -120,8 +142,13 @@ module.exports = React.createClass({
       <div className={buttonClass}
            title={this.props.gamertag}
            onClick={this.toggle}>
-        <span className="fa fa-envelope"></span>
-        {'  '}{this.props.gamertag}
+
+        <span className={this.state.viewed ?
+                         "fa fa-envelope-o" :
+                         "fa fa-envelope"}></span>
+
+        {'   '}{this.props.gamertag}
+
       </div>
     );
 
@@ -129,8 +156,9 @@ module.exports = React.createClass({
       <div className="messenger">
 
         {this.state.error ?
+
           <span className="error-message">
-          {this.state.error}
+            {this.state.error}
           </span>
 
           : null
@@ -156,6 +184,7 @@ module.exports = React.createClass({
                  name="message-input"
                  value={this.state.input}
                  onChange={this.inputChanged}
+                 onFocus={this.focus}
                  autoComplete="off"/>
         </form>
 
@@ -163,7 +192,8 @@ module.exports = React.createClass({
     );
 
     return (
-      <div className="message-widget">
+      <div className="message-widget"
+           onClick={this.onClick}>
 
         {toggleButton}
 
