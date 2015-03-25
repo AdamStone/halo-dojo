@@ -44,13 +44,11 @@ module.exports = {
             console.log('beacon deactivation requested by ' + gamertag);
             socket.leave('beacons');
             delete _beacons[gamertag];
-//            delete _clients[gamertag];
             emitBeacons();
           };
 
           var activateBeacon = function(gamertag) {
             console.log('beacon activation requested by ' + gamertag);
-//            _clients[gamertag] = socket;
             socket.join('beacons');
             _beacons[gamertag] = {
               time: Math.round(new Date().getTime()/1000),
@@ -60,22 +58,6 @@ module.exports = {
           };
 
           // =============== event handlers =============== //
-
-
-          socket.on('disconnect', function() {
-            if (gamertag) {
-              console.log(gamertag + ' disconnected');
-              if (gamertag in _beacons) {
-                deactivateBeacon(gamertag);
-              }
-              delete _clients[gamertag];
-            }
-            else {
-              console.log('socket disconnected');
-            }
-          });
-
-
 
           socket.on('handshake', function(data, callback) {
             console.log(data);
@@ -90,11 +72,22 @@ module.exports = {
                     callback(err);
                   }
 
-                  // Successfully connected and authenticated
+                  // successfully connected and authenticated
                   if (Object.keys(data).length) {
                     gamertag = data.gamertag;
                     socket.gamertag = gamertag;
                     _clients[gamertag] = socket;
+
+                    // alert any listening conversations of login
+                    socket.join(gamertag);
+                    self.io.sockets.in(gamertag)
+                      .emit('logged in', gamertag);
+
+                    // TODO get login state of prior conversants,
+                    // listen for login/logouts
+
+                    // maybe through separate event?
+
                     console.log('Socket.io handshake from ' + gamertag);
                     if (callback) {
                       return callback(null, 'handshake accepted');
@@ -173,24 +166,51 @@ module.exports = {
                   };
 
                   if (data.recipient in _clients) {
+                    var recipient = _clients[data.recipient];
 
-                    _clients[data.recipient].send(payload, function(err) {
+                    // send message
+                    recipient.send(payload, function(err) {
                       if (err) {
                         console.log(err);
                         return callback(err);
                       }
-                      return callback(null, payload);
+                      else {
+                        // mutually listen for logout/logins
+                        socket.join(recipient.gamertag);
+                        recipient.join(gamertag);
+
+                        return callback(null, payload);
+                      }
                     });
                   }
                   else {
                     // recipient is disconnected
-
-                    callback(data.recipient +
-                             ' is offline');
+                    callback(data.recipient + ' is offline');
                   }
                 });
             });
           });
+
+
+
+          socket.on('disconnect', function() {
+            if (gamertag) {
+              console.log(gamertag + ' disconnected');
+              if (gamertag in _beacons) {
+                deactivateBeacon(gamertag);
+              }
+
+              // emit logout event to conversation partners
+              socket.leave(gamertag);
+              self.io.sockets.in(gamertag)
+                .emit('logged out', gamertag);
+              delete _clients[gamertag];
+            }
+            else {
+              console.log('socket disconnected');
+            }
+          });
+
         });
       });
     };

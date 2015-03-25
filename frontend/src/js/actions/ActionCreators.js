@@ -173,7 +173,17 @@ module.exports = {
             console.log('socket was disconnected: ' + reason);
             UserActions.disconnected();
           }
+        });
 
+        // listen for login/logout of conversations
+        Socket.on('logged in', function(data) {
+          console.log('log in event:');
+          console.log(data);
+        });
+
+        Socket.on('logged out', function(data) {
+          console.log('log out event:');
+          console.log(data);
         });
 
         return (callback && callback(null, response));
