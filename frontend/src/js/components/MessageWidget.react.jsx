@@ -78,7 +78,7 @@ module.exports = React.createClass({
   },
 
   componentDidMount: function() {
-    if (!this.props.minimized) {
+    if (!this.props.data.minimized) {
       setTimeout(function(self) {
         self.scrollDown();
         self.focus();
