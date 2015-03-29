@@ -648,58 +648,60 @@ a {
     background-color: $b50;
     cursor: pointer;
   }
+}
 
-  .message-toggle {
+.message-toggle {
 
-    margin-top: .75em;
-    height: 2em;
+  margin-top: .75em;
+  height: 2em;
 
-    .error-message {
-      color: #eee;
-      margin: 0;
-      position: relative;
-      bottom: 4em;
-      text-align: center;
-    }
+  .error-message {
+    color: #eee;
+    margin: 0;
+    position: relative;
+    bottom: 4em;
+    text-align: center;
+  }
 
-    .textarea-sizer {
-      display: table-cell;
+  .textarea-sizer {
+    display: table-cell;
+    height: 100%;
+    width: $beacon-status-width;
+    position: relative;
+
+    .message-input {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      padding: .5em;
+      resize: none;
+      border: none;
+      width: 100%;
       height: 100%;
-      width: $beacon-status-width;
-      position: relative;
-
-      .message-input {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        padding: .5em;
-        resize: none;
-        border: none;
-        width: 100%;
-        height: 100%;
-        background-color: $beacon-status-bgcolor;
-        box-shadow: $shadow-white;
-        border-radius: 2px;
-        color: $beacon-status-color;
-      }
+      background-color: $beacon-status-bgcolor;
+      box-shadow: $shadow-white;
+      border-radius: 2px;
+      color: $beacon-status-color;
+    }
 
 //      input {
 //        color: #0cf;
 //      }
-    }
+  }
 
-    .message-send {
-      display: table-cell;
-      height: 100%;
-      vertical-align: middle;
-      text-align: center;
-      cursor: pointer;
-    }
-    .message-send:hover {
-      background-color: $b50;
-    }
+  .message-send {
+    display: table-cell;
+    height: 100%;
+    vertical-align: middle;
+    text-align: center;
+    cursor: pointer;
+  }
+  .message-send:hover {
+    background-color: $b50;
   }
 }
+
 
 .user-beacon-tile {
   box-shadow: inset 0 0 1px 0px rgba(255,255,255,1);
@@ -858,17 +860,21 @@ a {
   .player-tile {
     background-color: rgba(195, 208, 208, 0.05);
     width: 100%;
-    padding: 0 0.5em;
+    padding: .5em .75em;
     margin-top: .75em;
 
     .tile-row {
       position: relative;
       text-align: left;
+      margin-bottom: .75em;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
 
       .icon {
         height: 2em;
         width: 2em;
-        margin: 0 .1em;
         font-size: 18px;
       }
 
@@ -887,11 +893,11 @@ a {
 
       h3, p, pre {
         display: inline-block;
+        margin: 0;
       }
 
       .gamertag {
         font-size: 20px;
-        margin: 0.33em;
       }
 
       .status {

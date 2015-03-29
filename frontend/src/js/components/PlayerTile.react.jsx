@@ -1,4 +1,6 @@
-var React = require('react');
+var React = require('react'),
+    MessageToggle = require('./MessageToggle.react.jsx');
+
 
 module.exports = React.createClass({
 
@@ -8,6 +10,28 @@ module.exports = React.createClass({
   // online / searching status ?
 
   // common preferred games ?
+
+
+  getInitialState: function() {
+    return {
+      messagingActive: false
+    };
+  },
+
+
+  showMessaging: function(e) {
+    this.setState({
+      messagingActive: true
+    });
+  },
+
+
+  hideMessaging: function(e) {
+    this.setState({
+      messagingActive: false
+    });
+  },
+
 
   render: function() {
 
@@ -35,9 +59,14 @@ module.exports = React.createClass({
         </div>
         <div className="tile-row icon-row">
           {icons}
-          <span className="fa fa-envelope icon msg-button">
+          <span className="fa fa-envelope icon msg-button"
+                onClick={this.showMessaging}>
           </span>
         </div>
+
+        {this.state.messagingActive ?
+        <MessageToggle unmount={this.hideMessaging}
+                       gamertag={gamertag}/> : null}
       </div>
     );
   }
