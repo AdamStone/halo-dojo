@@ -95,7 +95,8 @@ module.exports = React.createClass({
           <input type="password"
                  name="password"
                  className="password-input"
-                 placeholder="Create a password"
+                 placeholder={this.props.action === 'register' ?
+                     "Create a password" : "Enter your password"}
                  value={this.state.password}
                  onChange={this.passwordChanged}
                  autoComplete={this.props.autocomplete}/>
