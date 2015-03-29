@@ -60,7 +60,6 @@ module.exports = {
           // =============== event handlers =============== //
 
           socket.on('handshake', function(data, callback) {
-            console.log(data);
             schema.socket.handshake.validate(data, function(err, data) {
               if (err && callback) {
                 return callback(err);

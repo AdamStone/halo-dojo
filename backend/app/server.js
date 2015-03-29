@@ -6,7 +6,7 @@ var Hapi = require('hapi'),
 
 var schema = require('../../shared/input-validation'),
     utils = require('../../shared/utils'),
-    setupDB = require('../setup-db'),
+    setupDB = require('../../scripts/setupDB'),
     SocketHandlers = require('./socket-handlers'),
     Credentials = require('./models/credentials'),
     Urls = require('../../shared/urls');
@@ -21,7 +21,7 @@ var xbl = {
   waypoint: new Waypoint()
 };
 
-xbl.waypoint.start();
+//xbl.waypoint.start();
 
 
 
@@ -216,6 +216,13 @@ http.register(require('hapi-auth-hawk'),
     path: '/userdata',
     config: config,
     handler: handlers.http.getUserData
+  });
+
+  http.route({
+    method: 'GET',
+    path: '/suggest',
+    config: config,
+    handler: handlers.http.suggest
   });
 
   // Connect WebSockets

@@ -1,7 +1,10 @@
 "use strict";
 
 var db = require('../../config/database'),
-    SharedConstants = require('../../../shared/constants');
+    SharedConstants = require('../../../shared/constants'),
+    Game = require('./game'),
+    Gamertag = require('./gamertag'),
+    User = require('./user');
 
 // constructor
 function Profile(_node) {
@@ -36,6 +39,11 @@ Object.defineProperty(Profile.prototype, 'data', {
 
 
 
+var weights = {
+  prefer: 1,
+  avoid: 0.5,
+  disagree: 1.25
+};
 
 
 
@@ -56,13 +64,31 @@ var _resultHandler = function(result, callback) {
   });
 
   // if profile exists
-  if (result[0].profile) {
+  if (result.length && result[0].profile) {
     var profileData = new Profile(result[0].profile).data;
     profileData.games = games;
     return callback(null, profileData);
   }
 
   return callback(null, []);
+};
+
+
+
+
+var _parseCollection = function(collection, Constructor, parameter) {
+  if (!collection.length) {
+    return [];
+  }
+  var result = new Array(collection.length);
+  for (var i=0; i < collection.length; i++) {
+    var n = new Constructor(collection[i]);
+    if (parameter) {
+      n = n[parameter];
+    }
+    result[i] = n;
+  }
+  return result;
 };
 
 
@@ -171,6 +197,83 @@ Profile.save = function(userId, data, callback) {
     }
     if (result) {
       return _resultHandler(result, callback);
+    }
+  }).send();
+};
+
+
+
+Profile.suggest = function(userId, callback) {
+  var cypher = [
+    'MATCH (user:User)',
+    'WHERE user.id = {userId}',
+
+    // agreed preferences
+    'OPTIONAL MATCH (prefG:Game), (player:User)',
+    'WHERE (user)-[:PREFERS]->(prefG)<-[:PREFERS]-(player)',
+
+    // agreed avoidances
+    'OPTIONAL MATCH (avG:Game)',
+    'WHERE (user)-[:AVOIDS]->(avG)<-[:AVOIDS]-(player)',
+
+    // disagreements
+    'OPTIONAL MATCH (user)-[r1]->(disG:Game)<-[r2]-(player)',
+    'WHERE NOT type(r1) = type(r2)',
+
+    // get matched player's gamertag
+    'OPTIONAL MATCH (gt:Gamertag)',
+    'WHERE (player)-[:MAINS]->(gt)',
+
+    'RETURN user, gt as gamertag, ',
+      'collect(DISTINCT prefG) as prefG, ',
+      'collect(DISTINCT avG) as avG, ',
+      'collect(DISTINCT disG) as disG'
+  ].join('\n');
+
+  var params = {
+    userId: userId
+  };
+
+  db.queryFactory(cypher, params, function(err, result) {
+    if (err) {
+      return callback(err);
+    }
+    if (result.length) {
+      var comparisons = {};
+      for (var i=0; i < result.length; i++) {
+
+        var gtNode = result[i].gamertag;
+        var gtData = null;
+        if (gtNode) {
+          gtData = new Gamertag(gtNode).data;
+
+          var results = {
+            gtData: gtData,
+            prefG: _parseCollection(result[i].prefG, Game, 'name'),
+            avG: _parseCollection(result[i].avG, Game, 'name'),
+            disG: _parseCollection(result[i].disG, Game, 'name')
+          };
+
+          results.rating = (results.prefG.length) * weights.prefer;
+          results.rating += (results.avG.length) * weights.avoid;
+          results.rating = Math.round(
+            100*results.rating / (results.rating +
+              (results.disG.length) * weights.disagree));
+
+
+          comparisons[gtData.gamertag] = results;
+        }
+//        else {
+//          // user hasn't added a gamertag
+//          comparisons[i] = null;
+//        }
+      }
+
+      return callback(null, comparisons);
+    }
+    else {
+      // result []
+      return callback(null, []);
     }
   }).send();
 };

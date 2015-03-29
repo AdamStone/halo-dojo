@@ -161,5 +161,24 @@ module.exports = function(xbl) {
 
 
 
+  handlers.suggest = function(request, reply) {
+
+    var user = new User(request.auth.credentials.user);
+    Profile.suggest(user.id, function(err, result) {
+      if (err) {
+        console.error(err);
+        return reply(Boom.badImplementation(
+          "An error occurred getting suggestions"
+        ));
+      }
+      if (result) {
+        return reply(result);
+      }
+    });
+
+  };
+
+
+
   return handlers;
 };
