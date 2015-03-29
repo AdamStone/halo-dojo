@@ -8,7 +8,8 @@ var SideBar = require('./SideBar.react.jsx'),
     GamertagStats = require('./GamertagStats.react.jsx'),
     Profile = require('./Profile.react.jsx'),
     SetGamertag = require('./SetGamertag.react.jsx'),
-    BeaconList = require('./BeaconList.react.jsx');
+    BeaconList = require('./BeaconList.react.jsx'),
+    SuggestedPlayers = require('./SuggestedPlayers.react.jsx');
 
 
 module.exports = React.createClass({
@@ -28,9 +29,6 @@ module.exports = React.createClass({
       console.error(err);
     }
     if (result) {
-      console.log('connectCallback run, props status:');
-      var status = this.props.beacons.status;
-      console.log(status);
       if (this.props.beacons.active) {
         ActionCreators.activateBeacon(function(err) {
           if (err) {
@@ -66,7 +64,6 @@ module.exports = React.createClass({
       ActionCreators.connect(this.props.user.main.gamertag,
                              this.connectCallback);
     }
-/*    console.log(this.props.beacons);*/
   },
 
   render: function() {
@@ -114,6 +111,7 @@ module.exports = React.createClass({
 
           <div className="sidebar-item suggested">
             <h3>Suggested Players</h3>
+            <SuggestedPlayers players={this.props.players}/>
           </div>
         </SideBar>
 

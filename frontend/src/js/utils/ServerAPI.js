@@ -88,6 +88,16 @@ module.exports = {
         .end(handler);
     },
 
+    getSuggestedPlayers: function(callback) {
+      var handler = handlerFactory(callback);
+      var path = '/suggest';
+      console.log('getSuggestedPlayers called in serverAPI');
+      Request
+        .get(path)
+        .set('Authorization', authHeader(path, 'get', _getToken()))
+        .end(handler);
+    },
+
     saveProfile: function(data, callback) {
       var handler = handlerFactory(callback);
       var path = '/profile';

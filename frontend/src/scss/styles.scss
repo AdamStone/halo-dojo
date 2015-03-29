@@ -93,6 +93,7 @@ img.grayscale.disabled {
 .sidebar {
   background-color: $sidebar-bgcolor;
   position: absolute;
+  overflow: hidden;
 //  margin-right: $sidebar-width;
   right: 0;
   top: $navbar-height;
@@ -106,7 +107,7 @@ img.grayscale.disabled {
     box-shadow: 0 0 5px rgba(255, 255, 255, .2);
     text-align: center;
     padding: .75em;
-    margin: 1em;
+//    margin: 1em;
 
     h3 {
       margin: 0;
@@ -119,14 +120,20 @@ img.grayscale.disabled {
 
   .live-search {
     cursor: pointer;
+    margin: 1em;
   }
 
   .live-search:hover {
     background-color: $b75;
   }
 
-  .suggested h3 {
-    font-size: 16px;
+  .suggested {
+//    font-size: 16px;
+    position: absolute;
+    right: 1em;
+    left: 1em;
+    top: 5em;
+    bottom: 1em;
   }
 
 }
@@ -755,7 +762,7 @@ a {
   right: 0;
   height: $messenger-width;
   width: $messenger-width;
-  background-color: $w50;
+  background-color: #aaa;
   color: #111;
   bottom: $messagebar-height + .3em;
 
@@ -836,6 +843,79 @@ a {
 }
 
 
+.suggested-players {
+  overflow-y: scroll;
+  position: absolute;
+  top: 2.75em;
+  bottom: 0.75em;
+  left: 0.75em;
+  right: 0.75em;
+
+  // hide scroll
+  margin-right: -100em;
+  padding-right: 99em;
+
+  .player-tile {
+    background-color: rgba(195, 208, 208, 0.05);
+    width: 100%;
+    padding: 0 0.5em;
+    margin-top: .75em;
+
+    .tile-row {
+      position: relative;
+      text-align: left;
+
+      .icon {
+        height: 2em;
+        width: 2em;
+        margin: 0 .1em;
+        font-size: 18px;
+      }
+
+      .msg-button {
+        text-align: center;
+        vertical-align: top;
+        padding-top: 0.5em;
+        position: absolute;
+        right: 0;
+
+        &:hover {
+          background-color: rgba(50,50,50,0.5);
+          cursor: pointer;
+        }
+      }
+
+      h3, p, pre {
+        display: inline-block;
+      }
+
+      .gamertag {
+        font-size: 20px;
+        margin: 0.33em;
+      }
+
+      .status {
+        color: #777;
+        position:absolute;
+        right: 2.5em;
+      }
+
+      .rating {
+        position: absolute;
+        right: 0.25em;
+      }
+
+    }
+  }
+}
+
+
+
+
+
+
+
+
 .tooltip {
   display: inline;
   position: relative;
@@ -903,314 +983,3 @@ to {-o-transform: rotate(359deg);}
 from {transform: rotate(0deg);}
 to {transform: rotate(359deg);}
 }
-
-
-
-
-
-
-
-
-
-
-//h1, h2, h3, h4, h5, h6 {
-//  margin-top: 0;
-//  cursor: default;
-//}
-//
-//.overflow-wrapper {
-//  width: 100%;
-//  overflow: hidden;
-//  position: absolute;
-//}
-//
-//
-
-//
-//.dojo-content {
-//  padding-top: $navbar-height;
-//}
-//
-//
-//.overflow-sizer {
-//
-////  background: url(../images/Orion_Nebula_-_Hubble_2006_mosaic_2560_blue_33.jpg) no-repeat;
-////  background-position: center;
-//  background-attachment: fixed;
-////  background-attachment: scroll;
-//  background-size: cover;
-//
-//  width: $overflow-width;
-//  display: table;
-//  table-layout: fixed;
-////  margin-left: -100%;
-////  margin-left: -200%;
-//}
-//
-//.row-wrapper {
-//  display: table-row;
-//}
-//
-//.scroller {
-//  background-color: rgba(0,0,0,.1);
-//  box-sizing: content-box;
-//  overflow-y: scroll;
-//  height: 100%;
-//  padding: $padding-view;
-//  padding-right: (99em + $padding-view + $scrollbar-width);
-//  margin-right: -100em;
-//}
-//
-//.scrollbar {
-//  width: $scrollbar-width;
-//  position: absolute;
-//  top: 0;
-//  right: 0;
-//  bottom: 0;
-//  background-color: $scrollbar-background;
-//
-//  .scrollhandle {
-//    background-color: $scrollbar-background;
-//    height: 20%;
-//  }
-//
-//}
-//
-//.profile {
-//  position: relative;
-//  overflow: hidden; // else spillover at very small width
-//  background-color: $scrollview-background;
-//  vertical-align: top;
-//  width: $content-width;
-//  display: table-cell;
-//  height: 100%;
-//
-//  .bio {
-//    .textarea {
-//      color: #ddd;
-//
-//      box-shadow: 0 0 5px rgba(255,255,255,.1);
-//      background-color: rgba(0,0,0,0.5);
-//      border-radius: 0.25em;
-//      cursor: default;
-//
-//      padding: .75em;
-//      font-family: 'Oxygen', sans-serif;
-//      font-weight: 400;
-//      font-size: 17px;
-////      margin-left: 1em;
-////      margin-right: 1em;
-//      display: block;
-//    }
-//
-//  }
-//
-//  .dojo-icon {
-//    height: 3.5em;
-//  }
-//
-//}
-//
-//
-//.view {
-//  display: table-cell;
-//  width: $content-width;
-//  height: 100%;
-//}
-//
-//
-//.search-results {
-//  position: relative;
-//  vertical-align: top;
-//  background-color: $scrollview-background;
-//  display: table;
-//  width: 100%;
-//  height: 100%;
-//
-//  .header {
-//    background-color: rgba(0,0,0,.25);
-//    margin: -0.75em;
-//    margin-bottom: .75em;
-//    padding: 0.5em;
-//
-//  }
-//
-//  .tile-row {
-//    margin-bottom: .5em;
-//  }
-//}
-//
-//
-//
-//.transition {
-//  cursor: pointer;
-////  display: table-cell;
-////  vertical-align: middle;
-//}
-//
-//.sidebar {
-//  background-color: rgba(0,0,0,0.9);
-//  vertical-align: middle;
-//  text-align: center;
-//  width: $transition-width;
-//  height: 100%;
-//  display: table-cell;
-////  display: none;
-//  padding: 0.25em;
-//  font-size: 25px;
-//  position: relative;
-//
-//  .beacon-svg {
-//    width: 100%;
-//  }
-//}
-//
-////.transition:hover {
-////  font-size: 26px;
-////  cursor: pointer;
-////  color: #fff;
-////  text-shadow: 0 0 2px rgba(255,255,255,.9);
-////}
-//
-//
-//.tile-row {
-//  display: table;
-//  width: 100%;
-//}
-//
-//.tile {
-//  vertical-align: top;
-//  display: table-cell;
-//  padding: $padding-tile;
-//  height: 100%;
-//  width: 50%;
-//  background-color: $tile-background;
-//}
-//
-//.tile:hover {
-//  background-color: $tile-background-hover;
-//
-//  .unknown {
-//    color: #666;
-//  }
-//}
-//
-//.unknown {
-//  color: rgba(0,0,0,0);
-//}
-//
-//
-//.player-tile {
-//
-//  .comparison {
-////    padding-top: 1em;
-//    display: table-cell;
-////    width: 100%;
-//  }
-//  .message {
-//    font-family: 'Oxygen', sans-serif;
-//    font-size: 15px;
-////    text-align: right;
-//    box-shadow: 0 0 5px rgba(255,255,255,.1);
-//    background-color: rgba(0,0,0,0.2);
-//    border-radius: 0.25em;
-//    cursor: default;
-//  }
-//
-//  .dojo-icon {
-//    height: 2.25em;
-//  }
-//  .btn-message:hover {
-////    box-shadow: 0 0 5px rgba(255,255,255,.1);
-//    background-color: rgba(0,0,0,0.25);
-////    border-radius: 0.25em;
-//    cursor: pointer;
-//  }
-//}
-//
-//.header-tile {
-//  background-color: rgba(0,0,0,.75);
-//}
-//.header-tile:hover {
-//  background-color: rgba(0,0,0,.75);
-//}
-//
-//
-//
-//
-//
-//
-//a:hover {
-//  text-decoration: none;
-//}
-//
-//li {
-//  list-style: none;
-//}
-//
-//
-//
-//.text-row {
-////  text-transform: uppercase;
-//  margin-left: auto;
-//  margin-right: auto;
-//  display: table;
-//  width: 100%;
-//  max-width: 225px;
-//  margin-top: 1em;
-//  cursor: default;
-//  p, span {
-////    width: 50%;
-//    display: table-cell;
-//  }
-//  .icon-row {
-//    display: inline-block;
-//  }
-//}
-//
-//.icon-row {
-//  display: inline-block;
-//  box-shadow: $img-shadow;
-//}
-//
-//.rank-row {
-//  margin-bottom: -0.5em;
-//}
-//
-//.first {
-//  margin-top: 0;
-//}
-//
-//.last {
-//  margin-bottom: 0;
-//}
-//
-//
-//.portrait { // centering
-//  display: block;
-//  max-width:200px;
-//  margin-left: auto;
-//  margin-right: auto;
-//  border-radius: 0.5em;
-//  box-shadow: $img-shadow;
-//}
-//
-//
-//
-//.rank {
-//  width: 2em;
-//  height: 2em;
-//  margin-right: -0.33em;
-//  vertical-align: middle;
-//}
-//
-//.title {
-//  text-transform: uppercase;
-//  letter-spacing: .1em;
-//  font-size: 17px;
-//  margin-bottom: 0.5em;
-//}
-//
-//.title::first-letter {
-//  font-size: 19px;
-//}

@@ -20,7 +20,8 @@ var MessagingStore = require('../stores/MessagingStore'),
     ProfileStore = require('../stores/ProfileStore'),
     UserStore = require('../stores/UserStore'),
     BeaconStore = require('../stores/BeaconStore'),
-    UIStore = require('../stores/UIStore');
+    UIStore = require('../stores/UIStore'),
+    PlayerStore = require('../stores/PlayerStore');
 
 var Constants = require('../constants/Constants');
 
@@ -45,7 +46,8 @@ function getAppState() {
     profile: ProfileStore.get(),
     ui: UIStore.get(),
     beacons: BeaconStore.get(),
-    messaging: MessagingStore.get()
+    messaging: MessagingStore.get(),
+    players: PlayerStore.get()
   };
 };
 
@@ -120,7 +122,8 @@ module.exports = React.createClass({
           <Dashboard user={user}
                      profile={this.state.profile}
                      beacons={this.state.beacons}
-                     messaging={this.state.messaging}/>
+                     messaging={this.state.messaging}
+                     players={this.state.players}/>
         </Route>
 
 

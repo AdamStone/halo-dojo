@@ -41,5 +41,9 @@ module.exports = {
   Beacons: keyMirror({
     SET_BEACONS: null,
     SET_STATUS: null
+  }),
+
+  Player: keyMirror({
+    GOT_PLAYER_DATA: null
   })
 };

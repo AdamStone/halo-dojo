@@ -5,6 +5,7 @@ var UserActions = require('./UserActions'),
     ProfileActions = require('./ProfileActions'),
     BeaconActions = require('./BeaconActions'),
     MessagingActions = require('./MessagingActions'),
+    PlayerActions = require('./PlayerActions'),
     Server = require('../utils/ServerAPI'),
     Socket = require('../utils/SocketAPI');
 
@@ -132,6 +133,21 @@ module.exports = {
         ProfileActions.setProfile(
           JSON.parse(response.text)
         );
+      }
+    });
+  },
+
+  getSuggestedPlayers: function() {
+    Server.auth.getSuggestedPlayers(function(err, result) {
+      console.log('getSuggestedPlayers returned');
+      if (err) {
+        console.error(err);
+      }
+      if (result) {
+        var suggestions = JSON.parse(result.text);
+        console.log(suggestions);
+
+        PlayerActions.gotPlayerData(suggestions);
       }
     });
   },

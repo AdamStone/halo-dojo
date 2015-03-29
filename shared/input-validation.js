@@ -8,7 +8,7 @@ var schema = {
   guid: Joi.string().guid(),
   username: Joi.string().token().min(3).max(15),
   password: Joi.string().min(8).max(20),
-  gamertag: Joi.string().regex(/^[A-Za-z\d]+(?: [A-Za-z\d]+)*$/).max(15).min(4),
+  gamertag: Joi.string().regex(/^_?[A-Za-z\d]+(?: [A-Za-z\d]+)*$/).max(15).min(4),
   intRange: function(low, high) {
     return Joi.number().integer().min(low).max(high);
   },
