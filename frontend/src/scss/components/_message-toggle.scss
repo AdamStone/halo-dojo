@@ -1,0 +1,48 @@
+.message-toggle {
+
+  margin-top: .75em;
+  height: 2em;
+
+  .error-message {
+    color: #eee;
+    margin: 0;
+    position: relative;
+    bottom: 4em;
+    text-align: center;
+  }
+
+  .textarea-sizer {
+    display: table-cell;
+    height: 100%;
+    width: $beacon-status-width;
+    position: relative;
+
+    .message-input {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      padding: .5em;
+      resize: none;
+      border: none;
+      width: 100%;
+      height: 100%;
+      background-color: $beacon-status-bgcolor;
+      box-shadow: $shadow-white;
+      border-radius: 2px;
+      color: $beacon-status-color;
+    }
+  }
+
+  .message-send {
+    display: table-cell;
+    height: 100%;
+    vertical-align: middle;
+    text-align: center;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $b50;
+    }
+  }
+}

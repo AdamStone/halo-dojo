@@ -1,0 +1,8 @@
+.status-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: $sidebar-width;
+  height: $statusbar-height;
+  text-align: center;
+}

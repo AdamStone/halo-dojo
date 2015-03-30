@@ -1,0 +1,41 @@
+.message-bar {
+  color: $content-color;
+  height: $messagebar-height;
+  background-color: $messagebar-bgcolor;
+  position: fixed;
+  bottom: $statusbar-height;
+  left: 0;
+  right: $sidebar-width;
+
+  .messagebar-align {
+    position: absolute;
+    right: 0;
+  }
+
+  .message-widget {
+    display: table-cell;
+    height: 100%;
+    vertical-align: middle;
+    padding: .25em;
+    font-family: 'Oxygen', sans-serif;
+    font-size: 14px;
+    position: relative;
+
+    .toggle-button {
+      padding: .25em .5em;
+      width: $messenger-toggle-width;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &:hover {
+        cursor: pointer;
+        background-color: $w10;
+      }
+    }
+
+    .expanded {
+      width: $messenger-width;
+    }
+  }
+}

@@ -1,0 +1,29 @@
+.set-status {
+
+  display: table;
+  width: 100%;
+  height: 100%;
+  margin-left: 1px;
+
+  input {
+    display: table-cell;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 80%;
+    padding-left: 0.5em;
+    text-align: center;
+    background-color: $set-status-bgcolor;
+    color: $set-status-color;
+  }
+
+  .btn-submit {
+    display: table-cell;
+    padding: 0.25em;
+    background-color: $status-submit-bgcolor;
+    cursor: pointer;
+    width: 20%;
+    vertical-align: middle;
+  }
+}

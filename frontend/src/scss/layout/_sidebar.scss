@@ -1,0 +1,43 @@
+.sidebar {
+  background-color: $sidebar-bgcolor;
+  position: absolute;
+  overflow: hidden;
+  right: 0;
+  top: $navbar-height;
+  bottom: 0;
+  width: $sidebar-width;
+
+  .sidebar-item {
+    color: $content-color;
+    background-color: $b50;
+    box-shadow: 0 0 5px $w20;
+    text-align: center;
+    padding: .75em;
+
+    h3 {
+      margin: 0;
+      font-size: 20px;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 400;
+    }
+
+    &.live-search {
+      cursor: pointer;
+      margin: 1em;
+
+      &:hover {
+        background-color: $b75;
+      }
+    }
+
+    &.suggested {
+      position: absolute;
+      right: 1em;
+      left: 1em;
+      top: 5em;
+      bottom: 1em;
+    }
+
+  }
+
+}

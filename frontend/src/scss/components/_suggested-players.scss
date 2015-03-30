@@ -1,0 +1,69 @@
+.suggested-players {
+  overflow-y: scroll;
+  position: absolute;
+  top: 2.75em;
+  bottom: 0.75em;
+  left: 0.75em;
+  right: 0.75em;
+
+  // hide scroll
+  margin-right: -100em;
+  padding-right: 99em;
+
+  .player-tile {
+    background-color: $player-tile-bg-color;
+    width: 100%;
+    padding: .5em .75em;
+    margin-top: .75em;
+
+    .tile-row {
+      position: relative;
+      text-align: left;
+      margin-bottom: .75em;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .icon {
+        height: 2em;
+        width: 2em;
+        font-size: 18px;
+      }
+
+      .msg-button {
+        text-align: center;
+        vertical-align: top;
+        padding-top: 0.5em;
+        position: absolute;
+        right: 0;
+
+        &:hover {
+          background-color: $msg-button-hover-color;
+          cursor: pointer;
+        }
+      }
+
+      h3, p, pre {
+        display: inline-block;
+        margin: 0;
+      }
+
+      .gamertag {
+        font-size: 20px;
+      }
+
+      .status {
+        color: #777;
+        position:absolute;
+        right: 2.5em;
+      }
+
+      .rating {
+        position: absolute;
+        right: 0.25em;
+      }
+
+    }
+  }
+}

@@ -1,0 +1,86 @@
+.landing-page {
+  overflow-y: auto;
+  position: fixed;
+  top: $navbar-height;
+  bottom: 0;
+
+  .landing-title {
+    text-align: center;
+    width: 100%;
+    color: $content-color;
+    background-color: $landing-title-bg-color;
+
+    h1 {
+      text-transform: uppercase;
+      letter-spacing: .2em;
+      margin: 0;
+      padding: 1.5em;
+      font-size: 44px;
+      font-weight: 300;
+      cursor: default;
+    }
+  }
+
+  .landing-tagline {
+    text-align: center;
+
+    h2 {
+      font-size: 27px;
+      margin: 0;
+      padding: 1.5em 5em;
+      font-weight: 400;
+    }
+  }
+
+  .landing-section {
+    text-align: center;
+    padding: 3em 5em;
+
+    h3 {
+      margin: 0;
+      padding: 0 5em;
+      font-size: 26px;
+      font-family: Oxygen, sans-serif;
+      letter-spacing: 0.1em;
+      font-weight: 400;
+    }
+
+    p, a {
+      margin: 0;
+      padding: 2em 0 0;
+      font-size: 21px;
+      font-weight: 300;
+      font-family: Oxygen, sans-serif;
+      letter-spacing: 0.05em;
+    }
+
+    a {
+      font-size: 23px;
+
+      &:hover {
+        color: #fff;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .dark {
+    color: $content-color;
+    background-color: $dark-bg-color;
+
+  }
+
+  .light {
+    background-color: $light-bg-color;
+
+    a {
+      color: #000;
+    }
+  }
+
+  .logo {
+    width: 3em;
+    margin-top: 2em;
+  }
+
+}

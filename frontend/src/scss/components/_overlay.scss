@@ -1,0 +1,36 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: $overlay-bg-color;
+  z-index: 9999;
+
+  .dismiss-button {
+    margin-top: 1.5em;
+    padding: 1em;
+    background-color: $overlay-dismiss-color;
+
+    &:hover {
+      background-color: $overlay-dismiss-hover-color;
+    }
+  }
+
+  .window {
+    display: table;
+    height: 100%;
+    margin: auto;
+    padding: 5em 0;
+
+    .overlay-content {
+      color: $content-color;
+      background-color: $b90;
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+      width: 30em;
+      padding: 0 5em;
+    }
+  }
+}

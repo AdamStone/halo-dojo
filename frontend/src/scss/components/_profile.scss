@@ -1,0 +1,61 @@
+.profile {
+  width: 100%;
+  table-layout: fixed;
+  position: relative;
+
+  td {
+    vertical-align: top;
+  }
+
+  td.fixed-width {
+    width: $bio-width + 2em;
+  }
+
+  .bio {
+    width: $bio-width;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    font-size: 16px;
+    margin: 1em;
+
+    textarea {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      font-size: 16px;
+      padding: 1em;
+      background-color: $b50;
+      color: #eee;
+      width: $bio-width;
+      resize: none;
+      border: none;
+    }
+  }
+
+  .preferences {
+    text-align: center;
+    padding: 0 1em 1em 0;
+
+    h1, h2, h3 {
+      font-weight: 300;
+      margin: 0;
+      margin-bottom: 0.5em;
+      color: $content-color;
+    }
+
+    .tile {
+      background-color: $b50;
+      padding: .5em;
+      margin-top: 1em;
+    }
+
+    .icon {
+      height: 3.5em;
+      cursor: pointer;
+    }
+  }
+
+}

@@ -1,0 +1,82 @@
+.messenger {
+  position: absolute;
+  right: 0;
+  height: $messenger-width;
+  width: $messenger-width;
+  background-color: #aaa;
+  color: #111;
+  bottom: $messagebar-height + .3em;
+
+  .minimize, .close {
+    font-size: 12px;
+    display: inline-block;
+    text-align: center;
+    width: 1.5em;
+    height: 1.5em;
+    cursor: pointer;
+    position: absolute;
+    padding-top: .2em;
+    top: .3em;
+    right: 3%;
+
+    &:hover {
+      background-color: $w50;
+    }
+  }
+
+  .minimize {
+    padding-top: .3em;
+    right: auto;
+    left: 3%;
+  }
+
+  .error-message {
+    position: absolute;
+    width: 100%;
+    top: .2em;
+    text-align: center;
+    color: #444;
+  }
+
+  input {
+    width: 94%;
+    margin: .5em 3%;
+    height: 10%;
+  }
+
+  .chatbox {
+    background-color: $w75;
+    height: 75%;
+    width: 94%;
+    margin: 1.6em auto 0;
+    padding: .2em;
+    overflow-y: scroll;
+
+
+    .bubble {
+      padding: .15em .5em;
+      border-radius: .3em;
+      display: inline-block;
+    }
+
+    .message-self {
+      text-align: right;
+      margin-left: 3em;
+      margin-bottom: .25em;
+
+      .bubble {
+        background-color: $message-self-bubble-color;
+      }
+    }
+
+    .message-other {
+      text-align: left;
+      margin-right: 3em;
+      margin-bottom: .25em;
+
+      .bubble {
+        background-color: $message-other-bubble-color;
+      }
+    }
+  }
+}

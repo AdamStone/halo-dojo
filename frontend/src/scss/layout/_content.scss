@@ -1,0 +1,10 @@
+.dojo-content {
+  overflow: hidden;
+  position: absolute;
+  top: $navbar-height;
+  bottom: $statusbar-height + $messagebar-height;
+  width: 100%-$sidebar-width;
+  background-color: $content-bgcolor;
+  color: $content-color;
+}
+

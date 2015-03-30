@@ -1,0 +1,25 @@
+.auth-form {
+  width: 25em;
+  margin: auto;
+  padding: 1em;
+  text-align: center;
+
+  input {
+    text-align: center;
+    border: none;
+    padding: 0.5em;
+    margin: 0.5em auto;
+    width: 100%;
+    font-size: 16px;
+    border-radius: 3px;
+  }
+
+  input[type="submit"] {
+    width: 50%;
+  }
+
+  .hint {
+    color: #fff;
+    font-size: 21px;
+  }
+}

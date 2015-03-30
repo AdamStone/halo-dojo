@@ -1,0 +1,41 @@
+*, *:before, *:after {
+  -webkit-box-sizing: border-box; /* Needed for mobile WebKit */
+  -moz-box-sizing: border-box; /* Needed for Firefox */
+  box-sizing: border-box
+}
+
+html, body, .wrapper {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: $content-color;
+}
+
+
+// INPUT PLACEHOLDER TEXT
+
+.style-placeholders {
+  *::-webkit-input-placeholder {
+     color: $placeholder-color;
+  }
+  *:-moz-placeholder { /* Firefox 18- */
+     color: $placeholder-color;
+  }
+  *::-moz-placeholder {  /* Firefox 19+ */
+     color: $placeholder-color;
+  }
+  *:-ms-input-placeholder {
+     color: $placeholder-color;
+  }
+  *[placeholder] {
+    color: $placeholder-color;
+  }
+}

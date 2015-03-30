@@ -1,0 +1,28 @@
+.dashboard {
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: absolute;
+  font-family: 'Oxygen', sans-serif;
+  top: $navbar-height;
+  bottom: $messagebar-height;
+  left: 0;
+  right: $sidebar-width;
+  background-color: $content-bgcolor;
+
+  .tile-input {
+    border: none;
+    margin-bottom: 1em;
+    padding: 0.5em;
+    font-family: 'Oxygen', sans-serif;
+    font-size: 18px;
+    color: $content-color;
+    background-color: $b50;
+    box-shadow: $shadow-white;
+    text-align: center;
+    font-weight: 300;
+  }
+
+  .hint {
+    margin-top: 0;
+  }
+}
