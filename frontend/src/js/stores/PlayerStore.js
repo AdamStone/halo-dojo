@@ -56,8 +56,7 @@ _dispatchToken = AppDispatcher.register(function(payload) {
   switch (action.actionType) {
 
     case Constants.Player.GOT_PLAYER_DATA:
-      _data.data = utils.update(_data.data,
-                                      action.data);
+      _data.data = utils.update(_data.data, action.data);
       _data.cached = true;
       break;
 

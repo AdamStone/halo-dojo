@@ -171,7 +171,7 @@ User.getData = function(id, callback) {
           );
         }
         if (result[i].main) {
-          main = new Gamertag(result[0].main).data
+          main = new Gamertag(result[0].main).data;
         }
       }
       return callback(null, {
@@ -181,6 +181,7 @@ User.getData = function(id, callback) {
     }
   }).send();
 };
+
 
 
 module.exports = User;
