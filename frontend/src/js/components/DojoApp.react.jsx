@@ -30,7 +30,8 @@ var stores = [
   MessagingStore,
   ProfileStore,
   UIStore,
-  UserStore
+  UserStore,
+  PlayerStore
 ];
 
 
