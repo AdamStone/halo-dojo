@@ -5,9 +5,9 @@ var React = require('react'),
 
 
 module.exports = React.createClass({
-   
+
   render: function() {
-    var convos = this.props.messaging;
+    var convos = this.props.messaging.conversations;
     var messageWidgets = [];
     for (var gamertag in convos) {
       if (convos.hasOwnProperty(gamertag)) {
@@ -18,8 +18,8 @@ module.exports = React.createClass({
         )
       }
     }
-    
-    
+
+
     return (
       <div className="message-bar">
         <div className="messagebar-align" style={{display: 'table', height: '100%'}}>

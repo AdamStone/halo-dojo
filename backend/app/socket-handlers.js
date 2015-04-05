@@ -2,8 +2,10 @@
 
 var Socket = require('socket.io'),
     Hawk = require('hawk'),
-    schema = require('../../shared/input-validation'),
+    schema = require('../../shared/input-validation');
 
+var Convo = require('./models/convo'),
+    User = require('./models/user'),
     Credentials = require('./models/credentials');
 
 
@@ -65,7 +67,7 @@ module.exports = {
                 return callback(err);
               }
               Hawk.server.authenticateMessage('localhost', 8000, 'message',
-                data.auth, Credentials.get, {}, function(err) {
+                data.auth, Credentials.get, {}, function(err, credentials) {
 
                   if (err && callback) {
                     callback(err);
@@ -75,6 +77,7 @@ module.exports = {
                   if (Object.keys(data).length) {
                     gamertag = data.gamertag;
                     socket.gamertag = gamertag;
+                    socket.user = new User(credentials.user);
                     _clients[gamertag] = socket;
 
                     // alert any listening conversations of login
@@ -157,35 +160,44 @@ module.exports = {
                       'Clients must handshake before messaging');
                   }
 
-                  var payload = {
-                    message: data.message,
-                    from: gamertag,
-                    to: data.recipient,
-                    time: Math.round(new Date().getTime()/1000)
-                  };
-
+                  var recipient;
                   if (data.recipient in _clients) {
-                    var recipient = _clients[data.recipient];
-
-                    // send message
-                    recipient.send(payload, function(err) {
-                      if (err) {
-                        console.log(err);
-                        return callback(err);
-                      }
-                      else {
-                        // mutually listen for logout/logins
-                        socket.join(recipient.gamertag);
-                        recipient.join(gamertag);
-
-                        return callback(null, payload);
-                      }
-                    });
+                    recipient = _clients[data.recipient];
                   }
                   else {
                     // recipient is disconnected
-                    callback(data.recipient + ' is offline');
+                    recipient = null;
                   }
+
+                  // save message to database
+                  Convo.append(gamertag, data.recipient, data.message,
+                                (!recipient), function(err, result) {
+                    if (err) {
+                      console.log(err);
+                    }
+                    if (result) {
+                      // send message if recipient online
+                      if (recipient) {
+                        recipient.send(result, function(err) {
+                          if (err) {
+                            console.log(err);
+                            return callback(err);
+                          }
+                          else {
+                            // mutually listen for logout/logins
+                            socket.join(recipient.gamertag);
+                            recipient.join(gamertag);
+
+                            return callback(null, result);
+                          }
+                        });
+                      }
+                      else {
+                        return callback(null, result);
+                      }
+                    }
+                  });
+
                 });
             });
           });
@@ -208,6 +220,14 @@ module.exports = {
             else {
               console.log('socket disconnected');
             }
+          });
+
+
+
+          socket.on('get convos', function(_, callback) {
+            Convo.getUserConvos(socket.user.id, function(err, result) {
+              return callback(err, result);
+            });
           });
 
         });

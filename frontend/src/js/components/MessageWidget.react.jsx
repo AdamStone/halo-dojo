@@ -128,11 +128,12 @@ module.exports = React.createClass({
         return (
           <div className={className} key={i}>
             <div className="bubble">
-              {message.message}
+              {message.text}
             </div>
           </div>
         );
-      });
+      }
+    );
 
     var buttonClass = "toggle-button";
     if (!minimized) {

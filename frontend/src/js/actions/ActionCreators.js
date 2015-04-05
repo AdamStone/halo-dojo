@@ -145,12 +145,12 @@ module.exports = {
       }
       if (result) {
         var suggestions = JSON.parse(result.text);
-        console.log(suggestions);
-
         PlayerActions.gotPlayerData(suggestions);
       }
     });
   },
+
+
 
 
   // SOCKET API
@@ -261,6 +261,19 @@ module.exports = {
         console.log(message);
       }
       BeaconActions.setStatus(status);
+    });
+  },
+
+  getConvos: function(callback) {
+    Socket.emit('get convos', {}, function(err, result) {
+      if (err && callback) {
+        return callback(err);
+      }
+      if (result) {
+        console.log('got convos');
+        MessagingActions.gotConvos(result);
+        return (callback && callback());
+      }
     });
   },
 
