@@ -7,7 +7,13 @@ function Gamertag(_node) {
 }
 
 var properties = [
-  'gamertag'
+  'gamertag',
+  'csr_max',
+  'games_played',
+  'kd',
+  'total_deaths',
+  'total_kills',
+  'wl'
 ];
 
 properties.forEach(function(property) {
