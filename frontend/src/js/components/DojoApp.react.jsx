@@ -111,7 +111,8 @@ module.exports = React.createClass({
       <div className="wrapper site-wrapper unselectable">
 
         <NavBar user={this.state.user}
-                profile={this.state.profile}/>
+                profile={this.state.profile}
+                messaging={this.state.messaging}/>
 
 
         <Route condition={!user.token}>

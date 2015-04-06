@@ -4,6 +4,8 @@ var React = require('react');
 var UIActions = require('../actions/UIActions'),
     ActionCreators = require('../actions/ActionCreators');
 
+var MessagingDropdown = require('./MessagingDropdown.react.jsx');
+
 module.exports = React.createClass({
 
   showRegistrationOverlay: function(e) {
@@ -61,7 +63,10 @@ module.exports = React.createClass({
 
             {this.props.user.token ?
 
-              null
+              <li className="indicator">
+                <MessagingDropdown messaging={
+                    this.props.messaging}/>
+              </li>
 
               :
 

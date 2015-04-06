@@ -13,6 +13,10 @@ $messenger-toggle-width: 8em;
 $messenger-width: 16em;
 $bio-width: 20em;
 
+
+$messaging-dropdown-list-width: 12em;
+$messaging-dropdown-list-height: 16em;
+
 // COLORS
 
 // black alpha
@@ -40,7 +44,7 @@ $w05: rgba(255,255,255,.05);
 
 
 // light text theme
-$navbar-bgcolor: $b90;
+$navbar-bgcolor: #060608;
 $sidebar-bgcolor: $b75;
 $widget-bgcolor: $b50;
 $content-bgcolor: $b15;
@@ -53,6 +57,7 @@ $set-status-bgcolor: #eee;
 
 $navbar-color: #cdf;
 $content-color: #cdf;
+$content-color-alpha: rgba(204, 221, 255, 0.33);
 $beacon-status-color: #9ab;
 $placeholder-color: #567;
 $set-status-color: #222;

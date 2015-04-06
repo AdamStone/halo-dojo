@@ -32,6 +32,8 @@ module.exports = {
 
   Messaging: keyMirror({
     GOT_CONVOS: null,
+    GOT_MESSAGES: null,
+    MARKED_READ: null,
     SENT_MESSAGE: null,
     RECEIVED_MESSAGE: null,
     MINIMIZED: null,

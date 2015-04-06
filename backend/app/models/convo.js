@@ -48,27 +48,45 @@ Convo.getUserConvos = function(userId, callback, maxMsgs) {
   */
 
   // default to 10 messages
-  maxMsgs = typeof maxMsgs !== 'undefined' ? maxMsgs.toString() : '10';
+  maxMsgs = typeof maxMsgs !== 'undefined' ?
+                        maxMsgs.toString() : '10';
 
   var cypher = [
     // get all (:Convo) partners associated with user
-    'MATCH (user {id: {id}})',
-    'OPTIONAL MATCH ' +
-      '(user)-[:HAD]-(c:Convo)-[:HAD]-(other:User)' +
+    'MATCH ',
+      '(user {id: {id}})',
+    'OPTIONAL MATCH ',
+      '(user)-[:HAD]-(c:Convo)-[:HAD]-(other:User)',
         '-[:MAINS]->(gt:Gamertag)',
-    'WHERE NOT id(user) = id(other)',
+    'WHERE NOT ',
+      'id(user) = id(other)',
 
     // get subset marked [:UNREAD]
-    'WITH user, c, other, gt',
-    'OPTIONAL MATCH ' +
+    'WITH ',
+      'user, c, other, gt',
+    'OPTIONAL MATCH ',
       '(user)-[:UNREAD]->(unread:Convo)-[:HAD]-(other)',
 
     // get messages associated with unread
-    'OPTIONAL MATCH ' +
-      '(unread)-[:LAST]->()' +
-        '<-[:NEXT*0..' + maxMsgs + ']-(m:Message)',
+    'OPTIONAL MATCH ',
+      '(unread)-[:LAST]->()<-[:NEXT*0..' +
+                              maxMsgs + ']-(m:Message)',
 
-    'RETURN gt AS gamertag, collect(DISTINCT m) as messages',
+    // get sender and recipient of each message
+    'WITH ',
+      'gt, c, m',
+    'OPTIONAL MATCH ',
+      '(m)<-[:SENT]-(:User)-[:MAINS]->(sender:Gamertag),',
+      '(m)-[:TO]->(:User)-[:MAINS]->(recipient:Gamertag)',
+
+    'RETURN ',
+      'gt AS gamertag, ',
+      'c.lastTime AS lastTime, ',
+      'collect(m) AS messages, ',
+      'collect(sender.gamertag) AS senders,',
+      'collect(recipient.gamertag) AS recipients',
+    'ORDER BY ',
+      'lastTime DESC'
 
   ].join('\n');
 
@@ -80,23 +98,101 @@ Convo.getUserConvos = function(userId, callback, maxMsgs) {
     if (err) {
       return callback(err);
     }
+    /*
+      result format:
+        [{
+          gamertag: {gamertag: , csr_max: , ...},
+          lastTime: (time of last message in convo),
+          messages: [{text: , time: }, {...}, ...],
+          senders:  [(gt strings of corr. senders)],
+          recipients:  [(gt strings of corr. recipients)],
+        }, {
+          ...
+        }]
+    */
 
-    var payload = {};
+    var payload = [];
 
-    // each row contains gamertag and, if unread, maxMsgs messages
+    // parse result
     result.forEach(function(row) {
-      var gamertag = new Gamertag(row.gamertag).gamertag;
+      var gtData = new Gamertag(row.gamertag).data,
+          lastTime = row.lastTime;
 
-      payload[gamertag] = [];
-      if (row.messages.length) {
+      var messages = [],
+          unread = false;
+      if (row.messages.length) { // convo is unread
         // newest messages are first in array
-        row.messages.forEach(function(m) {
-          payload[gamertag].unshift(new Message(m).data);
-        });
+        for (var i=0; i < row.messages.length; i++) {
+          var m = new Message(row.messages[i]).data;
+          m.from = row.senders[i];
+          m.to = row.recipients[i];
+          messages.unshift(m);
+        }
+        unread = true;
       }
+      var entry = {};
+      entry[gtData.gamertag] = {
+        messages: messages,
+        unread: unread,
+        lastTime: lastTime
+      };
+      payload.unshift(entry);
     });
-
     return callback(null, payload);
+  }).send();
+};
+
+
+
+Convo.getMessages = function(userId, gamertag,
+                             callback, maxMsgs) {
+  // default to 10 messages
+  maxMsgs = typeof maxMsgs !== 'undefined' ?
+                        maxMsgs.toString() : '10';
+  var cypher = [
+    'MATCH',
+      '(user:User {id: {id}}),',
+      '(gt:Gamertag {gamertag: {gt}})',
+
+    // get last maxMsgs messages
+    'OPTIONAL MATCH',
+      '(user)-[:HAD]->(c:Convo)',
+        '<-[:HAD]-(other:User)-[:MAINS]->(gt),',
+      '(c)-[:LAST]->()<-[:NEXT*0..' +
+                         maxMsgs + ']-(m:Message)',
+
+    // get sender and recipient of each message
+    'WITH ',
+      'm',
+    'OPTIONAL MATCH ',
+      '(m)<-[:SENT]-(:User)-[:MAINS]->(sender:Gamertag),',
+      '(m)-[:TO]->(:User)-[:MAINS]->(recipient:Gamertag)',
+
+    'RETURN ',
+      'collect(m) AS messages, ',
+      'collect(sender.gamertag) AS senders,',
+      'collect(recipient.gamertag) AS recipients'
+
+  ].join('\n');
+
+  var params = {
+    id: userId,
+    gt: gamertag
+  };
+  db.queryFactory(cypher, params, function(err, result) {
+    if (err) {
+      return callback(err);
+    }
+    if (result) {
+      var messages = [];
+      for (var i=0; i < result[0].messages.length; i++) {
+        var m = new Message(result[0].messages[i]).data;
+        m.from = result[0].senders[i];
+        m.to = result[0].recipients[i];
+        messages.unshift(m);
+      }
+      return callback(null, messages);
+    }
   }).send();
 };
 
@@ -114,7 +210,7 @@ Convo.append = function(senderGamertag, recipientGamertag, message,
   // if recipient offline, mark (:Convo) as [:UNREAD]
   var unread = '';
   if (offline) {
-    unread = 'CREATE (other)-[:UNREAD]->(c)';
+    unread = 'CREATE UNIQUE (other)-[:UNREAD]->(c)';
   }
 
   var cypher = [
@@ -131,9 +227,11 @@ Convo.append = function(senderGamertag, recipientGamertag, message,
     'OPTIONAL MATCH (c)-[del:LAST]->(lst:Message)',
     'DELETE del',
 
-    // create new (:Message) as [:LAST] and mark who [:SENT]
+    // create new (:Message) as [:LAST]
     'CREATE (c)-[:LAST]->(this:Message {messageData})',
-    'CREATE (user)-[:SENT]->(this)',
+
+    // mark who [:SENT] and [:TO] whom
+    'CREATE (user)-[:SENT]->(this)-[:TO]->(other)',
 
     // if a previous [:LAST] was found, link it to new [:LAST]
     'FOREACH (x IN CASE WHEN lst IS NULL THEN [] ELSE [1] END |',
@@ -167,6 +265,38 @@ Convo.append = function(senderGamertag, recipientGamertag, message,
     payload.to = recipientGamertag;
     return callback(null, payload);
   }).send();
+};
+
+
+
+Convo.markRead = function(userId, gamertag, callback) {
+  var cypher = [
+    'MATCH',
+      '(user:User {id: {id}}),',
+      '(other:User)-[:MAINS]->(gt:Gamertag {gamertag: {gt}})',
+    'OPTIONAL MATCH',
+      '(user)-[del:UNREAD]->(:Convo)<-[:HAD]-(other)',
+    'DELETE',
+      'del',
+    'RETURN',
+      'gt AS gamertag'
+  ].join('\n');
+
+  var params = {
+    id: userId,
+    gt: gamertag
+  };
+
+  db.queryFactory(cypher, params, function(err, result) {
+    if (err && callback) {
+      return callback(err);
+    }
+    if (result) {
+      return callback(null,
+          new Gamertag(result[0].gamertag).gamertag);
+    }
+  }).send();
+
 };
 
 module.exports = Convo;

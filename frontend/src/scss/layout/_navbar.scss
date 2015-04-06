@@ -49,12 +49,12 @@
       padding-left: 0.5em;
     }
 
-    .spacer {
+    li.spacer {
       width: auto;
       cursor: default;
 
       &:hover {
-        background-color: #000;
+        background-color: transparent;
       }
     }
 

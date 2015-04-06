@@ -12,6 +12,25 @@ var MessagingActions = {
     });
   },
 
+  gotMessages: function(gamertag, messages) {
+    AppDispatcher.handleServerAction({
+      actionType: Constants.Messaging.GOT_MESSAGES,
+      data: {
+        gamertag: gamertag,
+        messages: messages
+      }
+    });
+  },
+
+  markedConvoRead: function(gamertag) {
+    AppDispatcher.handleServerAction({
+      actionType: Constants.Messaging.MARKED_READ,
+      data: {
+        gamertag: gamertag
+      }
+    });
+  },
+
   sentMessage: function(data) {
     AppDispatcher.handleServerAction({
       actionType: Constants.Messaging.SENT_MESSAGE,

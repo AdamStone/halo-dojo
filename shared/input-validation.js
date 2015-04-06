@@ -43,7 +43,7 @@ schema.socket = {
   message: Joi.object().keys({
     auth: schema.auth.required(),
     recipient: schema.gamertag.required(),
-    message: schema.message.required()
+    text: schema.message.required()
   })
 };
 

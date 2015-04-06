@@ -270,18 +270,49 @@ module.exports = {
         return callback(err);
       }
       if (result) {
-        console.log('got convos');
         MessagingActions.gotConvos(result);
         return (callback && callback());
       }
     });
   },
 
-  sendMessage: function(gamertag, message, callback) {
-    if (message.trim() !== '') {
+  getMessages: function(gamertag, callback) {
+    var data = {
+      gamertag: gamertag
+    };
+    Socket.emit('get messages', data,
+                function(err, result) {
+      if (err && callback) {
+        return callback(err);
+      }
+      if (result) {
+        MessagingActions.gotMessages(gamertag, result);
+        return (callback && callback());
+      }
+    });
+  },
+
+  markConvoRead: function(gamertag, callback) {
+    var data = {
+      gamertag: gamertag
+    };
+    Socket.emit('mark convo read', data,
+                function(err, result) {
+      if (err && callback) {
+        return callback(err);
+      }
+      if (result) {
+        MessagingActions.markedConvoRead(result);
+        return (callback && callback());
+      }
+    });
+  },
+
+  sendMessage: function(gamertag, text, callback) {
+    if (text.trim() !== '') {
       var data = {
         recipient: gamertag,
-        message: message
+        text: text
       };
       Socket.emit('message', data, function(err, data) {
         if (err) {

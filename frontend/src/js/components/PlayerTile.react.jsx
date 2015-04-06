@@ -59,7 +59,7 @@ module.exports = React.createClass({
         </div>
         <div className="tile-row icon-row">
           {icons}
-          <span className="fa fa-envelope icon msg-button"
+          <span className="fa fa-envelope-o icon msg-button"
                 onClick={this.showMessaging}>
           </span>
         </div>

@@ -15,7 +15,7 @@ module.exports = React.createClass({
         var data = convos[gamertag];
         messageWidgets.push(
           <MessageWidget key={i} gamertag={gamertag} data={data}/>
-        )
+        );
       }
     }
 

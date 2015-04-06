@@ -170,7 +170,7 @@ module.exports = {
                   }
 
                   // save message to database
-                  Convo.append(gamertag, data.recipient, data.message,
+                  Convo.append(gamertag, data.recipient, data.text,
                                 (!recipient), function(err, result) {
                     if (err) {
                       console.log(err);
@@ -210,7 +210,6 @@ module.exports = {
               if (gamertag in _beacons) {
                 deactivateBeacon(gamertag);
               }
-
               // emit logout event to conversation partners
               socket.leave(gamertag);
               self.io.sockets.in(gamertag)
@@ -224,8 +223,37 @@ module.exports = {
 
 
 
-          socket.on('get convos', function(_, callback) {
-            Convo.getUserConvos(socket.user.id, function(err, result) {
+          socket.on('get convos',
+                    function(data, callback) {
+
+            Convo.getUserConvos(socket.user.id,
+                                function(err, result) {
+
+              return callback(err, result);
+            });
+          });
+
+
+
+          socket.on('get messages',
+                    function(data, callback) {
+
+            var gamertag = data.gamertag;
+            Convo.getMessages(socket.user.id, gamertag,
+                              function(err, result) {
+
+              return callback(err, result);
+            });
+          });
+
+
+          socket.on('mark convo read',
+                    function(data, callback) {
+
+            var gamertag = data.gamertag;
+            Convo.markRead(socket.user.id, gamertag,
+                           function(err, result) {
+
               return callback(err, result);
             });
           });

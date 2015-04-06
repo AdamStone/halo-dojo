@@ -14,10 +14,37 @@ var _dispatchToken;
 var _data;
 
 
-if (!sessionStorage._MessagingStore) {
-  _data = {
+/*
+_data model: {
+  conversations: {
+
+    gamertag: {
+      minimized: bool,
+      closed: bool,
+      lastTime: int seconds,
+      messages: [
+        {time: int seconds,
+         text: 'message',
+         to: 'gamertag',
+         from: 'gamertag'}
+      ],
+      unread: bool
+    },
+
+    ...
+  }
+}
+*/
+
+
+var _getInitialState = function() {
+  return {
     conversations: {}
   };
+};
+
+if (!sessionStorage._MessagingStore) {
+  _data = _getInitialState();
 }
 else {
   _data = JSON.parse(sessionStorage._MessagingStore);
@@ -45,32 +72,37 @@ var MessagingStore = merge(EventEmitter.prototype, {
 
 
 //entry: {
-//  message: data.message,
+//  text: data.text,
 //  from: gamertag,
 //  to: data.recipient,
 //  time: Math.floor(new Date().getTime()/1000)
 //}
 
-var initConversation = function(gamertag, entries) {
+var initConversation = function(gamertag, data) {
   // add gamertag if not already known, else ignore
   if (!(gamertag in _data.conversations)) {
     _data.conversations[gamertag] = {
       minimized: true,
       closed: true,
-      conversation: entries
+      lastTime: data.lastTime,
+      messages: data.messages,
+      unread: data.unread
     };
   }
 };
 
 
-var updateConversation = function(gamertag, entries) {
+var updateConversation = function(gamertag, messages) {
   if (gamertag in _data.conversations) {
-    if (entries) {
+    if (messages) {
       // got new entry in existing conversation
       var convo = _data.conversations[gamertag];
 
-      entries.forEach(function(entry) {
-        convo.conversation.push(entry);
+      messages.forEach(function(message) {
+        if (message.time > convo.lastTime) {
+          convo.lastTime = message.time;
+        }
+        convo.messages.push(message);
       });
 
       if (convo.closed) {
@@ -79,20 +111,21 @@ var updateConversation = function(gamertag, entries) {
       }
     }
   }
-  else if (entries) {
-    // got first entry of new conversation
+  else if (messages) {
+    // got first entries of new conversation
+
+    var lastTime = 0;
+    messages.forEach(function(message) {
+      if (message.time > lastTime) {
+        lastTime = message.time;
+      }
+    });
     _data.conversations[gamertag] = {
       minimized: false,
       closed: false,
-      conversation: entries
-    };
-  }
-  else {
-    // got informed that a conversation exists
-    _data.conversations[gamertag] = {
-      minimized: true,
-      closed: true,
-      conversation: []
+      lastTime: lastTime,
+      messages: messages,
+      unread: false
     };
   }
 };
@@ -101,21 +134,33 @@ var updateConversation = function(gamertag, entries) {
 _dispatchToken = AppDispatcher.register(function(payload) {
   var action = payload.action;
 
-  var gamertag = action.data.gamertag;
+  var gamertag = action.data.gamertag,
+      convo = _data.conversations[gamertag];
 
   switch(action.actionType) {
 
     case Constants.Messaging.MINIMIZED:
-      _data.conversations[gamertag].minimized = true;
+      convo.minimized = true;
       break;
 
     case Constants.Messaging.EXPANDED:
-      _data.conversations[gamertag].minimized = false;
+      convo.minimized = false;
+      convo.closed = false;
+
+      if (!convo.messages.length) {
+        console.log(gamertag);
+        ActionCreators.getMessages(gamertag,
+                                   function(err) {
+          if (err) {
+            console.log(err);
+          }
+        });
+      }
       break;
 
     case Constants.Messaging.CLOSED:
-      _data.conversations[gamertag].minimized = true;
-      _data.conversations[gamertag].closed = true;
+      convo.minimized = true;
+      convo.closed = true;
       break;
 
     case Constants.Messaging.SENT_MESSAGE:
@@ -127,18 +172,37 @@ _dispatchToken = AppDispatcher.register(function(payload) {
       break;
 
     case Constants.Messaging.GOT_CONVOS:
-      console.log('MessagingStore got convos');
       var data = action.data;
-      console.log(data);
-      for (gamertag in data) {
-        initConversation(gamertag, data[gamertag]);
+
+      for (var i=0; i < data.length; i++) {
+        for (gamertag in data[i]) {
+          // data[i][gamertag] = {lastTime:, messages:[], unread:}
+          initConversation(gamertag, data[i][gamertag]);
+        }
       }
+      break;
+
+    case Constants.Messaging.GOT_MESSAGES:
+      var messages = action.data.messages;
+      updateConversation(gamertag, messages);
+      break;
+
+    case Constants.Messaging.MARKED_READ:
+      convo.unread = false;
       break;
 
     case Constants.User.CONNECTED:
       AppDispatcher.waitFor([UserStore.getDispatchToken()]);
-      console.log('getting convos');
-      ActionCreators.getConvos();
+      ActionCreators.getConvos(function(err) {
+        if (err) {
+          console.log(err);
+        }
+      });
+      break;
+
+    case Constants.User.LOGGED_OUT:
+      AppDispatcher.waitFor([UserStore.getDispatchToken()]);
+      _data = _getInitialState();
       break;
 
     default:

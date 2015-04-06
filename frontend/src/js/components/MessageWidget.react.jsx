@@ -20,10 +20,18 @@ module.exports = React.createClass({
   focus: function(e) {
     if (this.refs.messageInput) {
       this.refs.messageInput.getDOMNode().focus();
+      this.setState({
+        viewed: true
+      });
+      if (this.props.data.unread) {
+        ActionCreators.markConvoRead(this.props.gamertag,
+                                     function(err) {
+          if (err) {
+            console.log(err);
+          }
+        });
+      }
     }
-    this.setState({
-      viewed: true
-    });
   },
 
   sendMessage: function(e) {
@@ -98,8 +106,8 @@ module.exports = React.createClass({
         }, 250, this);
       }
     }
-    if (this.props.data.conversation.length >
-         prevProps.data.conversation.length) {
+    if (this.props.data.messages.length >
+         prevProps.data.messages.length) {
 
       this.setState({
         viewed: false
@@ -116,7 +124,7 @@ module.exports = React.createClass({
       return null;
     }
     var gamertag = this.props.gamertag;
-    var messageNodes = this.props.data.conversation.map(
+    var messageNodes = this.props.data.messages.map(
       function(message, i) {
         var className;
         if (message.from === gamertag) {
@@ -139,17 +147,18 @@ module.exports = React.createClass({
     if (!minimized) {
       buttonClass += " expanded";
     }
+    var iconClass = "message-icon fa fa-envelope";
+
     var toggleButton = (
       <div className={buttonClass}
            title={this.props.gamertag}
            onClick={this.toggle}>
 
+        <span className="gamertag">{this.props.gamertag}</span>
+
         <span className={this.state.viewed ?
-                         "fa fa-envelope-o" :
-                         "fa fa-envelope"}></span>
-
-        {'   '}{this.props.gamertag}
-
+                         iconClass + "-o" :
+                         iconClass}></span>
       </div>
     );
 

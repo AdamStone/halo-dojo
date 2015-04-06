@@ -16,21 +16,35 @@
     display: table-cell;
     height: 100%;
     vertical-align: middle;
-    padding: .25em;
     font-family: 'Oxygen', sans-serif;
     font-size: 14px;
     position: relative;
 
     .toggle-button {
-      padding: .25em .5em;
       width: $messenger-toggle-width;
+      height: $messagebar-height;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      position: relative;
 
       &:hover {
         cursor: pointer;
         background-color: $w10;
+      }
+
+      .gamertag {
+        margin: 0;
+        margin-left: 2em;
+        padding: .5em;
+        display: inline-block;
+      }
+
+      .message-icon {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 0.6em;
       }
     }
 
