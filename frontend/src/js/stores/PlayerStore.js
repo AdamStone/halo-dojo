@@ -5,6 +5,7 @@ var AppDispatcher = require('../dispatcher/AppDispatcher'),
     merge = require('react/lib/merge');
 
 var Constants = require('../constants/Constants'),
+    UserStore = require('../stores/UserStore'),
     utils = require('../../../../shared/utils');
 
 var _dispatchToken,
@@ -58,6 +59,11 @@ _dispatchToken = AppDispatcher.register(function(payload) {
     case Constants.Player.GOT_PLAYER_DATA:
       _data.data = utils.update(_data.data, action.data);
       _data.cached = true;
+      break;
+
+    case Constants.User.LOGGED_OUT:
+      AppDispatcher.waitFor([UserStore.getDispatchToken()]);
+      _data = _getInitialState();
       break;
 
     default:
