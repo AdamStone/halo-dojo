@@ -20,12 +20,17 @@ function isEmpty(obj) {
 var _dispatchToken,
     _data;
 
-if (!sessionStorage._BeaconStore) {
-  _data = {
+
+var _getInitialState = function() {
+  return {
     active: false,
     status: null,
     beacons: {}
   };
+};
+
+if (!sessionStorage._BeaconStore) {
+  _data = _getInitialState();
 }
 else {
   _data = JSON.parse(sessionStorage._BeaconStore);
@@ -72,19 +77,11 @@ _dispatchToken = AppDispatcher.register(function(payload) {
       break;
 
     case Constants.User.DISCONNECTED:
-      _data = {
-        beacons: {},
-        active: false,
-        status: null
-      };
+      _data = _getInitialState();
       break;
 
     case Constants.User.LOST_CONNECTION:
-      _data = {
-        beacons: {},
-        active: false,
-        status: null
-      };
+      _data = _getInitialState();
       break;
 
     case Constants.Beacons.SET_STATUS:
