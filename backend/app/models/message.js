@@ -9,7 +9,9 @@ function Message(node) {
 // Public instance properties
 var properties = [
   'text',
-  'time'
+  'time',
+  'to',
+  'from'
 ];
 
 properties.forEach(function(property) {
