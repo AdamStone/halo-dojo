@@ -17,10 +17,36 @@ module.exports = {
     var ts = new Date(secondsUTC*1000);
     var now = new Date();
 
-    var tsDate = ts.toDateString();
-    if (tsDate !== now.toDateString()) {
-      // ts not the same day as now; return date
-      return tsDate;
+    // "Mon Apr 06 2015"
+    var date = ts.toDateString();
+    now = now.toDateString();
+
+    if (date !== now) {
+      // ts not the same day as now
+      date = date.split(' ');
+      date = {
+        weekday: date[0],
+        month: date[1],
+        day: date[2],
+        year: date[3]
+      };
+      now = now.split(' ');
+      now = {
+        weekday: now[0],
+        month: now[1],
+        day: now[2],
+        year: now[3]
+      };
+
+      var dateString;
+      if (now.year !== date.year) {
+        dateString = [date.month, date.year].join(' ');
+      }
+      else {
+        dateString = [date.month, date.day].join(' ');
+      }
+
+      return dateString;
     }
     else {
       // ts on same day as now; return time
