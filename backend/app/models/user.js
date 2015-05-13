@@ -3,7 +3,7 @@
 var db = require('../../config/database'),
     UUID = require('node-uuid');
 
-var Gamertag = require('./Gamertag');
+var Gamertag = require('./gamertag');
 
 // constructor
 function User(_node) {

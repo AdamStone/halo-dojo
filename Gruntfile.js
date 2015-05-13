@@ -35,9 +35,8 @@ module.exports = function(grunt) {
 
     cssmin: {
       build: {
-        files: {
-          'frontend/public/css/styles.min.css' : 'frontend/src/css/styles.css'
-        }
+        src: 'frontend/src/css/styles.css',
+        dest: 'frontend/public/css/styles.min.css'
       }
     },
 
@@ -56,15 +55,21 @@ module.exports = function(grunt) {
       }
     },
 
+    uglify: {
+      build: {
+        src: 'frontend/public/bundle.js',
+        dest: 'frontend/public/bundle.min.js'
+      }
+    },
+
     watch: {
       options: {
-//        livereload: true
         livereload: {
-          port: 35729,
+          port: 35730,
           key: grunt.file.read(
-            './backend/app/gitignore.ssl/ssl-key.pem'),
+            './backend/app/gitignore.ssl/localhost-ssl-key.pem'),
           cert: grunt.file.read(
-            './backend/app/gitignore.ssl/ssl-cert.pem')
+            './backend/app/gitignore.ssl/localhost-ssl-cert.pem')
         }
       },
 
@@ -101,7 +106,6 @@ module.exports = function(grunt) {
         tasks: 'copy:images'
       },
 
-
       hapi: {
         files: [
           'backend/app/**/*.js',
@@ -121,7 +125,7 @@ module.exports = function(grunt) {
       http: {
         options: {
           server: require('path').resolve('./backend/app/server'),
-          livereload: 35729
+          livereload: 35730
         }
       }
     }
@@ -129,7 +133,7 @@ module.exports = function(grunt) {
   });
 
   // batch load grunt-contrib-* modules
-  var grunt_contribs = [
+  var gruntContribs = [
     'cssmin',
     'uglify',
     'watch',
@@ -142,15 +146,21 @@ module.exports = function(grunt) {
     'browserify'
   ];
 
-  for (var i=0; i < grunt_contribs.length; i++) {
-    grunt.loadNpmTasks('grunt-contrib-' + grunt_contribs[i]);
+  for (var i=0; i < gruntContribs.length; i++) {
+    grunt.loadNpmTasks('grunt-contrib-' + gruntContribs[i]);
   }
 
   for (i=0; i < grunts.length; i++) {
     grunt.loadNpmTasks('grunt-' + grunts[i]);
   }
 
-  grunt.registerTask('default', ['copy', 'sass', 'cssmin', 'browserify']);
+  grunt.registerTask('default', [
+    'copy',
+    'sass',
+    'cssmin',
+    'browserify',
+    'uglify'
+  ]);
 
   grunt.registerTask('serve', function() {
     grunt.task.run([

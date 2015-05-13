@@ -21,7 +21,8 @@ module.exports = React.createClass({
     return {
       focus: "false",
       autocomplete: "on",
-      action: "submit"    // should be overridden
+      action: "submit",   // should be overridden
+      header: "true"
     }
   },
 
@@ -29,7 +30,9 @@ module.exports = React.createClass({
     return {
       message: null,
       email: '',
-      password: ''
+      password: '',
+      pending: false,
+      hideForm: false
     };
   },
 
@@ -56,12 +59,23 @@ module.exports = React.createClass({
     ActionCreators[this.props.action](this.state.email,
                                       this.state.password,
                                       this.onMessage);
+    this.setState({
+      pending: true,
+      hideForm: true
+    });
   },
 
   onMessage: function(message) {
     if (message) {
+      var text = message.text,
+          status = message.success;
+
       this.setState({
-        message: message
+        message: text,
+        email: '',
+        password: '',
+        pending: false,
+        hideForm: status
       });
     }
   },
@@ -69,43 +83,55 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div className="auth-form">
-        <form onSubmit={this.onSubmit}
-              autoComplete={this.props.autocomplete}>
+        {this.props.header === "true" ?
+          <h3 className="header">{this.props.action}</h3>
 
-          {this.props.autocomplete === "off" ?
+          : null
+        }
 
-            // Hidden inputs hide autocomplete on chrome
-            <div>
-              <input style={{"display": "none"}}/>
-              <input style={{"display": "none"}} type="password"/>
-            </div>
+        {this.state.pending ?
+          <div className="spinner"></div> : null
+        }
 
-            : null
-          }
+        {this.state.hideForm ? true :
 
-          <input type="email"
-                 name="email"
-                 className="email-input"
-                 placeholder="Enter your email"
-                 value={this.state.email}
-                 onChange={this.emailChanged}
-                 ref="emailInput"
-                 autoComplete={this.props.autocomplete}/>
+          <form onSubmit={this.onSubmit}
+                autoComplete={this.props.autocomplete}>
 
-          <input type="password"
-                 name="password"
-                 className="password-input"
-                 placeholder={this.props.action === 'register' ?
-                     "Create a password" : "Enter your password"}
-                 value={this.state.password}
-                 onChange={this.passwordChanged}
-                 autoComplete={this.props.autocomplete}/>
+            {this.props.autocomplete === "off" ?
 
-          <input type="submit"
-                 className="submit-input"
-                 value={capitalize(this.props.action)}
-                 style={{'cursor': 'pointer'}}/>
-        </form>
+              // Hidden inputs hide autocomplete on chrome
+              <div>
+                <input style={{"display": "none"}}/>
+                <input style={{"display": "none"}} type="password"/>
+              </div>
+
+              : null
+            }
+
+            <input type="email"
+                   name="email"
+                   className="email-input"
+                   placeholder="Enter your email"
+                   value={this.state.email}
+                   onChange={this.emailChanged}
+                   ref="emailInput"
+                   autoComplete={this.props.autocomplete}/>
+
+            <input type="password"
+                   name="password"
+                   className="password-input"
+                   placeholder={this.props.action === 'register' ?
+                       "Create a password" : "Enter your password"}
+                   value={this.state.password}
+                   onChange={this.passwordChanged}
+                   autoComplete={this.props.autocomplete}/>
+
+            <input type="submit"
+                   className="submit-input"
+                   value={capitalize(this.props.action)}
+                   style={{'cursor': 'pointer'}}/>
+          </form> }
 
         { this.state.message ?
 

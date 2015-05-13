@@ -205,7 +205,7 @@ Profile.save = function(userId, data, callback) {
 
 Profile.suggest = function(userId, callback) {
   var cypher = [
-    'MATCH (user:User)',
+    'MATCH (user:User)-[:MAINS]->(userGt:Gamertag)',
     'WHERE user.id = {userId}',
 
     // agreed preferences
@@ -224,7 +224,7 @@ Profile.suggest = function(userId, callback) {
     'OPTIONAL MATCH (gt:Gamertag)',
     'WHERE (player)-[:MAINS]->(gt)',
 
-    'RETURN user, gt as gamertag, ',
+    'RETURN userGt, gt as gamertag, ',
       'collect(DISTINCT prefG) as prefG, ',
       'collect(DISTINCT avG) as avG, ',
       'collect(DISTINCT disG) as disG'
@@ -242,10 +242,14 @@ Profile.suggest = function(userId, callback) {
       var comparisons = {};
       for (var i=0; i < result.length; i++) {
 
-        var gtNode = result[i].gamertag;
-        var gtData = null;
-        if (gtNode) {
+        var gtNode = result[i].gamertag,
+            userGtNode = result[i].userGt,
+            gtData = null,
+            userGtData = null;
+
+        if (userGtNode && gtNode) {
           gtData = new Gamertag(gtNode).data;
+          userGtData = new Gamertag(userGtNode).data;
 
           var results = {
             gtData: gtData,
@@ -254,12 +258,15 @@ Profile.suggest = function(userId, callback) {
             disG: _parseCollection(result[i].disG, Game, 'name')
           };
 
-          results.rating = (results.prefG.length) * weights.prefer;
-          results.rating += (results.avG.length) * weights.avoid;
-          results.rating = Math.round(
-            100*results.rating / (results.rating +
-              (results.disG.length) * weights.disagree));
+          var rating = (results.prefG.length) * weights.prefer;
+          rating += (results.avG.length) * weights.avoid;
+          rating = rating / (rating +
+            results.disG.length * weights.disagree);
 
+          rating *= (100 - 2 * Math.abs(
+            userGtData.csr_max - gtData.csr_max))/100;
+
+          results.rating = Math.round(100*Math.pow(rating, 1));
 
           comparisons[gtData.gamertag] = results;
         }

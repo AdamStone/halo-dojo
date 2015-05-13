@@ -50,9 +50,9 @@ module.exports = React.createClass({
               </span>
             </li>
 
-            <li>FAQ</li>
+         {/*<li>FAQ</li>
             <li>Blog</li>
-            <li>About</li>
+            <li>About</li>*/}
 
             <li className="spacer"></li>
 
@@ -63,7 +63,7 @@ module.exports = React.createClass({
 
             {this.props.user.token ?
 
-              <li className="indicator">
+              <li className="messaging-toggle">
                 <MessagingDropdown messaging={
                     this.props.messaging}/>
               </li>

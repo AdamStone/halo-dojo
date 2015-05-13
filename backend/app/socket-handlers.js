@@ -2,7 +2,8 @@
 
 var Socket = require('socket.io'),
     Hawk = require('hawk'),
-    schema = require('../../shared/input-validation');
+    schema = require('../../shared/input-validation'),
+    Urls = require('../../shared/urls');
 
 var Convo = require('./models/convo'),
     User = require('./models/user'),
@@ -66,7 +67,8 @@ module.exports = {
               if (err && callback) {
                 return callback(err);
               }
-              Hawk.server.authenticateMessage('localhost', 8000, 'message',
+              Hawk.server.authenticateMessage(
+                Urls.http.hostname, Urls.http.port, 'message',
                 data.auth, Credentials.get, {}, function(err, credentials) {
 
                   if (err && callback) {
@@ -148,10 +150,12 @@ module.exports = {
               if (err) {
                 return callback(err);
               }
-              Hawk.server.authenticateMessage('localhost', 8000, 'message',
+              Hawk.server.authenticateMessage(
+                Urls.http.hostname, Urls.http.port, 'message',
                 data.auth, Credentials.get, {}, function(err, credentials) {
 
                   if (err) {
+                    console.log(err);
                     return callback(err);
                   }
 

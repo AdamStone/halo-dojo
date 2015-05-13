@@ -55,7 +55,11 @@ module.exports = React.createClass({
       <div className="player-tile">
         <div className="tile-row">
           <h3 className="gamertag">{gamertag}</h3>
-          <pre className="rating">{rating}</pre>
+          <img src={'/images/svg/ranks/' + gtData.csr_max + '.svg'}
+               alt={gtData.csr_max}
+               title="Max CSR"
+               className="rating"/>
+          {/*<pre className="rating">{rating}</pre>*/}
         </div>
         <div className="tile-row icon-row">
           {icons}

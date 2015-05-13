@@ -21,7 +21,7 @@ var xbl = {
   waypoint: new Waypoint()
 };
 
-//xbl.waypoint.start();
+xbl.waypoint.start();
 
 
 
@@ -35,30 +35,48 @@ var handlers = {
 var server = new Hapi.Server();
 
 server.connection({
-  host: Urls.http.hostname,
   port: Urls.http.port,
   labels: ['http']
 });
 
+var http = server.select('http');
+
+
+var ssl = {};
+if (Urls.localhost) {
+  ssl.key = 'localhost-ssl-key.pem';
+  ssl.cert = 'localhost-ssl-cert.pem';
+}
+else {
+  ssl.key = 'thehalodojo-private-decrypted.pem';
+  ssl.cert = 'unified.pem';
+}
+
+
+var tlsConfig = {
+  key: FS.readFileSync(Path.join(
+    __dirname, 'gitignore.ssl', ssl.key)),
+  cert: FS.readFileSync(Path.join(
+    __dirname, 'gitignore.ssl', ssl.cert))
+};
+
+var allowedOrigin = 'http://' + Urls.http.hostname;
+if (Urls.http.port != 80) {
+  allowedOrigin += (':' + Urls.http.port);
+}
+
 server.connection({
-  host: Urls.https.hostname,
   port: Urls.https.port,
-  tls: {
-    key: FS.readFileSync(Path.join(
-      __dirname, 'gitignore.ssl', 'ssl-key.pem')),
-    cert: FS.readFileSync(Path.join(
-      __dirname, 'gitignore.ssl', 'ssl-cert.pem'))
-  },
+  tls: tlsConfig,
   labels: ['https'],
   routes: {
     cors: {
-      origin: [Urls.http.domain]
+      origin: [allowedOrigin]
     }
   }
 });
 
 
-var http = server.select('http');
 var https = server.select('https');
 
 server.path(staticPath);
@@ -75,7 +93,6 @@ server.views({
 
 // make sure DB has been initialized
 setupDB.initialize();
-
 
 
 // HTTPS ROUTES
@@ -125,7 +142,7 @@ https.route({
 });
 
 https.route({
-  method: 'POST',
+  method: ['POST', 'OPTIONS'],
   path: '/activate/{code}',
   config: {
     validate: {

@@ -1,20 +1,27 @@
 "use strict";
 
-var URL  = require('url');
+var URL  = require('url'),
+    os = require('os');
 
-var parseDomain = function(href) {
-  var parsed = URL.parse(href);
-  parsed.domain = [parsed.protocol,
-                   href.split('//')[1]
-                       .split('/')[0]]
-                       .join('//');
-  return parsed;
+var DOMAIN = 'www.thehalodojo.com';
+
+var hostname = os.hostname(),
+    ip = hostname.split('-').slice(1,5).join('.');
+
+if (ip) {
+  hostname = DOMAIN;
+}
+else if (hostname !== DOMAIN) {
+  hostname = 'localhost';
+}
+
+var ports = {
+  http: (hostname === 'localhost' ? ':8000' : ':80'),
+  https: (hostname === 'localhost' ? ':9000' : ':443')
 };
 
-var HTTP  = parseDomain('http://localhost:8000');
-var HTTPS = parseDomain('https://localhost:9000/test');
-
 module.exports = {
-  http: HTTP,
-  https: HTTPS
+  http: URL.parse('http://' + hostname + ports.http),
+  https: URL.parse('https://' + hostname + ports.https),
+  localhost: (hostname === 'localhost')
 };

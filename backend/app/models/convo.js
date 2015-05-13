@@ -115,28 +115,30 @@ Convo.getUserConvos = function(userId, callback, maxMsgs) {
 
     // parse result
     result.forEach(function(row) {
-      var gtData = new Gamertag(row.gamertag).data,
-          lastTime = row.lastTime;
+      if (row.gamertag) {
+        var gtData = new Gamertag(row.gamertag).data,
+            lastTime = row.lastTime;
 
-      var messages = [],
-          unread = false;
-      if (row.messages.length) { // convo is unread
-        // newest messages are first in array
-        for (var i=0; i < row.messages.length; i++) {
-          var m = new Message(row.messages[i]).data;
-          m.from = row.senders[i];
-          m.to = row.recipients[i];
-          messages.unshift(m);
+        var messages = [],
+            unread = false;
+        if (row.messages.length) { // convo is unread
+          // newest messages are first in array
+          for (var i=0; i < row.messages.length; i++) {
+            var m = new Message(row.messages[i]).data;
+            m.from = row.senders[i];
+            m.to = row.recipients[i];
+            messages.unshift(m);
+          }
+          unread = true;
         }
-        unread = true;
+        var entry = {};
+        entry[gtData.gamertag] = {
+          messages: messages,
+          unread: unread,
+          lastTime: lastTime
+        };
+        payload.unshift(entry);
       }
-      var entry = {};
-      entry[gtData.gamertag] = {
-        messages: messages,
-        unread: unread,
-        lastTime: lastTime
-      };
-      payload.unshift(entry);
     });
     return callback(null, payload);
   }).send();

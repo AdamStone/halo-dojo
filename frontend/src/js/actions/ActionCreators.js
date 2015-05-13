@@ -36,6 +36,10 @@ var getLoginCallback = function(onMessage) {
         message = JSON.parse(response.text).message;
       }
     }
+    message = {
+      text: message,
+      success: false
+    };
     onMessage(message);
   };
 
@@ -74,7 +78,10 @@ module.exports = {
         if (response.statusType === 2) {
           // registration succeeded
 
-          message = response.text;
+          message = {
+            text: response.text,
+            success: true
+          };
           return onMessage(message);
         }
         else {
@@ -82,6 +89,10 @@ module.exports = {
           message = JSON.parse(response.text).message;
         }
       }
+      message = {
+        text: message,
+        success: false
+      };
       return onMessage(message);
     });
   },

@@ -36,7 +36,7 @@ module.exports = React.createClass({
           <div className="landing-section dark">
             <h3>Suit up</h3>
             <p>Let's make the solo queue obsolete</p>
-            <AuthForm action="register" autocomplete="off"/>
+            <AuthForm action="register" autocomplete="off" header="false"/>
             <img className="logo"
                  src="/images/svg/dojo.svg" />
           </div>

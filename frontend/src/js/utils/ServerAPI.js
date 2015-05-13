@@ -2,7 +2,9 @@
 
 var Request = require('superagent'),
     Hawk = require('hawk'),
+
     Urls = require('../../../../shared/urls');
+
 
 // NOTE for some reason, moving import to top returns {}
 var _getToken = function() {
@@ -24,9 +26,12 @@ var handlerFactory = function(callback) {
 
 
 var authHeader = function(path, method, token) {
-  return Hawk.client.header(Urls.http.domain + path, method, {
-    credentials: token
-  }).field;
+  return Hawk.client.header(
+    location.origin + path,
+    method, {
+      credentials: token
+    }
+  ).field;
 };
 
 
@@ -39,7 +44,7 @@ module.exports = {
   submitRegistration: function(email, password, callback) {
     var handler = handlerFactory(callback);
     Request
-      .post(Urls.https.domain + '/register')
+      .post(Urls.https.href + 'register')
       .send({email: email, password: password})
       .end(handler);
   },
@@ -47,7 +52,7 @@ module.exports = {
   submitLogin: function(email, password, callback) {
     var handler = handlerFactory(callback);
     Request
-      .post(Urls.https.domain + '/login')
+      .post(Urls.https.href + 'login')
       .set('Content-Type', 'application/json')
       .send({email: email, password: password})
       .end(handler);
@@ -56,9 +61,9 @@ module.exports = {
   submitActivate: function(email, password, code, callback) {
     var handler = handlerFactory(callback);
     Request
-      .post(Urls.https.domain + '/activate/' + code)
+      .post(Urls.https.href + 'activate/' + code)
       .set('Content-Type', 'application/json')
-      .send({email: email, password: password, code: code})
+      .send({email: email, password: password})
       .end(handler);
   },
 

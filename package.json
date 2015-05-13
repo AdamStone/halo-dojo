@@ -33,7 +33,7 @@
     "grunt-hapi": "^0.8.1",
     "grunt-react": "^0.10.0",
     "grunt-sass": "^0.16.0",
-    "node-sass": "^1.0.3",
+    "node-sass": "^3.0.0",
     "react-tools": "^0.13.0"
   },
   "dependencies": {

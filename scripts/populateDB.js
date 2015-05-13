@@ -10,6 +10,27 @@ var db = require('../backend/config/database'),
 var fileIO = require('./fileIO'),
     password = fileIO.readPassword();
 
+function rollGames(profile) {
+  var roll, hasPreferred;
+  Constants.GAME_NAMES.forEach(function(name) {
+    roll = Math.random()*3;
+    if (roll < 1) {
+      profile.games[name] = -1;
+    }
+    if (roll > 2) {
+      profile.games[name] = 1;
+      hasPreferred = true;
+    }
+  });
+  if (hasPreferred) {
+    return true;
+  }
+  else {
+    console.log('No preferred games, rolling again');
+    return rollGames(profile);
+  }
+}
+
 var populate = function() {
   var gamertags = fileIO.readGamertags();
   gamertags.forEach(function(gamertag, index) {
@@ -52,7 +73,7 @@ var populate = function() {
         // randomly prefer/avoid some games
 
         var profile = {
-          bio: 'test',
+          bio: '',
           games: {
             h1: 0,
             h2: 0,
@@ -63,16 +84,7 @@ var populate = function() {
           }
         };
 
-        var roll;
-        Constants.GAME_NAMES.forEach(function(name) {
-          roll = Math.random()*3;
-          if (roll < 1) {
-            profile.games[name] = -1;
-          }
-          if (roll > 2) {
-            profile.games[name] = 1;
-          }
-        });
+        rollGames(profile);
 
 
         // execute query
@@ -109,13 +121,15 @@ var populate = function() {
         }).send();
 
       });
-    }, index*250, gamertag);
+    }, index*1000, gamertag);
   });
 };
 
 // initialize,
 setupDB.initialize(function() {
   // then populate
-  populate();
+  setTimeout(function() {
+    populate();
+  }, 5000);
 });
 

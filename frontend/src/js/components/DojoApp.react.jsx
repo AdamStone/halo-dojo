@@ -101,6 +101,16 @@ module.exports = React.createClass({
         )
         break;
 
+
+      case Constants.UI.OVERLAY_MESSAGE:
+        overlay = (
+          <Overlay escapable="false">
+            <WorkInProgressMessage/>
+          </Overlay>
+        )
+        break;
+
+
       default:
         overlay = null;
     }

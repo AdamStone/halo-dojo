@@ -25,12 +25,14 @@
 
     .overlay-content {
       color: $content-color;
-      background-color: $b90;
-      display: table-cell;
+      background-color: $b95;
+      display: block;
       vertical-align: middle;
       text-align: center;
-      width: 30em;
-      padding: 0 5em;
+      width: 32em;
+      min-height: 18em;
+      position: relative;
+      padding: 1em 2em;
     }
   }
 }

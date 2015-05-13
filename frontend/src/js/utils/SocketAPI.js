@@ -22,26 +22,28 @@ module.exports = {
 
     if (!_socket) {
       console.log('connecting socket');
-      _socket = io.connect('http://localhost:8000');
+      _socket = io.connect(location.origin);
     }
     else {
       console.log('reconnecting socket');
       _socket.io.connect();
     }
 
-    var data = {
-      gamertag: gamertag
-    };
-    this.emit('handshake', data, function(err, response) {
-      if (callback) {
-        if (err) {
-          return callback(err);
+    _socket.on('connect', function() {
+      var data = {
+        gamertag: gamertag
+      };
+      this.emit('handshake', data, function(err, response) {
+        if (callback) {
+          if (err) {
+            return callback(err);
+          }
+          else {
+            return callback(null, response);
+          }
         }
-        else {
-          return callback(null, response);
-        }
-      }
-    });
+      });
+    }.bind(this));
   },
 
   disconnect: function(callback) {
@@ -114,7 +116,21 @@ module.exports = {
           message: data
         };
       }
-      data.auth = Hawk.client.message('localhost', 8000, 'message', {
+
+      var host = (location.hostname || 'localhost'),
+          port = parseInt(location.port);
+
+      if (!port) {
+        switch(location.protocol) {
+          case 'http:':
+            port = 80;
+            break;
+
+          case 'https:':
+            port = 443;
+        }
+      }
+      data.auth = Hawk.client.message(host, port, 'message', {
         credentials: _getToken()
       });
       _socket.emit(eventName, data, function() {

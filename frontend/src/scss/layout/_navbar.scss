@@ -39,8 +39,13 @@
       background-color: $w05;
     }
 
-    li.indicator {
+    li.indicator, li.messaging-toggle {
       width: 3em;
+    }
+
+    li.indicator:hover {
+      background-color: transparent;
+      cursor: default;
     }
 
     .brand {

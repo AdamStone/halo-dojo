@@ -8,7 +8,7 @@ describe('WorkInProgressMessage', function() {
     React = require('react/addons'),
     TestUtils = React.addons.TestUtils,
     Component = require('../WorkInProgressMessage.react.jsx'),
-    UIActions = require('../../Actions/UIActions');
+    UIActions = require('../../actions/UIActions');
 
     WIPMessage = TestUtils.renderIntoDocument(
       <Component/>
