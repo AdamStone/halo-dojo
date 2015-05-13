@@ -47,6 +47,21 @@ This is a full-stack JavaScript web application.
 
 ## Screenshots
 
+### Front page:
+
 ![Landing page](screenshot-frontpage.png)
 
+
+### Dashboard:
+
 ![Dashboard](screenshot-dashboard.png)
+
+
+### Messaging:
+
+![Messaging](screenshot-messaging.png)
+
+
+### Realtime Lobby:
+
+![Realtime Lobby](screenshot-lobby.png)
