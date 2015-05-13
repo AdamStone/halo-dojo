@@ -5,7 +5,7 @@ A real-time looking-for-group and teammate recommendation system for Halo online
 
 ## Demo
 
-A [live demo](http://thehalodojo.com) is now available. This should be considered merely a prototype or "proof-of-concept" reflecting the current state of development.
+A [live demo](http://www.thehalodojo.com) is now available. This should be considered merely a prototype or "proof-of-concept" reflecting the current state of development.
 
 ### Logging in
 
@@ -15,9 +15,9 @@ Registering a real account should also work but requires entering a real Xbox Ga
 
 ## Features
 
-Halo is a competitive online game that benefits strongly from effective teamwork and communication. However, so many players on Xbox Live play without microphones that relying on automatic matchmaking to provide random teammates is often a frustrating and discouraging experience (the infamous "solo queue"). 
+Halo is a competitive online game that benefits strongly from effective teamwork and communication. However, so many players on Xbox Live play without microphones that relying on automatic matchmaking to provide random teammates is often a frustrating and discouraging experience (the infamous "solo queue").
 
-This project aims to make it easy to find and team up with compatible players who are interested in teamwork and communication. 
+This project aims to make it easy to find and team up with compatible players who are interested in teamwork and communication.
 
 
 ### Realtime Search
@@ -27,7 +27,7 @@ The realtime search lobby enables players to find other players who are **ready 
 
 ### Suggested Players
 
-Players can maintain a simple profile describing their preferred and avoided gametypes. These preferences and the players' experience and skill metrics will be used to find similar players and provide a list of potentially compatible teammates.  
+Players can maintain a simple profile describing their preferred and avoided gametypes. These preferences and the players' experience and skill metrics will be used to find similar players and provide a list of potentially compatible teammates.
 
 
 ### Messaging
