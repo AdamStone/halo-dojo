@@ -1,6 +1,8 @@
-/** @jsx React.DOM */
+"use strict";
+
 var React = require('react');
 var AuthForm = require('./AuthForm.react.jsx');
+
 
 module.exports = React.createClass({
 
@@ -8,17 +10,17 @@ module.exports = React.createClass({
     return (
         <div className="landing-page selectable">
 
-          <div className="landing-title unselectable">
+          <div className="landing-banner unselectable">
             <h1>The Halo Dojo</h1>
           </div>
 
           <div className="landing-tagline dark">
-            <h2>The Halo Dojo is a real-time looking-for-group and teammate recommendation system for Halo online multiplayer</h2>
+            <h2>Real-time looking-for-group and teammate recommendation for Halo online multiplayer</h2>
           </div>
 
           <div className="landing-section light">
             <h3>Escape the Solo Queue</h3>
-            <p>For players with mics looking for communication and teamwork, solo matchmaking can be incredibly frustrating. The Halo Dojo leverages the latest web technologies to help compatible players team up in powerful new ways.</p>
+            <p>For players with mics hoping for communication and teamwork, solo matchmaking can be incredibly frustrating. The Halo Dojo leverages the latest web technologies to help compatible players team up in powerful new ways.</p>
           </div>
 
           <div className="landing-section dark">

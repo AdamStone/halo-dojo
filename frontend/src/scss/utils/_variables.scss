@@ -1,5 +1,7 @@
 // LAYOUT
 
+$max-page-width: 980px;
+
 $navbar-height: 3em;
 $sidebar-width: 30%;
 $footer-height: 0;
@@ -59,6 +61,7 @@ $set-status-bgcolor: #eee;
 
 $navbar-color: #cdf;
 $content-color: #cdf;
+$content-color-dark: #000;
 $content-color-alpha: rgba(204, 221, 255, 0.33);
 $beacon-status-color: #9ab;
 $placeholder-color: #567;
@@ -69,7 +72,6 @@ $shadow-white: 0 0 5px $w10;
 
 $dark-bg-color: rgba(5, 6, 10, 0.9);
 $light-bg-color: rgba(157, 210, 249, 0.65);
-$landing-title-bg-color: rgba(1, 3, 24, 0.33);
 $player-tile-bg-color: rgba(195, 208, 208, 0.05);
 $msg-button-hover-color: rgba(50,50,50,0.5);
 $overlay-bg-color: rgba(0,0,0,.5);

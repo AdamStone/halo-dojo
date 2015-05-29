@@ -44,7 +44,6 @@ module.exports = React.createClass({
         <nav className="dojo-nav" role="navigation">
           <ul>
             <li className="brand">
-              <img className="logo" src="/images/svg/dojo.svg"/>
               <span className="brandname">
                 The Halo Dojo
               </span>
@@ -54,39 +53,41 @@ module.exports = React.createClass({
             <li>Blog</li>
             <li>About</li>*/}
 
-            <li className="spacer"></li>
+            <span className="navbar-group-right">
 
-            <li className="indicator"
-                title={saveStatusHover}>
-              {saveStatus}
-            </li>
-
-            {this.props.user.token ?
-
-              <li className="messaging-toggle">
-                <MessagingDropdown messaging={
-                    this.props.messaging}/>
+              <li className="indicator"
+                  title={saveStatusHover}>
+                {saveStatus}
               </li>
 
-              :
+              {this.props.user.token ?
 
-              <li onClick={this.showRegistrationOverlay}>
-                Register
-              </li>
-            }
+                <li className="messaging-toggle">
+                  <MessagingDropdown messaging={
+                      this.props.messaging}/>
+                </li>
 
-            {this.props.user.token ?
+                :
 
-              <li onClick={this.logOut}>
-                Log out
-              </li>
+                <li onClick={this.showRegistrationOverlay}>
+                  Register
+                </li>
+              }
 
-              :
+              {this.props.user.token ?
 
-              <li onClick={this.showLoginOverlay}>
-                Login
-              </li>
-            }
+                <li onClick={this.logOut}>
+                  Log out
+                </li>
+
+                :
+
+                <li onClick={this.showLoginOverlay}>
+                  Login
+                </li>
+              }
+
+            </span>
 
           </ul>
         </nav>

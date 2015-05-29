@@ -1,21 +1,28 @@
 .landing-page {
   overflow-y: auto;
-  position: fixed;
-  top: $navbar-height;
-  bottom: 0;
+  @include pos(f, $navbar-height 0 0 0);
+  font-family: $page-content-font-family;
 
-  .landing-title {
+  h1, h2, h3, p {
+    max-width: $max-page-width;
+    margin: 0 auto;
+  }
+
+  h1, h2, h3 {
+    font-family: $page-heading-font-family;
+  }
+
+  .landing-banner {
     text-align: center;
     width: 100%;
     color: $content-color;
-    background-color: $landing-title-bg-color;
+    background-color: $landing-banner-bg-color;
 
     h1 {
       text-transform: uppercase;
       letter-spacing: .2em;
-      margin: 0;
       padding: 1.5em;
-      font-size: 44px;
+      font-size: $landing-banner-font-size;
       font-weight: 300;
       cursor: default;
     }
@@ -25,42 +32,35 @@
     text-align: center;
 
     h2 {
-      font-size: 27px;
-      margin: 0;
-      padding: 1.5em 5em;
+      font-size: $landing-tagline-font-size;
+      padding: 1.5em;
       font-weight: 400;
+      max-width: $max-page-width*.75;
     }
   }
 
   .landing-section {
     text-align: center;
-    padding: 3em 5em;
+    padding: 5em 2em;
 
     h3 {
-      margin: 0;
-      padding: 0 5em;
-      font-size: 26px;
-      font-family: Oxygen, sans-serif;
+      font-size: $landing-section-header-font-size;
       letter-spacing: 0.1em;
       font-weight: 400;
+      padding: 1em;
+      padding-top: 0;
     }
 
     p, a {
-      margin: 0;
-      padding: 2em 0 0;
-      font-size: 21px;
+      font-size: $page-content-font-size;
       font-weight: 300;
-      font-family: Oxygen, sans-serif;
       letter-spacing: 0.05em;
+      padding: 1em;
     }
 
     a {
-      font-size: 23px;
-
-      &:hover {
-        color: #fff;
-        text-decoration: underline;
-      }
+      font-size: $landing-section-link-font-size;
+      padding-bottom: 0;
     }
   }
 
@@ -68,13 +68,25 @@
     color: $content-color;
     background-color: $dark-bg-color;
 
+    a {
+      color: $content-color;
+
+      &:hover {
+        text-shadow: 0 0 1px $content-color;
+      }
+    }
   }
 
   .light {
+    color: $content-color-dark;
     background-color: $light-bg-color;
 
     a {
-      color: #000;
+      color: $content-color-dark;
+
+      &:hover {
+        text-shadow: 0 0 1px $b50;
+      }
     }
   }
 
