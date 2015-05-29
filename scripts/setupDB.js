@@ -67,7 +67,7 @@ var setup = {
     };
 
     for (var i=0; i < queries.length; i++) {
-      setTimeout(timeout, 500*(i+1), queries[i]);
+      setTimeout(timeout, 5000*(i+1), queries[i]);
     }
   }
 };
